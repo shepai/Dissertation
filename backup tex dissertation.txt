@@ -1,0 +1,112 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with`a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{float}
+\title{Bio-Inspired Robotic Navigation On Varied Terrain}
+\author{Dexter R Shepherd}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+This dissertation studies autonomous robotic navigation through localized decisions based on previous experience. Nearly all organisms are limited at some point when it comes to movement. An octopus can fit through an aperture that is bigger than its beak \cite{octopus}. A person can climb over rocks, but only if it has grip points for hands and feet. These environmental barriers define conditions to an organism’s ability to traverse across it. When a path looks too arduous, we will often choose a more accessible route if existent. 
+
+These constraints comply with robotics too. Consider a mars rover 395.54 million km away from the nearest person to get it unstuck over an obstacle. In addition, it takes 181 seconds for a signal to get from earth to mars; thus, real-time control over changes in an environment will have taken effect by the time the signal arrives. A robot to self-preserve, like an organism, will need to know its limitations and not attempt outside these constraints. \cite{reinforcementLearning} 
+
+When deciding on routes, there may be the scenario that all paths are within the constraints. Some are simpler to navigate through than others. The agent will need to pick the option which requires the “least” effort. The best-case scenario is defined by the complexity of movement necessary to overcome the obstacle. 
+
+We will build an agent to perform this task by using a panoramic image, which forms a prediction on the best route to take via a clock-face prediction method. This chassis will have a back actuator, stabilizer, and neck actuator. Once attempting the terrain, the robot will need to use its chassis features to help it navigate over the landscape. 
+
+
+\section{Background Literature}
+\subsection{Whegs}
+
+The Wheg design is a wheel-leg hybrid that improves the climb of a mechanical system while maintaining low energy consumption \cite{moonrover}. Robotic legs using multiple servos have a high current draw, in addition to algorithmic complexity due to the need for inverse kinematics \cite{kinematics}. A standard wheel has low energy consumption due to a single axis continuous rotation; however, it is limited when climbing over advanced terrain. 
+
+The Wheg outperforms a wheel at terrain navigation due to its grip-able design  \cite{cockroach}. The Wheg is easily manufactured via 3D printing, and there are multiple design variations of the Wheg which suit different purposes \cite{whegDesign}. 
+
+The European Space Agency adopted this design for the PROLERO project. This project used a more straightforward form of actuation where the legs were rods rotating on one axis. This design could at maximum travel over obstacles less than or equal to a height of 10cm. The total mass was 1.5kg making it light for space travel. The rover passed the tests at the ESA planetary utilisation facility, thus confirming the model's validity. \cite{esa} 
+
+Other designs on offer are caterpillar tracks which have good energy efficiency due to the optimized traction system. They do, however, have higher weight and are harder to repair. The robot would be inoperable if the link was broken, whereas with wheels or Whegs it could continue to move with worn down tyres. 
+\subsection{Cockroaches and Bio-inspired Robotics}
+Research on Cockroaches explored the use of cockroach inspired limbs and movement. This involved a bend in the back to increase climb over obstacles. This robot used a wheg design to improve its climb, this was inspired by the cockroach leg which is brought into phase when the cockroach climbs. \cite{cockroach} 
+
+\begin{figure}[H]
+\centering
+  \includegraphics[width=0.7\linewidth]{cock.png}
+  \caption{Figure taken from ‘Comparing cockroach and Whegs robot body motions’ showing the cockroach rotation to an obstacle. This is compare to a bio-inspired robot. }
+  \label{figure : robot}
+\end{figure}
+
+\subsection{Reinforcement Learning}
+Reinforcement learning is a machine learning approach where a neural network is trained via a series of trials. The optimization is achieved by implementing a genetic algorithm to guide training towards a solution. 
+
+\begin{figure}[H]
+\centering
+  \includegraphics[width=0.5\linewidth]{RFdiag.PNG}
+  \caption{Reinforcement learning simplified showing a simplified dynamic. }
+  \label{figure : robot}
+\end{figure}
+
+
+This approach has been deployed for route planning robots to plot a solution on different terrain. The reinforcement learning approach was successful in a small number of trials. This used a neural network which took in state information to predict the next step. The research was carried out in simulation rather than physical agent. \cite{reinforcementLearning} 
+
+\subsubsection{Markov decision process}
+The Markov model states that the future is independent of the past given the present. This is denoted mathematically by using P[t] to represent the current state of the agent, therefore P[t+1] represents the next state \cite{RFL}. 
+\begin{equation}
+P[S_{t+1} \mid S_{t}] = P[S_{t+1} \mid S_{1}, ... , S_{t}]
+\end{equation}
+State transition probability is given by the following equation:
+\begin{equation}
+P_{ss{}'} = \mathbb{P}[S_{t+1}=s{}' \mid S_{t}=s]
+\end{equation}
+
+\subsubsection{Genetic algorithm optimization}
+An approach to reinforcement learning is to generate the weights and biases via a Gaussian distribution within a one-dimensional array. Each generation will allow mutation of these values. Mutation functions fit Gaussian noise on top of the current encoded data, which alters the operation of the neural network when applied. 
+
+One optimization approach uses a Microbial algorithm that generates a population of Gaussian distributions and trials each of them in a tournament against one another. The winner overwrites the loser. 
+
+\subsection{Evaluating performance of robots on terrain}
+
+\subsection{Sensors}
+Terrain mapping sensing can take many forms. One study used a lidar sensor that would read at four layers to construct a world model. This model creates a 3D perception allowing a hexapod robot to predict movement \cite{laser}. 
+
+Optical flow uses the vectors between pixels in two images taken one immediately after another. This can be used for optical flow alone \cite{optical}. Optical flow can also be used to calculate obstacles and swerve an agent away from the obstruction via depth estimation maps \cite{opticalDepth}. This same depth estimation method was achieved using a convolutional neural network and the Canny edge detector and morphological operators \cite{canny}. 
+
+Depth perception via stereo imaging is another method that requires less training. A hexapod robot used this method with six legs to predict stable movement over uneven terrain. This prediction method was accurate \cite{stereo}.
+
+\begin{figure}[H]
+\centering
+  \includegraphics[width=0.5\linewidth]{hexapodStereo.PNG}
+  \caption{Figure showing Weaver the stereo vision hexapod. The ground is uneven for all legs, therefore the agent must adapt across all legs. }
+  \label{figure : robot}
+\end{figure}
+
+\section{Requirement analysis}
+
+\subsection{Robot platform}
+\subsection{Language}
+\subsection{Simulation}
+
+\section{Plan}
+
+\section{Methods and Preliminary Results}
+
+\section{Professional Considerations}
+
+\bibliographystyle{unsrt}
+\bibliography{sample}
+
+\end{document}

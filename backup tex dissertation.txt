@@ -13,6 +13,7 @@
 \usepackage{graphicx}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 \usepackage{float}
+
 \title{Bio-Inspired Robotic Navigation On Varied Terrain}
 \author{Dexter R Shepherd}
 
@@ -35,13 +36,13 @@ We will build an agent to perform this task by using a panoramic image, which fo
 
 The Wheg design is a wheel-leg hybrid that improves the climb of a mechanical system while maintaining low energy consumption \cite{moonrover}. Robotic legs using multiple servos have a high current draw, in addition to algorithmic complexity due to the need for inverse kinematics \cite{kinematics}. A standard wheel has low energy consumption due to a single axis continuous rotation; however, it is limited when climbing over advanced terrain. 
 
-The Wheg outperforms a wheel at terrain navigation due to its grip-able design  \cite{cockroach}. The Wheg is easily manufactured via 3D printing, and there are multiple design variations of the Wheg which suit different purposes \cite{whegDesign}. 
+The Wheg outperforms a wheel at uneven terrain navigation due to its grip-able design  \cite{cockroach}. The Wheg is easily manufactured via 3D printing, and there are multiple design variations of the Wheg which suit different purposes \cite{whegDesign}. 
 
 The European Space Agency adopted this design for the PROLERO project. This project used a more straightforward form of actuation where the legs were rods rotating on one axis. This design could at maximum travel over obstacles less than or equal to a height of 10cm. The total mass was 1.5kg making it light for space travel. The rover passed the tests at the ESA planetary utilisation facility, thus confirming the model's validity. \cite{esa} 
 
-Other designs on offer are caterpillar tracks which have good energy efficiency due to the optimized traction system. They do, however, have higher weight and are harder to repair. The robot would be inoperable if the link was broken, whereas with wheels or Whegs it could continue to move with worn down tyres. 
+Other designs on offer are caterpillar tracks which have good energy efficiency due to the optimized traction system. They do, however, have higher weight and are harder to repair. The robot would be inoperable with link breakage, whereas, with wheels or Whegs, it could continue to move with worn-down tires. 
 \subsection{Cockroaches and Bio-inspired Robotics}
-Research on Cockroaches explored the use of cockroach inspired limbs and movement. This involved a bend in the back to increase climb over obstacles. This robot used a wheg design to improve its climb, this was inspired by the cockroach leg which is brought into phase when the cockroach climbs. \cite{cockroach} 
+Research on Cockroaches explored the use of cockroach-inspired limbs and movement. This involved a bend in the back in increasing climb over obstacles. This robot used a wheg design to improve its advancement, inspired by the cockroach leg, brought into the phase when the cockroach climbs. \cite{cockroach} 
 
 \begin{figure}[H]
 \centering
@@ -51,32 +52,35 @@ Research on Cockroaches explored the use of cockroach inspired limbs and movemen
 \end{figure}
 
 \subsection{Reinforcement Learning}
-Reinforcement learning is a machine learning approach where a neural network is trained via a series of trials. The optimization is achieved by implementing a genetic algorithm to guide training towards a solution. 
+Reinforcement learning is a machine learning approach where a neural network trains under a series of trials. The optimization is achieved by implementing a genetic algorithm to guide training towards a solution. 
+
+This approach has been deployed for route planning robots to plot a solution on different terrain. The reinforcement learning approach was successful in a small number of trials. This method used a neural network that took state information to predict the next step. The research was carried out in simulation rather than a physical agent. \cite{reinforcementLearning} 
 
 \begin{figure}[H]
 \centering
   \includegraphics[width=0.5\linewidth]{RFdiag.PNG}
-  \caption{Reinforcement learning simplified showing a simplified dynamic. }
+  \caption{Reinforcement learning simplified showing. }
   \label{figure : robot}
 \end{figure}
 
-
-This approach has been deployed for route planning robots to plot a solution on different terrain. The reinforcement learning approach was successful in a small number of trials. This used a neural network which took in state information to predict the next step. The research was carried out in simulation rather than physical agent. \cite{reinforcementLearning} 
+Reinforcement learning comprises an agent, environment, state, reward, and action. The agent is the entity to which the reinforcement learning applies, such as a robot or sprite. The environment is the area in which the agent will roam., where each state is the current agent position within that environment. The agent behaviour that is wanted is rewarded at the end of each trial.  
 
 \subsubsection{Markov decision process}
 The Markov model states that the future is independent of the past given the present. This is denoted mathematically by using P[t] to represent the current state of the agent, therefore P[t+1] represents the next state \cite{RFL}. 
 \begin{equation}
-P[S_{t+1} \mid S_{t}] = P[S_{t+1} \mid S_{1}, ... , S_{t}]
+ P[S_{t+1} \mid S_{t}] = P[S_{t+1} \mid S_{1}, ... , S_{t}]
 \end{equation}
 State transition probability is given by the following equation:
 \begin{equation}
-P_{ss{}'} = \mathbb{P}[S_{t+1}=s{}' \mid S_{t}=s]
+ P_{ss{}'} = \mathbb{P}[S_{t+1}=s{}' \mid S_{t}=s]
 \end{equation}
 
 \subsubsection{Genetic algorithm optimization}
-An approach to reinforcement learning is to generate the weights and biases via a Gaussian distribution within a one-dimensional array. Each generation will allow mutation of these values. Mutation functions fit Gaussian noise on top of the current encoded data, which alters the operation of the neural network when applied. 
+An approach to reinforcement learning is to generate the weights and biases via a Gaussian distribution within a one-dimensional array. Each generation will allow mutation of these values. Mutation functions fit Gaussian noise on top of the current encoded data, which alters the operation of the neural network when applied.
 
-One optimization approach uses a Microbial algorithm that generates a population of Gaussian distributions and trials each of them in a tournament against one another. The winner overwrites the loser. 
+One optimization approach uses a Microbial algorithm that generates a population of Gaussian distributions and trials each of them in a tournament against one another. The winner overwrites the loser. \cite{microbial}
+
+Particle Swarm optimization uses a method inspired by particle physics. When particles are energized through heat and cooled slowly, they move back into place better than if called quickly. This theory applied as a genetic algorithm allows sub-optimal solutions to move away and trial new solutions. \cite{particle}
 
 \subsection{Evaluating performance of robots on terrain}
 

@@ -11,6 +11,8 @@
 % Useful packages
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 \usepackage{float}
 
@@ -22,13 +24,13 @@
 
 \section{Introduction}
 
-This dissertation studies autonomous robotic navigation through localized decisions based on previous experience. Nearly all organisms are limited at some point when it comes to movement. An octopus can fit through an aperture that is bigger than its beak \cite{octopus}. A person can climb over rocks, but only if it has grip points for hands and feet. These environmental barriers define conditions to an organism’s ability to traverse across it. When a path looks too arduous, we will often choose a more accessible route if possible. 
+This dissertation studies autonomous robotic navigation through localized decisions based on previous experience. Nearly all organisms are limited at some point when it comes to movement. An octopus can fit through an aperture that is bigger than its beak \cite{octopus}. A person can climb over rocks, but only if they have grip points for hands and feet. These environmental barriers define conditions to an organism’s ability to traverse across it. When a path looks too arduous, we will often choose a more accessible route if possible. 
 
-These constraints comply with robotics also. Consider a Mars Rover over 395 million km away from the nearest person to get it unstuck over an obstacle. In addition, it takes 181 seconds for a signal to get from earth to Mars; thus, real-time control over changes in an environment will have taken effect by the time the signal arrives. A robot to self-preserve, like an organism, will need to know its limitations and not attempt tasks of movement outside these constraints. \cite{reinforcementLearning} 
+These constraints comply with robotics also. Consider a Mars Rover over 395 million km away from the nearest person, if the Rover were to get obstructed there would be no one to recover it. In addition, it takes 181 seconds for a signal to get from Earth to Mars; thus, real-time control over changes in an environment will have taken effect by the time the signal arrives. A robot to self-preserve, like an organism, will need to know its limitations and not attempt tasks of movement outside these physical constraints. \cite{reinforcementLearning} 
 
-When deciding on routes, there may be the scenario that all paths are within the constraints. Some are more simpler to navigate through than others. The agent will need to pick the option which requires the “least” effort. The best-case scenario is defined by the level of complexity of movement necessary to overcome the obstacle. 
+When deciding on routes, there may be the scenario that all paths are within the constraints. Some are simpler to navigate through than others. The agent will need to pick the option which requires the “least” effort. The best-case scenario is defined by the level of complexity of movement necessary to overcome the obstacle. 
 
-We will build an agent to perform this task by using a panoramic image, which forms a prediction on the best route to take via a clock-face prediction method. This chassis will have a back actuator, stabilizer, and neck actuator. Once attempting the terrain, the robot will need to use its chassis features to help it navigate over the landscape. 
+We will build an agent to perform this task by using computer vision techniques, which forms a prediction on the best route to take via a clock-face prediction method. This chassis will have a back actuator, stabilizer and neck actuator. Once attempting the terrain, the robot will need to use its chassis features to help it navigate over the landscape. 
 
 
 \section{Background Literature}
@@ -36,18 +38,31 @@ We will build an agent to perform this task by using a panoramic image, which fo
 
 The Wheg design is a wheel-leg hybrid that improves the climb of a mechanical system while maintaining low energy consumption \cite{moonrover}. Robotic legs using multiple servos have a high current draw, in addition to algorithmic complexity due to the need for inverse kinematics \cite{kinematics}. A standard wheel has low energy consumption due to a single axis continuous rotation; however, it is limited when climbing over advanced terrain. 
 
-The Wheg outperforms a wheel at uneven terrain navigation due to its grip-able design  \cite{cockroach}. The Wheg is easily manufactured via 3D printing, and there are multiple design variations of the Wheg which suit different purposes \cite{whegDesign}. 
+\begin{figure}[H]
+\centering
+  \includegraphics[width=0.4\linewidth]{whegv1.PNG}
+  \caption{Prototype of the Wheg robot to test out the wheg design, in addition the hardware required. This prototype ran on a Raspberry Pi zero and used a phone charger cell providing 5.1V and a maximum of 2A of current.}
+  \label{figure : robot}
+\end{figure}
+
+The Wheg outperforms a wheel at uneven terrain navigation due to its terrain-gripping design  \cite{cockroach}. The Wheg is easily manufactured via 3D printing, and there are multiple design variations of the Wheg which suit different purposes \cite{whegDesign}. 
 
 The European Space Agency adopted this design for the PROLERO project. This project used a more straightforward form of actuation where the legs were rods rotating on one axis. This design could at maximum travel over obstacles less than or equal to a height of 10cm. The total mass was 1.5kg making it light for space travel. The rover passed the tests at the ESA planetary utilisation facility, thus confirming the model's validity. \cite{esa} 
+\begin{figure}[H]
+\centering
+  \includegraphics[width=0.4\linewidth]{prolero.png}
+  \caption{Figure howing the PROLERO robot taken from ESA }
+  \label{figure : robot}
+\end{figure}
 
-Other designs on offer are caterpillar tracks which have good energy efficiency due to the optimized traction system. They do, however, have higher weight and are harder to repair. The robot would be inoperable with link breakage, whereas, with wheels or Whegs, it could continue to move with worn-down tires. 
+Other designs on offer are caterpillar tracks which have good energy efficiency due to the optimized traction system. They do, however, have higher weight and are more difficult to repair. The robot would be inoperable with link breakage, whereas, with wheels or Whegs, it could continue to move with worn-down tyres. 
 \subsection{Cockroaches and Bio-inspired Robotics}
-Research on Cockroaches explored the use of cockroach-inspired limbs and movement. This involved a bend in the back in increasing climb over obstacles. This robot used a wheg design to improve its advancement, inspired by the cockroach leg, brought into the phase when the cockroach climbs. \cite{cockroach} 
+Research on cockroaches explored the use of cockroach-inspired limbs and movement. This involved a bend in the back in increasing climb over obstacles. This robot used a wheg design to improve its advancement, inspired by the cockroach leg, brought into the phase when the cockroach climbs. \cite{cockroach} 
 
 \begin{figure}[H]
 \centering
   \includegraphics[width=0.7\linewidth]{cock.png}
-  \caption{Figure taken from ‘Comparing cockroach and Whegs robot body motions’ showing the cockroach rotation to an obstacle. This is compare to a bio-inspired robot. }
+  \caption{Figure taken from ‘Comparing cockroach and Whegs robot body motions’ showing the cockroach rotation to an obstacle. This is compared to a bio-inspired robot. }
   \label{figure : robot}
 \end{figure}
 
@@ -123,6 +138,22 @@ Depth perception via stereo imaging is another method that requires less trainin
 \section{Requirement analysis}
 
 \subsection{Robot platform}
+The robot chassis will incorporate a wheg design. This design will need to be able to climb over terrain while maintaining stability. The Whegs will be 3D printed, thus requiring no more significant than 200mm diameter due to the printer capacity. Current designs typically use claw-like hooks on the whegs. This design is limited on specific terrains due to it not being able to reverse. 
+
+The main chassis of the robot will use suspension so that a higher incline on one extremity does not tilt the overall robot. This design was inspired by a Tamiya radio controlled car \cite{tamiya}.
+
+
+\begin{figure}[H]
+\centering
+\subfloat[Neutral position]{%
+  \includegraphics[clip,width=0.3\columnwidth]{sus1.PNG}%
+}
+\subfloat[Activated position]{%
+  \includegraphics[clip,width=0.3\columnwidth]{sus2.PNG}%
+}
+\caption{Figure showing the movement of the suspension system design moving over hardware. This uses a single spring shock absorber per Wheg.}
+\end{figure}
+
 \subsection{Language}
 We can use a series of languages to perform this project, both simulation side and on the practical robot. Ideally, the language selected is transferred easily between both methods of investigation. 
 
@@ -135,7 +166,8 @@ When Python deploys on hardware, there are two popular methods. One of which is 
 On the higher end is the Jetson, a Nvidia-developed board design for machine learning tasks. These are heavily used within brains on boards projects. 
 
 The approach that we will take is using the Raspberry Pi. These are low-cost computers that run a Linux-based operating system. These are typically more expensive than Arduinos, but still much cheaper compared to higher specification models such as the Jetson. Though slower than the micro-controllers listed, it will provide the machine learning tools required for the project.
-\subsection{Simulation}
+\subsection{Simulation and application of the Robot}
+
 
 \section{Project Plan}
 
@@ -151,12 +183,33 @@ We set up a Python simulation by generating a polygonal map using noise.  The pe
   \label{figure : robot}
 \end{figure}
 
-As seen in Figure 5 the points are generated to always be on land.  Using the distance formula, we can find how far a point is from the start position and how steep it is. The energy consumed (E) by a robot in a given trial is denoted by the steps taken (S) and the accumulated terrain value of each place (P).
+As seen in Figure 6 the points are generated to always be on land.  Using the distance formula, we can find how far a point is from the start position and how steep it is. The energy consumed (E) by a robot in a given trial is denoted by the steps taken (S) and the accumulated terrain value of each place (P).
 \begin{equation}
 E_{nergy} = S_{teps} \cdot \sum_{i=1}^{S_{teps}} (P_{i})
 \end{equation}
 
 \subsection{Robotic hardware}
+
+Throughout the initial testing, there were three designs of Whegs developed. Two of these designs were trialed physically. 
+Initial designs of the Wheg used the claw method, where each strut would power more climb. 
+
+\begin{figure}[H]
+\centering
+  \includegraphics[width=0.5\linewidth]{wheg.PNG}
+  \caption{Initial claw design with 4 claws for stable rotation. }
+  \label{figure : robot}
+\end{figure}
+
+
+The initial design would struggle to reverse, as predicted. We instead adopted a reversible claw design. 
+
+\begin{figure}[H]
+\centering
+  \includegraphics[width=0.5\linewidth]{whegTri.PNG}
+  \caption{Reversible claw design using a tri-claw system for strength. The 4 claw stable rotation was replaced as this design had less gaps thus making it naturally more stable.}
+  \label{figure : robot}
+\end{figure}
+
 
 \section{Professional Considerations}
 

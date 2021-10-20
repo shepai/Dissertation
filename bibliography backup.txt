@@ -1,0 +1,128 @@
+@misc{reinforcementLearning,
+      title={PPMC RL Training Algorithm: Rough Terrain Intelligent Robots through Reinforcement Learning}, 
+      author={Tamir Blum and Kazuya Yoshida},
+      year={2020},
+      eprint={2003.02655},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO}
+}
+@INPROCEEDINGS{cockroach,
+  author={Schroer, R.T. and Boggess, M.J. and Bachmann, R.J. and Quinn, R.D. and Ritzmann, R.E.},
+  booktitle={IEEE International Conference on Robotics and Automation, 2004. Proceedings. ICRA '04. 2004}, 
+  title={Comparing cockroach and Whegs robot body motions}, 
+  year={2004},
+  volume={4},
+  number={},
+  pages={3288-3293 Vol.4},
+  doi={10.1109/ROBOT.2004.1308761}}
+  
+@misc{esa,
+    title={PROLERO},
+    author={European Space Agency},
+    howpublished={\url{https://www.esa.int/Enabling_Support/Space_Engineering_Technology/Automation_and_Robotics/PROLERO}}
+
+}
+@article{octopus,
+author = { James B.   Wood  and  Roland C.   Anderson },
+title = {Interspecific Evaluation of Octopus Escape Behavior},
+journal = {Journal of Applied Animal Welfare Science},
+volume = {7},
+number = {2},
+pages = {95-106},
+year  = {2004},
+publisher = {Routledge},
+doi = {10.1207/s15327604jaws0702\_2},
+    note ={PMID: 15234886},
+
+URL = { 
+        https://doi.org/10.1207/s15327604jaws0702_2
+    
+},
+eprint = { 
+        https://doi.org/10.1207/s15327604jaws0702_2
+    
+}
+
+}
+@INPROCEEDINGS{moonrover,  author={Schwendner and Jakob and Grimminger and Felix and Bartsch and Sebastian and Kaupisch and Thilo and Yüksel and Mehmed and Bresser and Andreas and Akpo and Joel Bessekon and Seydel and Michael K.-G. and Dieterle and Alexander and Schmidt and Steffen and Kirchner and Frank},  booktitle={2009 IEEE/RSJ International Conference on Intelligent Robots and Systems},   title={CESAR: A lunar crater exploration and sample return robot},   year={2009},  volume={},  number={},  pages={3355-3360},  doi={10.1109/IROS.2009.5354353}}
+
+@INPROCEEDINGS{kinematics,  author={Priandana and Karlisa and Buono and Agus and Wulandari},  booktitle={2017 International Conference on Advanced Computer Science and Information Systems (ICACSIS)},   title={Hexapod leg coordination using simple geometrical tripod-gait and inverse kinematics approach},   year={2017},  volume={},  number={},  pages={35-40},  doi={10.1109/ICACSIS.2017.8355009}}
+
+@INPROCEEDINGS{whegDesign,  author={Quinn, R.D. and Offi and J.T. and Kingsley and D.A. and Ritzmann, R.E.},  booktitle={IEEE/RSJ International Conference on Intelligent Robots and Systems},   title={Improved mobility through abstracted biological principles},   year={2002},  volume={3},  number={},  pages={2652-2657 vol.3},  doi={10.1109/IRDS.2002.1041670}}
+
+@INPROCEEDINGS{laser,  author={Dominik Belter and Piotr Skrzypczyński}, booktitle={Institute of Control and Information Engineering, Pozna´n University of Technology}, title={Rough terrain mapping and classification for foothold selection in a walking robot},   year={2011} }
+
+@article{canny,
+author = {Hasan, S.M.Abid and Ko, Kwanghee},
+year = {2016},
+month = {02},
+pages = {},
+title = {Depth Edge Detection By Image-based Smoothing and Morphological Operations},
+volume = {3},
+journal = {Journal of Computational Design and Engineering},
+doi = {10.1016/j.jcde.2016.02.002}
+}
+
+@article{stereo,  author={Marko Bjelonic1 and Timon Homberger and Navinda Kottege and Paulo Borges and Margarita Chli and Philipp Beckerle}, title={Autonomous Navigation of Hexapod Robots With Vision-basedController Adaptation} }
+
+@article{optical,  author={Kahlouche Souhila and Achour Karim}, title={Optical Flow Based Robot Obstacle Avoidance} }
+
+@article{opticalDepth,  author={Yang Wang and Peng Wang and Zhenheng Yang and Chenxu Luo and Yi Yang1Wei Xu and Baidu}, title={Unified Unsupervised Optical-flow and Stereo-depth Estimation by Watching Videos} }
+
+@article{RFL,  author={Csaba Szepesvári}, title={Algorithms for Reinforcement Learning
+Synthesis Lectures on Artificial Intelligence and Machine Learning} }
+
+@InProceedings{microbial,
+author="Harvey, Inman",
+editor="Kampis, George
+and Karsai, Istv{\'a}n
+and Szathm{\'a}ry, E{\"o}rs",
+title="The Microbial Genetic Algorithm",
+booktitle="Advances in Artificial Life. Darwin Meets von Neumann",
+year="2011",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="126--133",
+abstract="We analyse how the conventional Genetic Algorithm can be stripped down and reduced to its basics. We present a minimal, modified version that can be interpreted in terms of horizontal gene transfer, as in bacterial conjugation. Whilst its functionality is effectively similar to the conventional version, it is much easier to program, and recommended for both teaching purposes and practical applications. Despite the simplicity of the core code, it effects Selection, (variable rates of) Recombination, Mutation, Elitism (`for free') and Geographical Distribution.",
+isbn="978-3-642-21314-4"
+}
+
+@ARTICLE{particle,  author={Bonyadi, Mohammad Reza and Michalewicz, Zbigniew},  journal={Evolutionary Computation},   title={Particle Swarm Optimization for Single Objective Continuous Space Problems: A Review},   year={2017},  volume={25},  number={1},  pages={1-54},  doi={10.1162/EVCO_r_00180}}
+
+@article{measure,
+title = {Active bogies and chassis levelling for a vehicle operating in rough terrain},
+journal = {Journal of Terramechanics},
+volume = {49},
+number = {3},
+pages = {161-171},
+year = {2012},
+issn = {0022-4898},
+doi = {https://doi.org/10.1016/j.jterra.2012.03.001},
+url = {https://www.sciencedirect.com/science/article/pii/S0022489812000201},
+author = {J. Pijuan and M. Comellas and M. Nogués and J. Roca and X. Potau},
+keywords = {Off-road, Rough terrain, Bogie, Traction, Obstacle surmounting, Parametrical model, Active, Chassis levelling, Levelling},
+abstract = {Four axle vehicles with bogies can adapt the position of the wheels to follow irregularities in the terrain, having an obstacle surpassing ability far greater than conventional 2-axle vehicles. Still, the ability to overcome discrete obstacles on a steep slope is very different depending on the wheel that is facing the obstacle. A possible solution to diminish this variation can be found if the vehicle is able to actively redistribute the load on each wheel. One strategy is to design the suspension mechanism so it can regulate its height, being able to level the chassis. Also, an active torque on the pin join between the bogie and the chassis can be applied with the same goal, adopting a system of active bogies. Both solutions have been parametrically studied in a bi-dimensional multibody model of a 4-axle vehicle with double bogies. The results show an improvement independent of obstacle position and terrain angle when using active bogies. With height regulation, this improvement is limited to the rear bogie wheels, but the obstacle surmounting capacity of the vehicle as a whole can be considerably increased if the optimal regulation point is found. Possible applications for such enhanced vehicles with bogies are performing different tasks in forest areas with obstacles on steep slopes or unstructured terrain exploration.}
+}
+
+@article{chassisTerrain,
+author = {Thueer, Thomas and Krebs, Ambroise and Siegwart, Roland and Lamon, Pierre},
+title = {Performance comparison of rough-terrain robots—simulation and hardware},
+journal = {Journal of Field Robotics},
+volume = {24},
+number = {3},
+pages = {251-271},
+doi = {https://doi.org/10.1002/rob.20185},
+url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/rob.20185},
+eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1002/rob.20185},
+abstract = {Abstract The design of a rover for a specific environment is a complex procedure which requires modeling a chassis and evaluating it with specific criteria. This is the aim of the performance optimization tool (POT) presented in this paper. The POT enables the comparison and optimization of a rover chassis in a quick and efficient way. The tool is based on a static approach including optimization of the wheel torques in order to maximize traction. Tests with real hardware were performed to validate the POT. Two different rovers, CRAB and RCL-E, were assessed in simulation and hardware with respect to specific, well defined metrics. In simulation, their performances were compared to the rocker-bogie-type rover MER. CRAB and MER showed similar performance, while RCL-E had significant problems with the benchmark obstacle. A very good match between simulation results and real measurements was achieved. © 2007 Wiley Periodicals, Inc.},
+year = {2007}
+}
+
+@misc{tamiya,
+    title={RC car datasheets},
+    author={Tamiya},
+    howpublished={\url{https://www.tamiya.com/english/rc/chassis/cc-02/index.htmO}}
+}
+
+
+

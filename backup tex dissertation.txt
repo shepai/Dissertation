@@ -17,7 +17,7 @@
 \usepackage{float}
 
 \title{Bio-Inspired Robotic Navigation On Varied Terrain}
-\author{Dexter R Shepherd}
+\author{Dexter R Shepherd [candNo: 215819] \\ Supervisor: Dr James Knight}
 
 \begin{document}
 \maketitle
@@ -136,6 +136,7 @@ Depth perception via stereo imaging is another method that requires less trainin
 \end{figure}
 
 \section{Requirement analysis}
+Existing solutions of robotics have not yet looked into the collaboration of bio-inspired cockroaches with reinforcement learning. This project will use a physical robot platform and a simulation of this platform for the gathering of data.
 
 \subsection{Robot platform}
 The robot chassis will incorporate a wheg design. This design will need to be able to climb over terrain while maintaining stability. The Whegs will be 3D printed, thus requiring no more significant than 200mm diameter due to the printer capacity. Current designs typically use claw-like hooks on the whegs. This design is limited on specific terrains due to it not being able to reverse. 
@@ -154,6 +155,8 @@ The main chassis of the robot will use suspension so that a higher incline on on
 \caption{Figure showing the movement of the suspension system design moving over hardware. This uses a single spring shock absorber per Wheg.}
 \end{figure}
 
+In terms of back and neck actuation, we will need a pan and tilt style mechanism. The front of the robot chassis will pan left to right. The tilt will be up and down on the axis of gravity. This method will allow the agent to bend its back, thus redistributing weight. The exact process applied in the cockroach research \cite{cockroach}. 
+
 \subsection{Language}
 We can use a series of languages to perform this project, both simulation side and on the practical robot. Ideally, the language selected is transferred easily between both methods of investigation. 
 
@@ -171,6 +174,25 @@ The approach that we will take is using the Raspberry Pi. These are low-cost com
 
 \section{Project Plan}
 
+\subsection{Phase one simulation}
+
+Phase one will focus on developing the navigation methods and a virtual environment to test within. This phase is critical for the project as simulation can test out concepts more quickly and cheaply than physical robot testing. 
+We will use the Python noise generation library to develop a 3D map of the terrain.
+
+\subsection{Phase two simulation trials}
+The deployment of the simulation will test the theory of using vision to exploit navigation over rough terrain. The agent will need to pick the most accessible routes which minimize the overall energy consumption. There are multiple ways of testing this concept.
+
+\subsection{Phase three building of physical robot}
+To understand whether or not this concept works in practice, we must try it on a physical robot. The real world has many more variables which affect the performance of algorithms. Lighting, colour, and shade can have significant effects on the way the robot perceives the environment. 
+
+We will build the robot to deploy the requirements set out. This chassis will use aluminum servo apparatus, and 3D printed Whegs to be light. 
+
+It is essential that this design successfully can climb over terrain and can travel in bi-direction. We will test this using a simple remote control. Once we know the physical limitations, it can help us design the testing environment. 
+
+\subsection{Phase four applying simulation on the physical robot}
+
+\subsection{Phase five evolving back movement}
+
 \section{Methods and Preliminary Results}
 
 \subsection{Simulation}
@@ -183,10 +205,14 @@ We set up a Python simulation by generating a polygonal map using noise.  The pe
   \label{figure : robot}
 \end{figure}
 
-As seen in Figure 6 the points are generated to always be on land.  Using the distance formula, we can find how far a point is from the start position and how steep it is. The energy consumed (E) by a robot in a given trial is denoted by the steps taken (S) and the accumulated terrain value of each place (P).
+As seen in Figure 8 the points are generated to always be on land.  Using the distance formula, we can find how far a point is from the start position and how steep it is. The energy consumed (E) by a robot in a given trial is denoted by the steps taken (S) and the accumulated terrain value of each place (P).
+
+S represents the Manhattan distanced, which was picked in place of the euclidean distance due to increased accuracy with high dimensionality.
+
 \begin{equation}
-E_{nergy} = S_{teps} \cdot \sum_{i=1}^{S_{teps}} (P_{i})
+E_{nergy} = (\mid x1 - x2 \mid  + \mid  y1 - y2 \mid ) \cdot \sum_{i=1}^{S_{teps}} (P_{i})
 \end{equation}
+The Manhattan method would be used in the case of smaller simulation environments.
 
 \subsection{Robotic hardware}
 

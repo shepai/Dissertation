@@ -40,11 +40,13 @@ When deciding on routes, there may be the scenario that all paths are within the
 
 We will build an agent to perform this task by using computer vision techniques, which forms a prediction on the best route to take via a clock-face prediction method. This chassis will have a back actuator, stabilizer and neck actuator. Once attempting the terrain, the robot will need to use its chassis features to help it navigate over the landscape. 
 
-\section{Ethical considerations}
+\section{Professional and Ethical considerations}
 No ethical approval is needed for this project. 
 While there are indisputable risks of dual use in AI research, at the fundamental level that I am working on, I have made a conscious decision to prioritise Open Science and all of my code will be publicly available on Github. 
 
 In terms of training data used for images we will have to consider the dangers of people being in visual perception, thus consider the GDPR rules. As the resolution of images will be low, this will not be recognizable. 
+
+Another ethical consideration is the safety involved in testing. The robot could run into people present. We will need to test the robot in an environment that it cannot hit people. 
 
 
 \section{Background Literature}
@@ -154,12 +156,13 @@ Depth perception via stereo imaging is another method that requires less trainin
 \section{Requirement analysis}
 Existing solutions of robotics have not yet looked into the collaboration of bio-inspired cockroaches with reinforcement learning. This project will use a physical robot platform and a simulation of this platform for the gathering of data.
 
-\subsection{User Needs}
+\subsection{User Needs and ideal features}
+The agent will need to exploit visual information and recognize the differences between rough and smooth terrain. It is ideal for the physical robot to use its backbone to improve its climb over terrain, mainly through reinforcement learning. 
 
-\subsection{Ideal system}
+The agent will need to understand its limitations and not attempt routes that it will get stuck on. By the end of the trials the robot should show this. If this cannot be successfully trialed on a physical robot, it is still essential the algorithm works in simulation. 
 
 \subsection{Limitations}
-
+The robot naturally is limited on some terrain. These limitations will be on terrain that is too high or too uneven. This project does not intend to create a robot that can climb any terrain. The Wheg design is to improve its climb but not make it impervious to the laws of physics. 
 
 \subsection{System overview}
 \subsubsection{Simulation and application of the Robot}
@@ -224,6 +227,7 @@ We will build the robot to deploy the requirements set out. This chassis will us
 It is essential that this design successfully can climb over terrain and can travel in bi-direction. We will test this using a simple remote control. Once we know the physical limitations, it can help us design the testing environment. 
 
 \subsection{Phase four applying simulation on the physical robot}
+The working reinforcement learning algorithm will deploy on the physical robot. This test will test that we can cross the reality gap where the algorithm functions with all the real-life background noise. 
 
 \subsection{Phase five evolving back movement}
 Evolving back movements is not an essential feature of this project. However, it will significantly improve the agent's ability to climb, as seen in other robots. If there is time, this will be trialed using a reinforcement learning approach to help redistribute weight, thus improving the climb. 
@@ -271,8 +275,9 @@ The initial design would struggle to reverse, as predicted. We instead adopted a
   \label{figure : robot}
 \end{figure}
 
+The hardware will use light Aluminium servo parts. These parts are typically used in biped robotics and can be purchased cheaply on the internet. The design will allow rotation servos as the back and neck, alongside continuous rotation servos for the Whegs. 
 
-\section{Professional Considerations}
+
 
 \bibliographystyle{unsrt}
 \bibliography{sample}

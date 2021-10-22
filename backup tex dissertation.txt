@@ -16,11 +16,19 @@
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 \usepackage{float}
 
-\title{Bio-Inspired Robotic Navigation On Varied Terrain}
+\title{Bio-Inspired Robotic Navigation On Varied Terrain
+\\\\
+\large Interim report}
+
 \author{Dexter R Shepherd [candNo: 215819] \\ Supervisor: Dr James Knight}
+
 
 \begin{document}
 \maketitle
+
+\newpage
+\tableofcontents
+\newpage
 
 \section{Introduction}
 
@@ -31,6 +39,12 @@ These constraints comply with robotics also. Consider a Mars Rover over 395 mill
 When deciding on routes, there may be the scenario that all paths are within the constraints. Some are simpler to navigate through than others. The agent will need to pick the option which requires the “least” effort. The best-case scenario is defined by the level of complexity of movement necessary to overcome the obstacle. 
 
 We will build an agent to perform this task by using computer vision techniques, which forms a prediction on the best route to take via a clock-face prediction method. This chassis will have a back actuator, stabilizer and neck actuator. Once attempting the terrain, the robot will need to use its chassis features to help it navigate over the landscape. 
+
+\section{Ethical considerations}
+No ethical approval is needed for this project. 
+While there are indisputable risks of dual use in AI research, at the fundamental level that I am working on, I have made a conscious decision to prioritise Open Science and all of my code will be publicly available on Github. 
+
+In terms of training data used for images we will have to consider the dangers of people being in visual perception, thus consider the GDPR rules. As the resolution of images will be low, this will not be recognizable. 
 
 
 \section{Background Literature}
@@ -134,11 +148,23 @@ Depth perception via stereo imaging is another method that requires less trainin
   \caption{Figure showing Weaver the stereo vision hexapod. The ground is uneven for all legs, therefore the agent must adapt across all legs. }
   \label{figure : robot}
 \end{figure}
+\subsection{Contributions to the field}
+
 
 \section{Requirement analysis}
 Existing solutions of robotics have not yet looked into the collaboration of bio-inspired cockroaches with reinforcement learning. This project will use a physical robot platform and a simulation of this platform for the gathering of data.
 
-\subsection{Robot platform}
+\subsection{User Needs}
+
+\subsection{Ideal system}
+
+\subsection{Limitations}
+
+
+\subsection{System overview}
+\subsubsection{Simulation and application of the Robot}
+
+\subsubsection{Robot platform}
 The robot chassis will incorporate a wheg design. This design will need to be able to climb over terrain while maintaining stability. The Whegs will be 3D printed, thus requiring no more significant than 200mm diameter due to the printer capacity. Current designs typically use claw-like hooks on the whegs. This design is limited on specific terrains due to it not being able to reverse. 
 
 The main chassis of the robot will use suspension so that a higher incline on one extremity does not tilt the overall robot. This design was inspired by a Tamiya radio controlled car \cite{tamiya}.
@@ -169,15 +195,23 @@ When Python deploys on hardware, there are two popular methods. One of which is 
 On the higher end is the Jetson, a Nvidia-developed board design for machine learning tasks. These are heavily used within brains on boards projects. 
 
 The approach that we will take is using the Raspberry Pi. These are low-cost computers that run a Linux-based operating system. These are typically more expensive than Arduinos, but still much cheaper compared to higher specification models such as the Jetson. Though slower than the micro-controllers listed, it will provide the machine learning tools required for the project.
-\subsection{Simulation and application of the Robot}
 
 
 \section{Project Plan}
 
+\begin{figure}[H]
+\centering
+  \includegraphics[width=0.8\linewidth]{plan.PNG}
+  \caption{Timetable of development }
+  \label{figure : robot}
+\end{figure}
+
 \subsection{Phase one simulation}
 
-Phase one will focus on developing the navigation methods and a virtual environment to test within. This phase is critical for the project as simulation can test out concepts more quickly and cheaply than physical robot testing. 
-We will use the Python noise generation library to develop a 3D map of the terrain.
+Phase one will focus on developing the navigation methods and a virtual environment to test within. This phase is critical for the project as simulation can test concepts more quickly and cheaply than physical robot testing. 
+We will use the Python noise generation library to develop a 3D map of the terrain. 
+
+
 
 \subsection{Phase two simulation trials}
 The deployment of the simulation will test the theory of using vision to exploit navigation over rough terrain. The agent will need to pick the most accessible routes which minimize the overall energy consumption. There are multiple ways of testing this concept.
@@ -192,6 +226,7 @@ It is essential that this design successfully can climb over terrain and can tra
 \subsection{Phase four applying simulation on the physical robot}
 
 \subsection{Phase five evolving back movement}
+Evolving back movements is not an essential feature of this project. However, it will significantly improve the agent's ability to climb, as seen in other robots. If there is time, this will be trialed using a reinforcement learning approach to help redistribute weight, thus improving the climb. 
 
 \section{Methods and Preliminary Results}
 
@@ -200,12 +235,12 @@ We set up a Python simulation by generating a polygonal map using noise.  The pe
 
 \begin{figure}[H]
 \centering
-  \includegraphics[width=0.8\linewidth]{Sim2d.png}
+  \includegraphics[width=0.9\linewidth]{Sim2d.png}
   \caption{2D simulation plot of a 3D terrain. Random generated points are shown to show the position of agents and rewards. }
   \label{figure : robot}
 \end{figure}
 
-As seen in Figure 8 the points are generated to always be on land.  Using the distance formula, we can find how far a point is from the start position and how steep it is. The energy consumed (E) by a robot in a given trial is denoted by the steps taken (S) and the accumulated terrain value of each place (P).
+As seen in Figure 9 the points are generated to always be on land.  Using the distance formula, we can find how far a point is from the start position and how steep it is. The energy consumed (E) by a robot in a given trial is denoted by the steps taken (S) and the accumulated terrain value of each place (P).
 
 S represents the Manhattan distanced, which was picked in place of the euclidean distance due to increased accuracy with high dimensionality.
 

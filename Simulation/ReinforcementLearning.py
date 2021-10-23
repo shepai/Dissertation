@@ -86,12 +86,12 @@ def getDist(start,end):
     d1=((start[0]-end[0])**2 + (start[1]-end[1])**2)**0.5
     return int(d1)
 
-def readIm(r=5):
+def readIm(terrain,point,r=5):
     #read the ground around the agent at a radius of i
     pass
 
 Generations=50
-for gen in Generations:
+for gen in range(Generations):
     #generate the world terrain
     world,shape=generateWorld() 
     #randomly pick a start position
@@ -103,14 +103,14 @@ for gen in Generations:
     current=startPos.copy()
     energy=0
     last=startPos.copy()
-    for i in range(maxPath):
+    for i in range(maxPath): #loop through and generate path
         v=rnd.choice(vectors)
         pathx.append(current[0]+v[0])
         pathy.append(current[1]+v[1])
         last=current.copy()
         current[0]+=v[0]
         current[1]+=v[1]
-        if current[0]>=0 and current[0]<len(world) and current[1]>=0 and current[1]<len(world[0]):
+        if current[0]>=0 and current[0]<len(world)-1 and current[1]>=0 and current[1]<len(world[0])-1:
             if world[current[0]][current[1]]<=-6:
                 print("water")
             else:

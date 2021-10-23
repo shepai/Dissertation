@@ -1,0 +1,59 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with`a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\title{Bio-Inspired Robotic Navigation On Varied Terrain Proposal}
+\author{Dexter Shepherd [candNo: 215819] \\ Supervisor: Dr James Knight}
+
+\begin{document}
+\maketitle
+
+
+\section{Introduction}
+This dissertation studies autonomous robotic navigation through localized decisions based on previous experience. Nearly all organisms are limited at some point when it comes to movement. An octopus can fit through an aperture that is bigger than its beak \cite{octopus}. A person can climb over rocks, but only if they have grip points for hands and feet. These environmental barriers define conditions to an organism’s ability to traverse across it. When a path looks too arduous, we will often choose a more accessible route if possible. 
+
+These constraints comply with robotics also. Consider a Mars Rover over 395 million km away from the nearest person, if the Rover were to get obstructed there would be no one to recover it. In addition, it takes 181 seconds for a signal to get from Earth to Mars; thus, real-time control over changes in an environment will have taken effect by the time the signal arrives. A robot to self-preserve, like an organism, will need to know its limitations and not attempt tasks of movement outside these physical constraints. \cite{reinforcementLearning} 
+
+When deciding on routes, there may be the scenario that all paths are within the constraints. Some are simpler to navigate through than others. The agent will need to pick the option which requires the “least” effort. The best-case scenario is defined by the level of complexity of movement necessary to overcome the obstacle. 
+
+We will build an agent to perform this task by using computer vision techniques, which forms a prediction on the best route to take via a clock-face prediction method. This chassis will have a back actuator, stabilizer and neck actuator. Once attempting the terrain, the robot will need to use its chassis features to help it navigate over the landscape. 
+
+
+\section{Aims and Objectives}
+Our aim is to make an explorer robot which navigates around terrain autonomously and avoids rough or potentially dangerous terrain. 
+
+\begin{itemize}
+  \item Research and evaluate current terrain navigating robotics
+  \item Improve the chassis of current wheeled and Wheg  robotics
+  \item Critique current robot chassis and fix the limitations of them on our chassis
+  \item Simulate an agent which avoids rough terrain when exploring
+  \item Explore a range of computer vision techniques and research which one will be most effective for this task.
+  \item Implement the simulation on an explorer Wheg robot
+  \item Conduct real world testing 
+  
+\end{itemize}
+
+
+\section{Relevance}
+
+\section{Resources required}
+
+\section{Weekly timetable}
+
+\section{Relevance}
+
+\bibliographystyle{unsrt}
+\bibliography{sample}
+
+\end{document}

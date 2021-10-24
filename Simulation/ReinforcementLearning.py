@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import axes3d
 import random as rnd
 import copy
+from agent import Agent
 
 SIZE=50
 def generateWorld():
@@ -88,15 +89,32 @@ def getDist(start,end):
 
 def readIm(terrain,point,r=5):
     #read the ground around the agent at a radius of i
-    pass
+    x = np.arange(0, SIZE)
+    y = np.arange(0, SIZE)
+    arr=np.array(copy.deepcopy(terrain))
+    cx = point[1]
+    cy = point[0]
+    # The two lines below could be merged, but I stored the mask
+    # for code clarity.
+    mask = (x[np.newaxis,:]-cx)**2 + (y[:,np.newaxis]-cy)**2 < r**2
+    return np.array(arr[mask])
 
+world,shape=generateWorld()
+startPos=[int(SIZE/2),int(SIZE/2)] #centre point
+
+testIm=readIm(world,startPos)#.flatten()
+    
 Generations=50
+vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
+
+whegBot=Agent(testIm.shape[0],5,5,5,len(vectors)) #define the agent
+
 for gen in range(Generations):
     #generate the world terrain
     world,shape=generateWorld() 
     #randomly pick a start position
     startPos=pickPosition(world,4,LBounds=6)
-    vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
+   
     maxPath=30
     pathx=[]
     pathy=[]

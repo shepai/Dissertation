@@ -12,6 +12,7 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{float}
 
 \title{Bio-Inspired Robotic Navigation On Varied Terrain Proposal}
 \author{Dexter Shepherd [candNo: 215819] \\ Supervisor: Dr James Knight}
@@ -46,12 +47,22 @@ Our aim is to make an explorer robot which navigates around terrain autonomously
 
 
 \section{Relevance}
+Robots being aware of their own limitations shares relevance with many aspects of Computer Science with AI. On the theoretical aspects it incorporates intelligence in animals and the cognitive science of perception of information. On the technical side we are exploiting computer vision techniques, neural networks and evolving systems. 
+
+The project links to my JRA research where I was evolving obstacle avoidance. This project is a step further where we are not only avoiding obstacles, but avoiding challenging terrain when there is an easier option. 
 
 \section{Resources required}
+A chassis using continuous rotation servos will be required. This will run using the Raspberry Pi. Access to a 3D printer is imperative so the prining of Whegs can take place. 
+
 
 \section{Weekly timetable}
+\begin{figure}[H]
+\centering
+  \includegraphics[width=0.9\linewidth]{typical week.PNG}
+  \caption{Typical week of lessons }
+  \label{figure : robot}
+\end{figure}
 
-\section{Relevance}
 
 \bibliographystyle{unsrt}
 \bibliography{sample}

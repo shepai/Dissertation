@@ -89,15 +89,16 @@ def getDist(start,end):
 
 def readIm(terrain,point,r=5):
     #read the ground around the agent at a radius of i
-    x = np.arange(0, SIZE)
-    y = np.arange(0, SIZE)
-    arr=np.array(copy.deepcopy(terrain))
+    x = np.arange(0, len(terrain))
+    y = np.arange(0, len(terrain))
+    arr=copy.deepcopy(terrain)
     cx = point[1]
     cy = point[0]
     # The two lines below could be merged, but I stored the mask
     # for code clarity.
     mask = (x[np.newaxis,:]-cx)**2 + (y[:,np.newaxis]-cy)**2 < r**2
     return np.array(arr[mask])
+
 
 world,shape=generateWorld()
 startPos=[int(SIZE/2),int(SIZE/2)] #centre point
@@ -111,7 +112,10 @@ whegBot=Agent(testIm.shape[0],5,5,5,len(vectors)) #define the agent
 
 for gen in range(Generations):
     #generate the world terrain
-    world,shape=generateWorld() 
+    world,shape=generateWorld()
+    world=np.pad(np.array(world), (2,2), 'constant',constant_values=(-6,-6))
+    world=np.pad(np.array(world), (3,3), 'constant',constant_values=(-7,-7))
+    world=np.pad(np.array(world), (1,1), 'constant',constant_values=(-8,-8))
     #randomly pick a start position
     startPos=pickPosition(world,4,LBounds=6)
    
@@ -121,6 +125,8 @@ for gen in range(Generations):
     current=startPos.copy()
     energy=0
     last=startPos.copy()
+    im=readIm(world,startPos)
+    assert len(im)==69, "Panoramic Camera failed"+str(len(im)) #assert length correct
     for i in range(maxPath): #loop through and generate path
         v=rnd.choice(vectors)
         pathx.append(current[0]+v[0])

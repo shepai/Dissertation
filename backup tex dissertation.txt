@@ -24,8 +24,8 @@
 
 
 \begin{document}
-\maketitle
 
+\maketitle
 \newpage
 \tableofcontents
 \newpage
@@ -50,9 +50,12 @@ Another ethical consideration is the safety involved in testing. The robot could
 
 
 \section{Background Literature}
-\subsection{Whegs}
+\subsection{Robot Locomotion}
 
-The Wheg design is a wheel-leg hybrid that improves the climb of a mechanical system while maintaining low energy consumption \cite{moonrover}. Robotic legs using multiple servos have a high current draw, in addition to algorithmic complexity due to the need for inverse kinematics \cite{kinematics}. A standard wheel has low energy consumption due to a single axis continuous rotation; however, it is limited when climbing over advanced terrain. 
+A standard wheel has low energy consumption due to a single axis continuous rotation; however, it is limited when climbing over advanced terrain. 
+To improve climb over terrain, an agent can use legs such as hexapods which are incredibly stable. However, robotic legs using multiple servos have a high current draw, in addition to algorithmic complexity due to the need for inverse kinematics \cite{kinematics}. 
+
+The Wheg design is a wheel-leg hybrid that improves the climb of a mechanical system while maintaining low energy consumption \cite{moonrover}. The design incorporates a claw-like circumference which digs into rocks and obstacles. 
 
 \begin{figure}[H]
 \centering
@@ -67,13 +70,13 @@ The European Space Agency adopted this design for the PROLERO project. This proj
 \begin{figure}[H]
 \centering
   \includegraphics[width=0.4\linewidth]{prolero.png}
-  \caption{Figure howing the PROLERO robot taken from ESA }
+  \caption{Figure showing the PROLERO robot taken from ESA \cite{esa} }
   \label{figure : robot}
 \end{figure}
 
-Other designs on offer are caterpillar tracks which have good energy efficiency due to the optimized traction system. They do, however, have higher weight and are more difficult to repair. The robot would be inoperable with link breakage, whereas, with wheels or Whegs, it could continue to move with worn-down tyres. 
+Other designs on offer are caterpillar tracks which have good energy efficiency due to the optimized traction system. They do, however, have higher weight and are more difficult to repair. The robot would be inoperable with link breakage, whereas, with wheels or Whegs, it could continue to move with worn-down tyres or grippers. 
 \subsection{Cockroaches and Bio-inspired Robotics}
-Research on cockroaches explored the use of cockroach-inspired limbs and movement. This involved a bend in the back in increasing climb over obstacles. This robot used a wheg design to improve its advancement, inspired by the cockroach leg, brought into the phase when the cockroach climbs. \cite{cockroach} 
+Research on cockroaches explored the use of cockroach-inspired limbs and movement. This involved a bend in the back in increasing climb over obstacles. This robot used a Wheg design to improve its advancement, inspired by the cockroach leg, brought into the phase when the cockroach climbs. \cite{cockroach} 
 
 \begin{figure}[H]
 \centering
@@ -186,7 +189,7 @@ The main chassis of the robot will use suspension so that a higher incline on on
 
 In terms of back and neck actuation, we will need a pan and tilt style mechanism. The front of the robot chassis will pan left to right. The tilt will be up and down on the axis of gravity. This method will allow the agent to bend its back, thus redistributing weight. The exact process applied in the cockroach research \cite{cockroach}. 
 
-\subsection{Language}
+\subsection{Programing languages}
 We can use a series of languages to perform this project, both simulation side and on the practical robot. Ideally, the language selected is transferred easily between both methods of investigation. 
 
 Languages that interact well with hardware include Arduino C++. Arduinos are quickly booted up and execute code soon due to storing it in binary format. This method is more complicated for computer vision and machine learning tasks than simpler languages such as Python. 
@@ -235,7 +238,12 @@ Evolving back movements is not an essential feature of this project. However, it
 \section{Methods and Preliminary Results}
 
 \subsection{Simulation}
-We set up a Python simulation by generating a polygonal map using noise.  The persistence,  octaves, and lacunarity are all altered via parameters in the world creation function. This function formed a map held as a two-dimensional array representing terrain heights numerically. 
+We set up a Python simulation by generating a 2D map using Perlin noise. Perlin noise is a type of gradient noise where the value of the space between two points changes smoothly. 
+\begin{equation}
+f(x) = a_{0} + smoothstep(x)\cdot (a_{1}-a_{0}),  0\leq x\leq 1
+\end{equation}
+
+The persistence,  octaves, and lacunarity are all altered via parameters in the world creation function. Each octave adds a layer of detail to the world, where the contribution of each octave is defined by persistence. The lucunarity defines how much detail is added or removed at each layer. This function formed a map held as a two-dimensional array representing terrain heights numerically. 
 
 \begin{figure}[H]
 \centering
@@ -278,6 +286,9 @@ The initial design would struggle to reverse, as predicted. We instead adopted a
 The hardware will use light Aluminium servo parts. These parts are typically used in biped robotics and can be purchased cheaply on the internet. The design will allow rotation servos as the back and neck, alongside continuous rotation servos for the Whegs. 
 
 
+\section{Supervisor meetings}
+
+\section{Appendices}
 
 \bibliographystyle{unsrt}
 \bibliography{sample}

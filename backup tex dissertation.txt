@@ -89,7 +89,7 @@ Research on cockroaches explored the use of cockroach-inspired limbs and movemen
 \end{figure}
 
 \subsection{Reinforcement Learning}
-Reinforcement learning is a machine learning approach that does not need labelled training data. The focus is on exploration of solutions and exploitation of current knowledge through actions to maximize the notion of cumulative reward. \cite{classicalRL} 
+Reinforcement learning is a machine learning approach that does not need labelled training data. The focus is on exploring solutions and exploiting current knowledge through actions to maximize cumulative reward. \cite{classicalRL} 
 
 This approach can include a neural network that trains under a series of trials. The optimization can be achieved by implementing evolutionary strategies to guide training towards a solution. 
 

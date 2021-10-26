@@ -41,6 +41,9 @@ When deciding on routes, there may be the scenario that all paths are within the
 We will build an agent to perform this task by using computer vision techniques, which forms a prediction on the best route to take via a clock-face prediction method. This chassis will have a back actuator, stabilizer and neck actuator. Once attempting the terrain, the robot will need to use its chassis features to help it navigate over the landscape. 
 
 \section{Professional and Ethical considerations}
+
+In line with the BCS Code of Conduct, we must undertake an area of research within our competency. Both modules, Computer Vision and Acquired Intelligence and Adaptive Behaviour have prepared the relevant knowledge for attempting the task of terrain navigation. In addition to this, the Junior Research Associate scheme taught robotics and evolving hardware. 
+
 No ethical approval is needed for this project. 
 While there are indisputable risks of dual use in AI research, at the fundamental level that I am working on, I have made a conscious decision to prioritise Open Science and all of my code will be publicly available on Github. 
 

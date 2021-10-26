@@ -89,7 +89,9 @@ Research on cockroaches explored the use of cockroach-inspired limbs and movemen
 \end{figure}
 
 \subsection{Reinforcement Learning}
-Reinforcement learning is a machine learning approach where a neural network trains under a series of trials. The optimization is achieved by implementing a genetic algorithm to guide training towards a solution. 
+Reinforcement learning is a machine learning approach that does not need labelled training data. The focus is on exploration of solutions and exploitation of current knowledge through actions to maximize the notion of cumulative reward. \cite{classicalRL} 
+
+This approach can include a neural network that trains under a series of trials. The optimization can be achieved by implementing evolutionary strategies to guide training towards a solution. 
 
 This approach has been deployed for route planning robots to plot a solution on different terrain. The reinforcement learning approach was successful in a small number of trials. This method used a neural network that took state information to predict the next step. The research was carried out in simulation rather than a physical agent. \cite{reinforcementLearning} 
 

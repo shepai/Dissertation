@@ -126,3 +126,16 @@ year = {2007}
 
 
 
+@article{classicalRL,
+title = {Control of a bioreactor using a new partially supervised reinforcement learning algorithm},
+journal = {Journal of Process Control},
+volume = {69},
+pages = {16-29},
+year = {2018},
+issn = {0959-1524},
+doi = {https://doi.org/10.1016/j.jprocont.2018.07.013},
+url = {https://www.sciencedirect.com/science/article/pii/S095915241830163X},
+author = {B. Jaganatha Pandian and Mathew Mithra Noel},
+keywords = {Machine learning, Reinforcement learning, Neural networks, Nonlinear control, Bioreactor control, Interacting multiple tank control},
+abstract = {In recent years, researchers have explored the application of Reinforcement Learning (RL) and Artificial Neural Networks (ANNs) to the control of complex nonlinear and time varying industrial processes. However RL algorithms use exploratory actions to learn an optimal control policy and converge slowly while popular inverse model ANN based control strategies require extensive training data to learn the inverse model of complex nonlinear systems. In this paper a novel approach that avoids the need for extensive training data to construct an exact inverse model in the inverse ANN approach, the need for an exact and stable inverse to exist and the need for exhaustive and costly exploration in pure RL based strategies is proposed. In this approach an initial approximate control policy learnt by an artificial neural network is refined using a reinforcement learning strategy. This Partially Supervised Reinforcement Learning (PSRL) strategy is applied to the economically important problem of control of a semi-continuous batch-fed bioreactor used for yeast fermentation. The bioreactor control problem is formulated as a Markov Decision Process (MDP) and solved using pure RL and PSRL algorithms. Model based and model-free RL control experiments and simulations are used to demonstrate the superior performance of the PSRL strategy compared to the pure RL and inverse model ANN based control strategies on a variety of performance metrics.}
+}

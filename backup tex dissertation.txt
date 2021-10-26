@@ -113,6 +113,7 @@ State transition probability is given by the following equation:
 \begin{equation}
  P_{ss{}'} = \mathbb{P}[S_{t+1}=s{}' \mid S_{t}=s]
 \end{equation}
+The Markov decision process formulates reinforcement learning mathematically. The agent transitions from one state to another. 
 
 \subsubsection{Genetic algorithm optimization}
 An approach to reinforcement learning is to generate the weights and biases via a Gaussian distribution within a one-dimensional array. Each generation will allow mutation of these values. Mutation functions fit Gaussian noise on top of the current encoded data, which alters the operation of the neural network when applied.
@@ -122,9 +123,7 @@ One optimization approach uses a Microbial algorithm that generates a population
 Particle Swarm optimization uses a method inspired by particle physics. When particles are energized through heat and cooled slowly, they move back into place better than if called quickly. This theory applied as a genetic algorithm allows sub-optimal solutions to move away and trial new solutions. \cite{particle}
 
 \subsection{Evaluating performance of robots on terrain}
-Current research in rough terrain robotics uses gyroscopic disturbance to determine the roughness of the terrain.  This method makes the completion of different trials over different terrain quantifiable.  \cite{reinforcementLearning} 
-
-Other studies have looked at the coefficient of friction plotted against the climb \cite{measure}.
+Current research in rough terrain robotics has used physical attributes such as the coefficient of friction and slippage plotted against the climb \cite{measure}.
 
 \begin{figure}[H]
 \centering
@@ -145,6 +144,8 @@ D_{istance} = \frac{\Delta _{coder}\cdot 2 \cdot \pi \cdot r}{N_{pulse}\cdot R_{
 
 These factors form a Max G score. This G score was used to measure chassis against one another in a table. 
 
+These attributes are calculated in simulation and would be harder to find on a physical robot. The use of gyroscopes and accelerometers are potentials for a substitute. 
+
 \subsection{Sensors}
 Terrain mapping sensing can take many forms. One study used a lidar sensor that would read at four layers to construct a world model. This model creates a 3D perception allowing a hexapod robot to predict movement \cite{laser}. 
 
@@ -159,6 +160,9 @@ Depth perception via stereo imaging is another method that requires less trainin
   \label{figure : robot}
 \end{figure}
 \subsection{Contributions to the field}
+Self preserving robotics are important in the same way it is important for biological agents to feel pain. The preserving of autonomous robotics will save money as well as prolong the lifespan of the agent. \cite{selfpres}
+
+Our approach will be using computer vision techniques to evaluate terrain and make safer and easier path decisions. 
 
 
 \section{Requirement analysis}

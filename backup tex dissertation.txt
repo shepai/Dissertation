@@ -78,15 +78,20 @@ The European Space Agency adopted this design for the PROLERO project. This proj
 \end{figure}
 
 Other designs on offer are caterpillar tracks which have good energy efficiency due to the optimized traction system. They do, however, have higher weight and are more difficult to repair. The robot would be inoperable with link breakage, whereas, with wheels or Whegs, it could continue to move with worn-down tyres or grippers. 
-\subsection{Cockroaches and Bio-inspired Robotics}
+\subsection{Biology and Bio-inspired Robotics}
 Research on cockroaches explored the use of cockroach-inspired limbs and movement. This involved a bend in the back in increasing climb over obstacles. This robot used a Wheg design to improve its advancement, inspired by the cockroach leg, brought into the phase when the cockroach climbs. \cite{cockroach} 
-
 \begin{figure}[H]
 \centering
   \includegraphics[width=0.7\linewidth]{cock.png}
   \caption{Figure taken from ‘Comparing cockroach and Whegs robot body motions’ showing the cockroach rotation to an obstacle. This is compared to a bio-inspired robot. }
   \label{figure : robot}
 \end{figure}
+
+A study on rats showed that rats would be fearful of new items in their surroundings. These changes would include mouse traps, which makes them more difficult to catch than mice. \cite{rats} This suggests there is a form of memory that stores how a common routes should look and spots an unexpected difference. 
+
+
+
+
 
 \subsection{Reinforcement Learning}
 Reinforcement learning is a machine learning approach that does not need labelled training data. The focus is on exploring solutions and exploiting current knowledge through actions to maximize cumulative reward. \cite{classicalRL} 
@@ -298,7 +303,10 @@ The hardware will use light Aluminium servo parts. These parts are typically use
 \section{Supervisor meetings}
 
 \section{Appendices}
-
+\begin{itemize}
+\item Dissertation proposal
+\item Simulation basic code NoiseGen.py
+\end{itemize}
 \bibliographystyle{unsrt}
 \bibliography{sample}
 

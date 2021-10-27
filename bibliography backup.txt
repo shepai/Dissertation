@@ -144,3 +144,12 @@ abstract = {In recent years, researchers have explored the application of Reinfo
   title={Bio-inspired Self-preservation to Protect Robots from Threats. In Towards Autonomous Robotic Systems: 18th Annual Conference, TAROS 2017, Guildford, UK, July 19--21, 2017, Proceedings (pp. 166-181).(Lecture Notes in Computer Science (including Lecture Notes in Artificial Intelligence)},
   author={Chiu, SK and Araiza Illan, D and Eder, KI}
 }
+
+@article{rats,
+  title={The reactions of common rats to four types of live-capture trap},
+  author={Taylor, KD and Hammond, LE and Quy, RJ},
+  journal={Journal of Applied Ecology},
+  pages={453--459},
+  year={1974},
+  publisher={JSTOR}
+}

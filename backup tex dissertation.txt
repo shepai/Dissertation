@@ -9,23 +9,43 @@
 \usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
 
 % Useful packages
+\usepackage{titling}
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{caption}
+\usepackage{xcolor}
 \usepackage{subcaption}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 \usepackage{float}
 
-\title{Bio-Inspired Robotic Navigation On Varied Terrain
-\\\\
-\large Interim report}
-
-\author{Dexter R Shepherd [candNo: 215819] \\ Supervisor: Dr James Knight}
-
-
 \begin{document}
+\begin{titlepage}
+   \begin{center}
+       \vspace*{2cm}
+        
+       \textbf{\LARGE Bio-Inspired Robotic Navigation On Varied Terrain}
+% Name separated by break lines and supervisor name
+    
+       \vspace{1cm}
+        \textbf{Dexter R Shepherd [candNo: 215819] \\ Supervisor: Dr James Knight}
 
-\maketitle
+       \vfill
+            
+       Interim report\\
+       Computer Science and Artificial Intelligence
+            
+       \vspace{0.8cm}
+     
+       %\includegraphics[width=0.4\textwidth]{university}
+         
+       Department of Informatics\\
+       University of Sussex\, BSc \\
+       
+       2021
+            
+   \end{center}
+\end{titlepage}
+
 \newpage
 \tableofcontents
 \newpage
@@ -33,7 +53,7 @@
 \section{Introduction}
 
 This dissertation studies autonomous robotic navigation through localized decisions based on previous experience. Nearly all organisms are limited at some point when it comes to movement. An octopus can fit through an aperture that is bigger than its beak \cite{octopus}. A person can climb over rocks, but only if they have grip points for hands and feet. These environmental barriers define conditions to an organism’s ability to traverse across it. When a path looks too arduous, we will often choose a more accessible route if possible. 
-
+This approach can include a neural network that trains under a series of trials.  The optimization
 These constraints comply with robotics also. Consider a Mars Rover over 395 million km away from the nearest person, if the Rover were to get obstructed there would be no one to recover it. In addition, it takes 181 seconds for a signal to get from Earth to Mars; thus, real-time control over changes in an environment will have taken effect by the time the signal arrives. A robot to self-preserve, like an organism, will need to know its limitations and not attempt tasks of movement outside these physical constraints. \cite{reinforcementLearning} 
 
 When deciding on routes, there may be the scenario that all paths are within the constraints. Some are simpler to navigate through than others. The agent will need to pick the option which requires the “least” effort. The best-case scenario is defined by the level of complexity of movement necessary to overcome the obstacle. 
@@ -89,7 +109,7 @@ Research on cockroaches explored the use of cockroach-inspired limbs and movemen
 
 A study on rats showed that rats would be fearful of new items in their surroundings. These changes would include mouse traps, which makes them more difficult to catch than mice. \cite{rats} This suggests there is a form of memory that stores how a common routes should look and spots an unexpected difference. 
 
-
+A similar result was found in insects where ants would learn a specific route 
 
 
 
@@ -119,6 +139,7 @@ State transition probability is given by the following equation:
  P_{ss{}'} = \mathbb{P}[S_{t+1}=s{}' \mid S_{t}=s]
 \end{equation}
 The Markov decision process formulates reinforcement learning mathematically. The agent transitions from one state to another. 
+This is important to reinforcement learning as it allows values to be functions of the current state. The state representation must be informative for an effective reinforcement learning approach to take place. 
 
 \subsubsection{Genetic algorithm optimization}
 An approach to reinforcement learning is to generate the weights and biases via a Gaussian distribution within a one-dimensional array. Each generation will allow mutation of these values. Mutation functions fit Gaussian noise on top of the current encoded data, which alters the operation of the neural network when applied.
@@ -183,6 +204,13 @@ The robot naturally is limited on some terrain. These limitations will be on ter
 
 \subsection{System overview}
 \subsubsection{Simulation and application of the Robot}
+The agent will be trialed in an environment, where we give it a way-point vector of movement, and it must avoid rough terrain between its start and end position. These constraints will be applied by calculating energy consumption. 
+
+Within an environment there can be dangers, which we will simulate using sea and snow (suggesting the ground is too high). Colliding with these features will result in 0 fitness. 
+
+Using a neural network with a visual representation and vector as an input layer. The output will be a left, right, forward command. 
+
+When we deploy this on the robot, we will most likely use a depth camera. 
 
 \subsubsection{Robot platform}
 The robot chassis will incorporate a wheg design. This design will need to be able to climb over terrain while maintaining stability. The Whegs will be 3D printed, thus requiring no more significant than 200mm diameter due to the printer capacity. Current designs typically use claw-like hooks on the whegs. This design is limited on specific terrains due to it not being able to reverse. 
@@ -252,7 +280,7 @@ Evolving back movements is not an essential feature of this project. However, it
 \section{Methods and Preliminary Results}
 
 \subsection{Simulation}
-We set up a Python simulation by generating a 2D map using Perlin noise. Perlin noise is a type of gradient noise where the value of the space between two points changes smoothly. 
+We set up a Python simulation by generating a 2D map using Perlin noise. Perlin noise is a type of gradient noise where the value of the space between two points changes smoothly. We present this mathematically using \textit {a} to represent a grid node, with 0 and 1 being the grid node indices. 
 \begin{equation}
 f(x) = a_{0} + smoothstep(x)\cdot (a_{1}-a_{0}),  0\leq x\leq 1
 \end{equation}

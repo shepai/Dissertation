@@ -153,3 +153,18 @@ abstract = {In recent years, researchers have explored the application of Reinfo
   year={1974},
   publisher={JSTOR}
 }
+@article{ants,
+title = {Rapid Aversive and Memory Trace Learning during Route Navigation in Desert Ants},
+journal = {Current Biology},
+volume = {30},
+number = {10},
+pages = {1927-1933.e2},
+year = {2020},
+issn = {0960-9822},
+doi = {https://doi.org/10.1016/j.cub.2020.02.082},
+url = {https://www.sciencedirect.com/science/article/pii/S096098222030289X},
+author = {Antoine Wystrach and Cornelia Buehlmann and Sebastian Schwarz and Ken Cheng and Paul Graham},
+keywords = {navigation, insect, vision, aversive learning, trace conditioning, memories, route following},
+abstract = {Summary
+The ability of bees and ants to learn long visually guided routes in complex environments is perhaps one of the most spectacular pieces of evidence for the impressive power of their small brains. Whereas flying bees can visit flowers in an optimized sequence over kilometers, walking solitary foraging ants can precisely recapitulate routes of up to 100 m in complex environments [1]. It is clear that route following depends largely on learned visual information and we have a good idea of how visual memories can guide individuals along them [2, 3, 4, 5, 6], as well as how this is implemented in the insect brain [7, 8]. However, little is known about the mechanisms that control route learning and development. Here we show that ants (Melophorus bagoti and Cataglyphis fortis) navigating in their natural environments can actively learn a route detour to avoid a pit trap. This adaptive flexibility depends on a mechanism of aversive learning based on memory traces of recently encountered stimuli, reflecting the laboratory paradigm of trace conditioning. The views experienced before falling into the trap become associated with the ensuing negative outcome and thus trigger salutary turns on the subsequent trip. This drives the ants to orient away from the goal direction and avoid the trap. If the pit trap is avoided, the novel views experienced during the detour become positively reinforced and the new route crystallizes. We discuss how such an interplay between appetitive and aversive memories might be implemented in insect neural circuitry.}
+}

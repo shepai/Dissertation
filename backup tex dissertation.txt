@@ -32,14 +32,14 @@
        \vfill
             
        Interim report\\
-       Computer Science and Artificial Intelligence
+       Computer Science and Artificial Intelligence\, BSc
             
        \vspace{0.8cm}
      
-       %\includegraphics[width=0.4\textwidth]{university}
+       \includegraphics[width=0.2\textwidth]{University_of_Sussex_Logo.png}
          
        Department of Informatics\\
-       University of Sussex\, BSc \\
+       University of Sussex \\
        
        2021
             
@@ -54,11 +54,14 @@
 
 This dissertation studies autonomous robotic navigation through localized decisions based on previous experience. Nearly all organisms are limited at some point when it comes to movement. An octopus can fit through an aperture that is bigger than its beak \cite{octopus}. A person can climb over rocks, but only if they have grip points for hands and feet. These environmental barriers define conditions to an organism’s ability to traverse across it. When a path looks too arduous, we will often choose a more accessible route if possible. 
 This approach can include a neural network that trains under a series of trials.  The optimization
-These constraints comply with robotics also. Consider a Mars Rover over 395 million km away from the nearest person, if the Rover were to get obstructed there would be no one to recover it. In addition, it takes 181 seconds for a signal to get from Earth to Mars; thus, real-time control over changes in an environment will have taken effect by the time the signal arrives. A robot to self-preserve, like an organism, will need to know its limitations and not attempt tasks of movement outside these physical constraints. \cite{reinforcementLearning} 
+These constraints comply with robotics also. Consider a Mars Rover over 395 million km away from the nearest person, if the Rover were to get obstructed there would be no one to recover it. In addition, it takes 181 seconds for a signal to get from Earth to Mars; thus, real-time control over changes in an environment will have taken effect by the time the signal arrives. A robot to self-preserve, like an organism, will need to know its limitations and not attempt tasks of movement outside these physical constraints.
+\cite{reinforcementLearning} 
 
 When deciding on routes, there may be the scenario that all paths are within the constraints. Some are simpler to navigate through than others. The agent will need to pick the option which requires the “least” effort. The best-case scenario is defined by the level of complexity of movement necessary to overcome the obstacle. 
 
 We will build an agent to perform this task by using computer vision techniques, which forms a prediction on the best route to take via a clock-face prediction method. This chassis will have a back actuator, stabilizer and neck actuator. Once attempting the terrain, the robot will need to use its chassis features to help it navigate over the landscape. 
+
+Our agent will be set a vector of movement and will need to avoid hazardous/overly complex terrain within the environment. Success is measured on whether the agent got there safely, and how much extra energy was consumed. 
 
 \section{Professional and Ethical considerations}
 
@@ -109,16 +112,25 @@ Research on cockroaches explored the use of cockroach-inspired limbs and movemen
 
 A study on rats showed that rats would be fearful of new items in their surroundings. These changes would include mouse traps, which makes them more difficult to catch than mice. \cite{rats} This suggests there is a form of memory that stores how a common routes should look and spots an unexpected difference. 
 
-A similar result was found in insects where ants would learn a specific route 
+A similar result was found in insects where ants would learn a specific route and when a trap was placed, the ants would learn to circumnavigate. \cite{ants} Unlike the rats, avoiding traps was done through a series of trials.   
 
+\begin{figure}[H]
+\centering
+  \includegraphics[width=0.7\linewidth]{antPaths.PNG}
+  \caption{Figure taken from ‘Rapid Aversive and Memory Trace Learning duringRoute Navigation in Desert Ants’ With routes taken by ants broken down species of ant. Blue paths show the ants who get stuck in the trap, green paths show ants who successfully navigated through. }
+  \label{figure : robot}
+\end{figure}
 
+These measures in nature can inspire our own approach to navigation and hardware decisions. The cockroach is the product of millions of years of evolution, and known for being durable. These methods can inspire our own design for a robotic chassis that can also be durable in hostile environments. 
 
 \subsection{Reinforcement Learning}
 Reinforcement learning is a machine learning approach that does not need labelled training data. The focus is on exploring solutions and exploiting current knowledge through actions to maximize cumulative reward. \cite{classicalRL} 
 
 This approach can include a neural network that trains under a series of trials. The optimization can be achieved by implementing evolutionary strategies to guide training towards a solution. 
 
-This approach has been deployed for route planning robots to plot a solution on different terrain. The reinforcement learning approach was successful in a small number of trials. This method used a neural network that took state information to predict the next step. The research was carried out in simulation rather than a physical agent. \cite{reinforcementLearning} 
+This approach has been deployed for route planning robots to plot a solution on different terrain. The reinforcement learning approach was successful in a small number of trials. This method used a neural network that took state information to predict the next step. The research was carried out in simulation rather than a physical agent.\cite{reinforcementLearning} 
+
+
 
 \begin{figure}[H]
 \centering
@@ -128,6 +140,9 @@ This approach has been deployed for route planning robots to plot a solution on 
 \end{figure}
 
 Reinforcement learning comprises an agent, environment, state, reward, and action. The agent is the entity to which the reinforcement learning applies, such as a robot or sprite. The environment is the area in which the agent will roam., where each state is the current agent position within that environment. The agent behaviour that is wanted is rewarded at the end of each trial.  
+
+This approach can develop the agent we are using to navigate terrain. By setting goals and constrains within the environment which are enforced through reward, the agent will develop behaviour favourable to the task at hand.
+
 
 \subsubsection{Markov decision process}
 The Markov model states that the future is independent of the past given the present. This is denoted mathematically by using P[t] to represent the current state of the agent, therefore P[t+1] represents the next state \cite{RFL}. 
@@ -140,6 +155,8 @@ State transition probability is given by the following equation:
 \end{equation}
 The Markov decision process formulates reinforcement learning mathematically. The agent transitions from one state to another. 
 This is important to reinforcement learning as it allows values to be functions of the current state. The state representation must be informative for an effective reinforcement learning approach to take place. 
+
+Our agent will use this principle to apply the reinforcement learning. The state of the environment is taken and changed by the action produced. The agent will now have a new state. 
 
 \subsubsection{Genetic algorithm optimization}
 An approach to reinforcement learning is to generate the weights and biases via a Gaussian distribution within a one-dimensional array. Each generation will allow mutation of these values. Mutation functions fit Gaussian noise on top of the current encoded data, which alters the operation of the neural network when applied.
@@ -294,14 +311,14 @@ The persistence,  octaves, and lacunarity are all altered via parameters in the 
   \label{figure : robot}
 \end{figure}
 
-As seen in Figure 9 the points are generated to always be on land.  Using the distance formula, we can find how far a point is from the start position and how steep it is. The energy consumed (E) by a robot in a given trial is denoted by the steps taken (S) and the accumulated terrain value of each place (P).
+As seen in Figure 10 the points are generated to always be on land.  Using the distance formula, we can find how far a point is from the start position and how steep it is. The energy consumed (E) by a robot in a given trial is denoted by the steps taken (S) and the accumulated terrain value of each place (P).
 
 S represents the Manhattan distanced, which was picked in place of the euclidean distance due to increased accuracy with high dimensionality.
 
 \begin{equation}
 E_{nergy} = (\mid x1 - x2 \mid  + \mid  y1 - y2 \mid ) \cdot \sum_{i=1}^{S_{teps}} (P_{i})
 \end{equation}
-The Manhattan method would be used in the case of smaller simulation environments.
+
 
 \subsection{Robotic hardware}
 

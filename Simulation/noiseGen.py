@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import axes3d
 import random as rnd
 import copy
+from matplotlib.collections import EllipseCollection
 
 SIZE=50
 def generateWorld():
@@ -90,13 +91,34 @@ def readIm(r=5):
     #read the ground around the agent at a radius of i
     pass
 
-Generations=50
-for gen in Generations:
+
+
+while True:
     #generate the world terrain
     world,shape=generateWorld() 
     #randomly pick a start position
     startPos=pickPosition(world,4,LBounds=6)
     vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
+    
+    #print(canReach(Rmap,startPos,endPos))
+    im = plt.imshow(world,cmap='terrain')
+    cb = plt.colorbar(im)
+    plt.setp(cb.ax.get_yticklabels([-1,0,1]), visible=False)
+    
+    plt.show()
+    """
+    lin_x = np.linspace(0,1,shape[0],endpoint=False)
+    lin_y = np.linspace(0,1,shape[1],endpoint=False)
+    x,y = np.meshgrid(lin_x,lin_y)
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection="3d")
+    ax.plot_surface(x,y,world,cmap='terrain')
+
+
+    plt.show()
+    #"""
+
+"""
     maxPath=30
     pathx=[]
     pathy=[]
@@ -116,22 +138,7 @@ for gen in Generations:
             else:
                 climb=max(0,world[current[0]][current[1]]-world[last[0]][last[1]]) #non 0 value of total climb
                 energy+=1+climb
+                
     print("total energy consumed",energy)
     plt.plot(pathy,pathx)
-    #print(canReach(Rmap,startPos,endPos))
-    plt.imshow(world,cmap='terrain')
-    plt.show()
-    """
-    lin_x = np.linspace(0,1,shape[0],endpoint=False)
-    lin_y = np.linspace(0,1,shape[1],endpoint=False)
-    x,y = np.meshgrid(lin_x,lin_y)
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection="3d")
-    ax.plot_surface(x,y,world,cmap='terrain')
-
-    ax.scatter((startPos[0]+1)/SIZE,(startPos[1]+1)/100,world[startPos[0]][startPos[1]]+2,c="b")
-    ax.scatter((endPos[0]+1)/SIZE,(endPos[1]+1)/100,world[endPos[0]][endPos[1]]+2,c="r")
-
-    plt.show()
     #"""
-

@@ -21,23 +21,29 @@
 \begin{document}
 \begin{titlepage}
    \begin{center}
+   % Centre the page to look neat
        \vspace*{2cm}
-        
+        % Set space from top
        \textbf{\LARGE Bio-Inspired Robotic Navigation On Varied Terrain}
 % Name separated by break lines and supervisor name
     
        \vspace{1cm}
+       % Set space from title
         \textbf{Dexter R Shepherd [candNo: 215819] \\ Supervisor: Dr James Knight}
 
        \vfill
-            
+       % allow it to stretch and sink verticaly
+            % Smaller text with title and course name
        Interim report\\
        Computer Science and Artificial Intelligence\, BSc
             
        \vspace{0.8cm}
+       % Set space from details
+     % Display photo of the logo (small size)
      
        \includegraphics[width=0.2\textwidth]{University_of_Sussex_Logo.png}
-         
+       
+         % Display establishment information
        Department of Informatics\\
        University of Sussex \\
        
@@ -46,7 +52,7 @@
    \end{center}
 \end{titlepage}
 
-\newpage
+\newpage 
 \tableofcontents
 \newpage
 
@@ -189,6 +195,8 @@ These factors form a Max G score. This G score was used to measure chassis again
 
 These attributes are calculated in simulation and would be harder to find on a physical robot. The use of gyroscopes and accelerometers are potentials for a substitute. 
 
+It is important for us to calculate a metric that can compare trials of our agent.
+
 \subsection{Sensors}
 Terrain mapping sensing can take many forms. One study used a lidar sensor that would read at four layers to construct a world model. This model creates a 3D perception allowing a hexapod robot to predict movement \cite{laser}. 
 
@@ -205,7 +213,7 @@ Depth perception via stereo imaging is another method that requires less trainin
 \subsection{Contributions to the field}
 Self preserving robotics are important in the same way it is important for biological agents to feel pain. The preserving of autonomous robotics will save money as well as prolong the lifespan of the agent. \cite{selfpres}
 
-Our approach will be using computer vision techniques to evaluate terrain and make safer and easier path decisions. 
+Our approach will be using computer vision techniques to evaluate terrain and make safer and easier path decisions. Our design will also be implemented on a cheaper design chassis, aiming to bring down the overall cost of robot development.
 
 
 \section{Requirement analysis}
@@ -346,6 +354,13 @@ The hardware will use light Aluminium servo parts. These parts are typically use
 
 
 \section{Supervisor meetings}
+\subsection{13/10/21}
+Discussion on subsections missing from our initial draft, areas of research we should investigate and how to improve the simulation method.
+We need to research more about bio-inspired robots like what we are designing and show more figures in general to the papers we have referenced and reviewed. 
+
+\subsection{27/10/21}
+We discussed how we will test the agent. Two main methods came up which was finding the highest point and making the most energy efficient path there or being set a vector and moving to it while avoiding obstacles. We looked at a paper on ants and trap avoiding which tied into our bio inspired research. Changes were suggested and made in the report. 
+A discussion on sensors on the physical robot and what will work the best happened. 
 
 \section{Appendices}
 \begin{itemize}

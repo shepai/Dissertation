@@ -60,15 +60,14 @@
 \section{Introduction}
 
 In this project, I am going to investigate autonomous robotic navigation through localized decisions based on previous experience. Nearly all organisms are limited at some point when it comes to movement. For example, an octopus can fit through an aperture that is bigger than its beak \cite{octopus} and a person can climb over rocks, but only if they have grip points for hands and feet. These environmental barriers define constraints to an organism’s ability to traverse across it. When a path looks too arduous, we will often choose a more accessible route if possible. 
-This approach can include a neural network that trains under a series of trials.  The optimization
+
 These constraints also apply to robots. Consider a Mars Rover over 395 million km away from the person controlling it. If the Rover were to get stuck, there would be no one to recover it and -- as it takes 181 seconds for a signal to get from Earth to Mars -- real-time control is impossible. Therefore, a robot, like a biological organism, needs a sense of self-preservation so needs to know its limitations and not attempt tasks of movement outside these physical constraints.
 \cite{reinforcementLearning} 
 
-When deciding on routes, there may be the scenario that all paths are within the constraints but some are simpler to navigate than others. In this situation, the agent will need to pick the option which requires the “least” effort. The best-case scenario is defined by the level of complexity of movement necessary to overcome the obstacle. 
+Our agent will be set a target location and will need to reach it while avoiding hazardous/overly complex terrain within the environment. Success will be defined as whether the agent got there safely, and how much extra energy was consumed.
+When deciding on routes, there may be the scenario that all paths are within the constraints but some are simpler to navigate than others. In this situation, the agent will need to pick the option which requires the “least” effort. The best-case scenario for the agent I am developing is governed by the level of complexity of movement necessary to overcome the obstacle. If the agent gets stuck it will get no reward, if the agent makes unnecessary movement while moving over simple terrain, it will get little reward.
 
-Our agent will be set a target location and will need to reach it while avoiding hazardous/overly complex terrain within the environment. Success will be defined as whether the agent got there safely, and how much extra energy was consumed. After simulation, I will build this agent within a physical robot. This robot will perform this task by using computer vision techniques, which forms a prediction on the best route to take via a movement instructions generated at each move. I will initially explore this problem using simulation before moving to a robot platform with a back actuator, stabilizer and neck actuator. The robot will need to learn to use these features to help it navigate over the landscape. 
-
-
+I will initially explore this problem using simulation before moving to a robot platform with a back actuator, stabilizer and neck actuator. The robot will need to learn to use these features to help it navigate over the landscape. This robot will perform this task by using computer vision techniques, which forms a prediction on the best route to take via a movement instructions generated at each move.
 
 \section{Professional and Ethical considerations}
 
@@ -98,7 +97,7 @@ The Wheg design is a wheel-leg hybrid that can traverse more challenging terrain
 
 Whegs are easily manufactured via 3D printing, and there are multiple design variations of the Wheg which suit different purposes~\cite{whegDesign}. 
 
-The European Space Agency~(ESA) adopted this design for the PROLERO project. This project used a more straightforward form of actuation where the legs were rods rotating on one axis. This design could at maximum travel over obstacles less than or equal to a height of \SI{10}{\centi\metre}. The total mass was \SI{1.5}{\kilo\gram} making it light for space travel and the rover passed the tests at the ESA planetary utilisation facility, confirming the model's validity~\cite{esa}.
+The European Space Agency~(ESA) adopted a similar design for the PROLERO project ~\cite{esa}. Although not quite a wheel, it still had the same locomotion as one. This project used a simpler design of actuation where the legs were rods rotating on one axis. This design could at maximum travel over obstacles less than or equal to a height of \SI{10}{\centi\metre}. The total mass was \SI{1.5}{\kilo\gram} making it light for space travel and the rover passed the tests at the ESA planetary utilisation facility, confirming the model's validity~\cite{esa}.
 \begin{figure}[H]
 \centering
   \includegraphics[width=0.4\linewidth]{prolero.png}
@@ -109,6 +108,7 @@ The European Space Agency~(ESA) adopted this design for the PROLERO project. Thi
 Other potential designs are caterpillar tracks which have good energy efficiency due to the optimized traction system which allows more grip over uneven terrain. They do, however, weigh more and are more difficult to repair meaning that the robot would be inoperable if a link breakage, whereas, with wheels or Whegs, it could continue to move with worn-down tyres or grippers. 
 \subsection{Biology and Bio-inspired Robotics}
 Research on cockroaches explored the use of cockroach-inspired limbs and movement. This involved a bend in the back in increasing climb over obstacles. Another biological advantage was how the cockroach would run into a wall. The cockroach limbs would be brought into phase at the point of climb. The rotational locomotion of the legs is comparable to the cyclic locomotion of wheel. This robot used a Wheg design to improve its advancement in a similar locomotion. A bend in the robot created a higher stance to climb.
+
 
 \cite{cockroach} 
 \begin{figure}[H]
@@ -166,7 +166,10 @@ This is important to reinforcement learning as it allows values to be functions 
 
 Our agent will use this principle to apply the reinforcement learning. The state of the environment is taken and changed by the action produced. The agent will now have a new state. 
 
-\subsection{Genetic algorithm optimization}
+\subsection{Genetic algorithms}
+Genetic algorithms are optimization methods which are inspired off of biological systems such as evolution~\cite{genetic}. Over a number of generations encoded information~($genotype$) will be changed~($mutated$
+), where this change is measured via a fitness function. If the mutation has helped the overall goal then it will get a high fitness and replace other genotypes within the population.
+
 An approach to reinforcement learning is to generate the weights and biases via a Gaussian distribution within a one-dimensional array. Each generation will allow mutation of these values. Mutation functions fit Gaussian noise on top of the current encoded data, which alters the operation of the neural network when applied.
 
 One optimization approach uses a Microbial algorithm that generates a population of Gaussian distributions and trials each of them in a tournament against one another. The winner overwrites the loser~ \cite{microbial}. Particle Swarm optimization uses a method inspired by particle physics. When particles are energized through heat and cooled slowly, they move back into place better than if called quickly. This theory applied as a genetic algorithm allows sub-optimal solutions to move away and trial new solutions~\cite{particle}.
@@ -253,7 +256,9 @@ There are numerous programming languages which could be used for the simulation 
 
 Languages that are particularly well-suited to working with hardware include C++ and Python.
 
-Arduinos use a version of C++. This can be quickly booted up and execute code sooner due to storing it in binary format. This method is more complicated for computer vision and machine learning tasks than simpler languages such as Python. Python is a high-level language that abstracts away from syntactic detail compared to other languages. This design makes it slower at execution but has a wide ecosystem of machine learning tools. These tools are written in C++ as Python is slow, however, Python can combine them without a significant loss of time.
+Arduinos use a version of C++. This can be quickly booted up and execute code sooner due to storing it in binary format. This method is more complicated for computer vision and machine learning tasks than simpler languages such as Python. 
+
+Python is a high-level language that abstracts away from syntactic detail compared to other languages. This design makes it slower at execution but has a wide ecosystem of machine learning tools. These tools are written in C++ as Python is slow, however, Python can combine them without a significant loss of time.
 
 When Python deploys on hardware, there are different methods to undertake. One of which is circuit Python as a Micro-controller, where a small Micro-controller compiles to work as an Arduino but using Python. This is found on the Raspberry Pi Pico, Adafruit feather and Microbit. This approach overcomes speed and complexity issues; however, these boards typically have a low amount of memory. On the higher end is the Jetson, a Nvidia-developed board design for machine learning tasks. These are heavily used within brains on boards projects. 
 

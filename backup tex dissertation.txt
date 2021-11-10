@@ -97,7 +97,7 @@ The Wheg design is a wheel-leg hybrid that can traverse more challenging terrain
 
 Whegs are easily manufactured via 3D printing, and there are multiple design variations of the Wheg which suit different purposes~\cite{whegDesign}. 
 
-The European Space Agency~(ESA) adopted a similar design for the PROLERO project ~\cite{esa}. Although not quite a wheel, it still had the same locomotion as one. This project used a simpler design of actuation where the legs were rods rotating on one axis. This design could at maximum travel over obstacles less than or equal to a height of \SI{10}{\centi\metre}. The total payload mass was \SI{1.5}{\kilo\gram} making it light for space travel and the rover passed the tests at the ESA planetary utilisation facility, confirming the model's validity~\cite{esa}.
+The European Space Agency~(ESA) adopted a similar design for the PROLERO project ~\cite{esa}. Although not quite a Wheg, it operates on a similar principle. This project used a simpler design of actuation where the legs were rods rotating on one axis. This design could at maximum travel over obstacles less than or equal to a height of \SI{10}{\centi\metre}. The total payload mass was \SI{1.5}{\kilo\gram} making it light for space travel and the rover passed the tests at the ESA planetary utilisation facility, confirming the model's validity~\cite{esa}.
 \begin{figure}[H]
 \centering
   \includegraphics[width=0.4\linewidth]{prolero.png}
@@ -142,10 +142,10 @@ This approach has been deployed for route planning robots to plot a solution on 
 \centering
   \includegraphics[width=0.5\linewidth]{RFdiag.PNG}
   \caption{Reinforcement learning simplified showing. }
-  \label{figure : robot}
+  \label{figure : reinforce}
 \end{figure}
 
-Reinforcement learning is often described in terms of an agent, environment, state, reward, and action. The agent is the entity to which the reinforcement learning applies, such as a robot. The environment is the area in which the agent will roam and the state presents the agent's current position within the environment. The desired agent behaviour is then rewarded at the end of each trial. Figure 5 shows the process of state transition through action and reward.
+Reinforcement learning is often described in terms of an agent, environment, state, reward, and action. The agent is the entity to which the reinforcement learning applies, such as a robot. The environment is the area in which the agent will roam and the state presents the agent's current position within the environment. The desired agent behaviour is then rewarded at the end of each trial. Figure~\ref{figure : reinforce} shows the process of state transition through action and reward.
 
 This approach can include a neural network that trains under a series of trials. 
 
@@ -160,7 +160,7 @@ State transition probability is given by the following equation:
  P_{ss{}'} = \mathbb{P}[S_{t+1}=s{}' \mid S_{t}=s]
 \end{equation}
  The agent transitions from one state to another. 
-This is important to reinforcement learning as it allows values to be functions of the current state. The state representation must be informative for an effective reinforcement learning approach to take place. 
+This is important to reinforcement learning as it allows values to be functions of the current state. The state representation must be informative for an effective reinforcement learning approach to take place. Manually determining optimal state space is challenging, therefore the use of neural networks can be used.
 
 Our agent will use this principle to apply the reinforcement learning. The state of the environment is taken and changed by the action produced. The agent will now have a new state. 
 
@@ -168,7 +168,7 @@ Our agent will use this principle to apply the reinforcement learning. The state
 Genetic algorithms are optimization methods which are inspired off of biological systems such as evolution~\cite{genetic}. Over a number of generations encoded information~($genotype$) will be changed~($mutated$
 ), where this change is measured via a fitness function. If the mutation has helped the overall goal then it will get a high fitness and replace other genotypes within the population.
 
-An approach to reinforcement learning is to generate the weights and biases via a Gaussian distribution within a one-dimensional array. Each generation will allow mutation of these values. Mutation functions fit Gaussian noise on top of the current encoded data, which alters the operation of the neural network when applied.
+An approach to evolutionary strategies is to generate the weights and biases via a Gaussian distribution within a one-dimensional array. Each generation will allow mutation of these values. Mutation functions fit Gaussian noise on top of the current encoded data, which alters the operation of the neural network when applied.
 
 One optimization approach uses a Microbial algorithm that generates a population of Gaussian distributions and trials each of them in a tournament against one another. The winner overwrites the loser~ \cite{microbial}. Particle Swarm optimization uses a method inspired by particle physics. When particles are energized through heat and cooled slowly, they move back into place better than if called quickly. This theory applied as a genetic algorithm allows sub-optimal solutions to move away and trial new solutions~\cite{particle}.
 
@@ -181,7 +181,7 @@ Current research in rough terrain robotics has used physical attributes such as 
 \begin{figure}[H]
 \centering
   \includegraphics[width=0.5\linewidth]{roverGyro.PNG}
-  \caption{Figure Taken from a 3D plot of the simulated paths for a moon rover \cite{reinforcementLearning} The z-axis shows a prominent climb om map 1 and map 3.}
+  \caption{Figure Taken from a 3D plot of the simulated paths for a moon rover \cite{reinforcementLearning} The z-axis shows a prominent climb on map 1 and map 3.}
   \label{figure : robot climbing}
 \end{figure}
 
@@ -190,12 +190,12 @@ Studies~\cite{chassisTerrain} have measured Locomotion performance based on seve
 \mu _{needed} = \frac{R}{N}=\frac{T\cdot r}{N}
 \end{equation}
 
-Slippage consumes energy without making the robot move forward. Slippage was calculated using the encoders on wheels. Distance is calculated using the following equation:
+Slippage consumes energy without making the robot move forward. Slippage was calculated using the encoders on wheels. Distance is calculated using the following equation which uses encoder values. The wheel encoder ($\Delta _{coder}$) is used and multiplied by the circumference of the wheel ($2 \cdot \pi \cdot r$). This divides over the pulse/turn multiplied by the gear ratio.
 \begin{equation}
 \text{Distance} = \frac{\Delta _{coder}\cdot 2 \cdot \pi \cdot r}{N_{pulse}\cdot R_{gearbox}} 
 \end{equation}
 The slippage is the difference of ground truth and wheel odometry~\cite{chassisTerrain}.
-These factors form a Max G score. This G score was used to measure chassis against one another. These attributes are easily calculated in simulation but would be harder to find on a physical robot. The use of gyroscopes and accelerometers are potentials for a substitute. There is also access to Vicon tracking which would allow 3D generation of the robot. This would allow us to quantify these attributes. 
+These factors form a Max and Min G score. Both robot robots could provide enough torque, but that does not mean equal performance. The G score is taken from all the G values, calculated from the torque needed. These attributes are easily calculated in simulation but would be harder to find on a physical robot. The use of gyroscopes and accelerometers are potentials for a substitute. There is also access to Vicon tracking which would allow 3D generation of the robot. This would allow us to quantify these attributes. 
 
 \subsection{Sensors}
 Terrain mapping sensing can take many forms. One study used a lidar sensor that would read at four layers to construct a world model. This model creates a 3D perception allowing a hexapod robot to predict movement \cite{laser}. 
@@ -298,17 +298,18 @@ Evolving back movements is not an essential feature of this project but, it will
 
 \subsection{Simulation}
 
-We set up a Python simulation by generating a 2D map using Perlin noise, seen in figure ~\ref{fig:perlin}. Perlin noise is a type of gradient noise commonly used to procedurally generate terrain~\cite{perlin} where the value of the space between two points changes smoothly. A grid of ($n$) dimensions is created. Each index is assigned a random vector, where the dot product is calculated. We present the interpolation between the dot products mathematically using $a$ to represent a grid node, with $0$ and $1$ being the grid node indices. 
-\begin{equation}
-f(x) = a_{0} + smoothstep(x)\cdot (a_{1}-a_{0}),  0\leq x\leq 1
-\end{equation}
+We set up a Python simulation by generating a 2D map using Perlin noise, seen in figure ~\ref{fig:perlin}. Perlin noise is a type of gradient noise commonly used to procedurally generate terrain~\cite{perlin} where the value of the space between two points changes smoothly. A grid of ($n$) dimensions is created. Each index is assigned a random vector, where the dot product is calculated, which allows interpolation to generate noise.
+
+%We present the interpolation between the dot products mathematically using $a$ to represent a grid node, with $0$ and $1$ being the grid node index. 
+
 \begin{figure}[H]
 \centering
   \includegraphics[width=0.9\linewidth]{Sim2d.png}
   \caption{2D simulation plot of a 3D terrain. Random generated points are shown to show the position of agents and rewards. }
   \label{fig:perlin}
 \end{figure}
-The persistence,  octaves, and lacunarity are all altered via parameters in the world creation function. Each octave adds a layer of detail to the world, where the contribution of each octave is defined by persistence. The lucunarity defines how much detail is added or removed at each layer. This function formed a map held as a two-dimensional array representing terrain heights numerically. 
+The smoothstep function represents a sigmoid-like interpolation. 
+The persistence,  octaves, and lacunarity are all altered via parameters in the world creation function. The octave is generate via a combination of frequency-amplitudes. Each octave adds a layer of detail to the world, where the contribution of each octave is defined by persistence. The lucunarity defines how much detail is added or removed at each layer. This function formed a map held as a two-dimensional array representing terrain heights numerically. 
 
 
 
@@ -350,6 +351,9 @@ We need to research more about bio-inspired robots like what we are designing an
 \subsection{27/10/21}
 We discussed how we will test the agent. Two main methods came up which was finding the highest point and making the most energy efficient path there or being set a vector and moving to it while avoiding obstacles. We looked at a paper on ants and trap avoiding which tied into our bio inspired research. Changes were suggested and made in the report. 
 A discussion on sensors on the physical robot and what will work the best happened. 
+\subsection{10/11/21}
+Discussion over Max G score and how it ties in with the calculation of terrain. Further discussing Perlin noise and how best display my simulation work within the report. 
+We then spoke about the next stage which was to get the simulation agent working.
 
 \section{Appendices}
 \begin{itemize}

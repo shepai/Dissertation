@@ -31,7 +31,18 @@ def generateWorld():
     print("Octaves:",octaves)
     return world,shape
 
+def mutation(gene, mean=0, std=0.5):
+    gene = gene + np.random.normal(mean, std, size=gene.shape) #mutate the gene via normal 
+    # constraint
+    gene[gene >4] = 4
+    gene[gene < -4] = -4
+    return gene
 
+def crossover(loser, winner, p_crossover=0.5): #provide a crossover function
+    for i,gene in enumerate(winner):
+      if random.random() <= p_crossover:
+        loser[i] = winner[i]
+    return loser
 
 def pickPosition(terrain,value,deny=[],LBounds=8,UBounds=4):
     current=-100
@@ -43,6 +54,11 @@ def pickPosition(terrain,value,deny=[],LBounds=8,UBounds=4):
             current=terrain[cords[0],cords[1]]
     return cords
 
+def fitness(broke,energy,mx,route):
+    if broke:
+        return 0
+    print(sum(route),mx)
+    return 1-(max(0,energy)/(mx+sum(route)))
 
 #canReach will make sure the problem is solvable
 def canReach(terrain,start,goal,endmarked=[[False for i in range(SIZE)] for j in range(SIZE)]):
@@ -89,6 +105,7 @@ def getDist(start,end):
 
 def readIm(terrain,point,r=5):
     #read the ground around the agent at a radius of i
+    
     x = np.arange(0, len(terrain))
     y = np.arange(0, len(terrain))
     arr=copy.deepcopy(terrain)
@@ -98,18 +115,32 @@ def readIm(terrain,point,r=5):
     # for code clarity.
     mask = (x[np.newaxis,:]-cx)**2 + (y[:,np.newaxis]-cy)**2 < r**2
     return np.array(arr[mask])
+    
+    layers=[]
+    #for m in 
+    LOffset,ROffset=0,0
+    return layers
+    
 
-
+def microbial_trial(genes):
+    return genes
 world,shape=generateWorld()
 startPos=[int(SIZE/2),int(SIZE/2)] #centre point
 
 testIm=readIm(world,startPos)#.flatten()
-    
+print(testIm)
 Generations=50
 vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 
 whegBot=Agent(testIm.shape[0],5,5,5,len(vectors)) #define the agent
 
+pop_size=10
+gene_pop=[]
+for i in range(pop_size): #vary from 10 to 20 depending on purpose of robot
+    gene=np.random.normal(0, 0.8, (whegBot.num_genes))
+    gene_pop.append(copy.deepcopy(gene))#create
+
+  
 for gen in range(Generations):
     #generate the world terrain
     world,shape=generateWorld()
@@ -126,8 +157,11 @@ for gen in range(Generations):
     energy=0
     last=startPos.copy()
     im=readIm(world,startPos)
+    broke=False
+    routeValues=[]
     assert len(im)==69, "Panoramic Camera failed"+str(len(im)) #assert length correct
     for i in range(maxPath): #loop through and generate path
+        #print(readIm(world,))
         v=rnd.choice(vectors)
         pathx.append(current[0]+v[0])
         pathy.append(current[1]+v[1])
@@ -137,10 +171,13 @@ for gen in range(Generations):
         if current[0]>=0 and current[0]<len(world)-1 and current[1]>=0 and current[1]<len(world[0])-1:
             if world[current[0]][current[1]]<=-6:
                 print("water")
+                broke=True
+                break
             else:
-                climb=max(0,world[current[0]][current[1]]-world[last[0]][last[1]]) #non 0 value of total climb
+                climb=max(-1,world[current[0]][current[1]]-world[last[0]][last[1]]) #non 0 value of total climb
+                routeValues.append(abs(climb))
                 energy+=1+climb
-    print("total energy consumed",energy)
+    print("total energy consumed",energy,"fitness",fitness(broke,energy,maxPath,routeValues))
     plt.plot(pathy,pathx)
     #print(canReach(Rmap,startPos,endPos))
     plt.imshow(world,cmap='terrain')

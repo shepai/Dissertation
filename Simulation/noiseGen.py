@@ -1,4 +1,9 @@
-#noise generator for simulation plot
+"""
+Noise generator using perlin noise
+Generate depth perception images from any coordinate 
+
+Code by Dexter Shepherd
+"""
 import noise
 import numpy as np
 import matplotlib.pyplot as plt

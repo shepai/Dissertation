@@ -1,0 +1,211 @@
+@misc{reinforcementLearning,
+      title={PPMC RL Training Algorithm: Rough Terrain Intelligent Robots through Reinforcement Learning}, 
+      author={Tamir Blum and Kazuya Yoshida},
+      year={2020},
+      eprint={2003.02655},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO}
+}
+@INPROCEEDINGS{cockroach,
+  author={Schroer, R.T. and Boggess, M.J. and Bachmann, R.J. and Quinn, R.D. and Ritzmann, R.E.},
+  booktitle={IEEE International Conference on Robotics and Automation, 2004. Proceedings. ICRA '04. 2004}, 
+  title={Comparing cockroach and Whegs robot body motions}, 
+  year={2004},
+  volume={4},
+  number={},
+  pages={3288-3293 Vol.4},
+  doi={10.1109/ROBOT.2004.1308761}}
+  
+@misc{esa,
+    title={PROLERO},
+    author={European Space Agency},
+    howpublished={\url{https://www.esa.int/Enabling_Support/Space_Engineering_Technology/Automation_and_Robotics/PROLERO}}
+
+}
+@article{octopus,
+author = { James B.   Wood  and  Roland C.   Anderson },
+title = {Interspecific Evaluation of Octopus Escape Behavior},
+journal = {Journal of Applied Animal Welfare Science},
+volume = {7},
+number = {2},
+pages = {95-106},
+year  = {2004},
+publisher = {Routledge},
+doi = {10.1207/s15327604jaws0702\_2},
+    note ={PMID: 15234886},
+
+URL = { 
+        https://doi.org/10.1207/s15327604jaws0702_2
+    
+},
+eprint = { 
+        https://doi.org/10.1207/s15327604jaws0702_2
+    
+}
+
+}
+@INPROCEEDINGS{moonrover,  author={Schwendner and Jakob and Grimminger and Felix and Bartsch and Sebastian and Kaupisch and Thilo and Yüksel and Mehmed and Bresser and Andreas and Akpo and Joel Bessekon and Seydel and Michael K.-G. and Dieterle and Alexander and Schmidt and Steffen and Kirchner and Frank},  booktitle={2009 IEEE/RSJ International Conference on Intelligent Robots and Systems},   title={CESAR: A lunar crater exploration and sample return robot},   year={2009},  volume={},  number={},  pages={3355-3360},  doi={10.1109/IROS.2009.5354353}}
+
+@INPROCEEDINGS{kinematics,  author={Priandana and Karlisa and Buono and Agus and Wulandari},  booktitle={2017 International Conference on Advanced Computer Science and Information Systems (ICACSIS)},   title={Hexapod leg coordination using simple geometrical tripod-gait and inverse kinematics approach},   year={2017},  volume={},  number={},  pages={35-40},  doi={10.1109/ICACSIS.2017.8355009}}
+
+@INPROCEEDINGS{whegDesign,  author={Quinn, R.D. and Offi and J.T. and Kingsley and D.A. and Ritzmann, R.E.},  booktitle={IEEE/RSJ International Conference on Intelligent Robots and Systems},   title={Improved mobility through abstracted biological principles},   year={2002},  volume={3},  number={},  pages={2652-2657 vol.3},  doi={10.1109/IRDS.2002.1041670}}
+
+@INPROCEEDINGS{laser,  author={Dominik Belter and Piotr Skrzypczyński}, booktitle={Institute of Control and Information Engineering, Pozna´n University of Technology}, title={Rough terrain mapping and classification for foothold selection in a walking robot},   year={2011} }
+
+@article{canny,
+author = {Hasan, S.M.Abid and Ko, Kwanghee},
+year = {2016},
+month = {02},
+pages = {},
+title = {Depth Edge Detection By Image-based Smoothing and Morphological Operations},
+volume = {3},
+journal = {Journal of Computational Design and Engineering},
+doi = {10.1016/j.jcde.2016.02.002}
+}
+
+@article{stereo,  author={Marko Bjelonic1 and Timon Homberger and Navinda Kottege and Paulo Borges and Margarita Chli and Philipp Beckerle}, title={Autonomous Navigation of Hexapod Robots With Vision-basedController Adaptation} }
+
+@article{optical,  author={Kahlouche Souhila and Achour Karim}, title={Optical Flow Based Robot Obstacle Avoidance} }
+
+@article{opticalDepth,  author={Yang Wang and Peng Wang and Zhenheng Yang and Chenxu Luo and Yi Yang1Wei Xu and Baidu}, title={Unified Unsupervised Optical-flow and Stereo-depth Estimation by Watching Videos} }
+
+@article{RFL,  author={Csaba Szepesvári}, title={Algorithms for Reinforcement Learning
+Synthesis Lectures on Artificial Intelligence and Machine Learning} }
+
+@InProceedings{microbial,
+author="Harvey, Inman",
+editor="Kampis, George
+and Karsai, Istv{\'a}n
+and Szathm{\'a}ry, E{\"o}rs",
+title="The Microbial Genetic Algorithm",
+booktitle="Advances in Artificial Life. Darwin Meets von Neumann",
+year="2011",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="126--133",
+abstract="We analyse how the conventional Genetic Algorithm can be stripped down and reduced to its basics. We present a minimal, modified version that can be interpreted in terms of horizontal gene transfer, as in bacterial conjugation. Whilst its functionality is effectively similar to the conventional version, it is much easier to program, and recommended for both teaching purposes and practical applications. Despite the simplicity of the core code, it effects Selection, (variable rates of) Recombination, Mutation, Elitism (`for free') and Geographical Distribution.",
+isbn="978-3-642-21314-4"
+}
+
+@ARTICLE{particle,  author={Bonyadi, Mohammad Reza and Michalewicz, Zbigniew},  journal={Evolutionary Computation},   title={Particle Swarm Optimization for Single Objective Continuous Space Problems: A Review},   year={2017},  volume={25},  number={1},  pages={1-54},  doi={10.1162/EVCO_r_00180}}
+
+@article{measure,
+title = {Active bogies and chassis levelling for a vehicle operating in rough terrain},
+journal = {Journal of Terramechanics},
+volume = {49},
+number = {3},
+pages = {161-171},
+year = {2012},
+issn = {0022-4898},
+doi = {https://doi.org/10.1016/j.jterra.2012.03.001},
+url = {https://www.sciencedirect.com/science/article/pii/S0022489812000201},
+author = {J. Pijuan and M. Comellas and M. Nogués and J. Roca and X. Potau},
+keywords = {Off-road, Rough terrain, Bogie, Traction, Obstacle surmounting, Parametrical model, Active, Chassis levelling, Levelling},
+abstract = {Four axle vehicles with bogies can adapt the position of the wheels to follow irregularities in the terrain, having an obstacle surpassing ability far greater than conventional 2-axle vehicles. Still, the ability to overcome discrete obstacles on a steep slope is very different depending on the wheel that is facing the obstacle. A possible solution to diminish this variation can be found if the vehicle is able to actively redistribute the load on each wheel. One strategy is to design the suspension mechanism so it can regulate its height, being able to level the chassis. Also, an active torque on the pin join between the bogie and the chassis can be applied with the same goal, adopting a system of active bogies. Both solutions have been parametrically studied in a bi-dimensional multibody model of a 4-axle vehicle with double bogies. The results show an improvement independent of obstacle position and terrain angle when using active bogies. With height regulation, this improvement is limited to the rear bogie wheels, but the obstacle surmounting capacity of the vehicle as a whole can be considerably increased if the optimal regulation point is found. Possible applications for such enhanced vehicles with bogies are performing different tasks in forest areas with obstacles on steep slopes or unstructured terrain exploration.}
+}
+
+@article{chassisTerrain,
+author = {Thueer, Thomas and Krebs, Ambroise and Siegwart, Roland and Lamon, Pierre},
+title = {Performance comparison of rough-terrain robots—simulation and hardware},
+journal = {Journal of Field Robotics},
+volume = {24},
+number = {3},
+pages = {251-271},
+doi = {https://doi.org/10.1002/rob.20185},
+url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/rob.20185},
+eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1002/rob.20185},
+abstract = {Abstract The design of a rover for a specific environment is a complex procedure which requires modeling a chassis and evaluating it with specific criteria. This is the aim of the performance optimization tool (POT) presented in this paper. The POT enables the comparison and optimization of a rover chassis in a quick and efficient way. The tool is based on a static approach including optimization of the wheel torques in order to maximize traction. Tests with real hardware were performed to validate the POT. Two different rovers, CRAB and RCL-E, were assessed in simulation and hardware with respect to specific, well defined metrics. In simulation, their performances were compared to the rocker-bogie-type rover MER. CRAB and MER showed similar performance, while RCL-E had significant problems with the benchmark obstacle. A very good match between simulation results and real measurements was achieved. © 2007 Wiley Periodicals, Inc.},
+year = {2007}
+}
+
+@misc{tamiya,
+    title={RC car datasheets},
+    author={Tamiya},
+    howpublished={\url{https://www.tamiya.com/english/rc/chassis/cc-02/index.htmO}}
+}
+
+
+
+@article{classicalRL,
+title = {Control of a bioreactor using a new partially supervised reinforcement learning algorithm},
+journal = {Journal of Process Control},
+volume = {69},
+pages = {16-29},
+year = {2018},
+issn = {0959-1524},
+doi = {https://doi.org/10.1016/j.jprocont.2018.07.013},
+url = {https://www.sciencedirect.com/science/article/pii/S095915241830163X},
+author = {B. Jaganatha Pandian and Mathew Mithra Noel},
+keywords = {Machine learning, Reinforcement learning, Neural networks, Nonlinear control, Bioreactor control, Interacting multiple tank control},
+abstract = {In recent years, researchers have explored the application of Reinforcement Learning (RL) and Artificial Neural Networks (ANNs) to the control of complex nonlinear and time varying industrial processes. However RL algorithms use exploratory actions to learn an optimal control policy and converge slowly while popular inverse model ANN based control strategies require extensive training data to learn the inverse model of complex nonlinear systems. In this paper a novel approach that avoids the need for extensive training data to construct an exact inverse model in the inverse ANN approach, the need for an exact and stable inverse to exist and the need for exhaustive and costly exploration in pure RL based strategies is proposed. In this approach an initial approximate control policy learnt by an artificial neural network is refined using a reinforcement learning strategy. This Partially Supervised Reinforcement Learning (PSRL) strategy is applied to the economically important problem of control of a semi-continuous batch-fed bioreactor used for yeast fermentation. The bioreactor control problem is formulated as a Markov Decision Process (MDP) and solved using pure RL and PSRL algorithms. Model based and model-free RL control experiments and simulations are used to demonstrate the superior performance of the PSRL strategy compared to the pure RL and inverse model ANN based control strategies on a variety of performance metrics.}
+}
+
+@article{selfpres,
+  title={Bio-inspired Self-preservation to Protect Robots from Threats. In Towards Autonomous Robotic Systems: 18th Annual Conference, TAROS 2017, Guildford, UK, July 19--21, 2017, Proceedings (pp. 166-181).(Lecture Notes in Computer Science (including Lecture Notes in Artificial Intelligence)},
+  author={Chiu, SK and Araiza Illan, D and Eder, KI}
+}
+
+@article{rats,
+  title={The reactions of common rats to four types of live-capture trap},
+  author={Taylor, KD and Hammond, LE and Quy, RJ},
+  journal={Journal of Applied Ecology},
+  pages={453--459},
+  year={1974},
+  publisher={JSTOR}
+}
+@article{ants,
+title = {Rapid Aversive and Memory Trace Learning during Route Navigation in Desert Ants},
+journal = {Current Biology},
+volume = {30},
+number = {10},
+pages = {1927-1933.e2},
+year = {2020},
+issn = {0960-9822},
+doi = {https://doi.org/10.1016/j.cub.2020.02.082},
+url = {https://www.sciencedirect.com/science/article/pii/S096098222030289X},
+author = {Antoine Wystrach and Cornelia Buehlmann and Sebastian Schwarz and Ken Cheng and Paul Graham},
+keywords = {navigation, insect, vision, aversive learning, trace conditioning, memories, route following},
+abstract = {Summary
+The ability of bees and ants to learn long visually guided routes in complex environments is perhaps one of the most spectacular pieces of evidence for the impressive power of their small brains. Whereas flying bees can visit flowers in an optimized sequence over kilometers, walking solitary foraging ants can precisely recapitulate routes of up to 100 m in complex environments [1]. It is clear that route following depends largely on learned visual information and we have a good idea of how visual memories can guide individuals along them [2, 3, 4, 5, 6], as well as how this is implemented in the insect brain [7, 8]. However, little is known about the mechanisms that control route learning and development. Here we show that ants (Melophorus bagoti and Cataglyphis fortis) navigating in their natural environments can actively learn a route detour to avoid a pit trap. This adaptive flexibility depends on a mechanism of aversive learning based on memory traces of recently encountered stimuli, reflecting the laboratory paradigm of trace conditioning. The views experienced before falling into the trap become associated with the ensuing negative outcome and thus trigger salutary turns on the subsequent trip. This drives the ants to orient away from the goal direction and avoid the trap. If the pit trap is avoided, the novel views experienced during the detour become positively reinforced and the new route crystallizes. We discuss how such an interplay between appetitive and aversive memories might be implemented in insect neural circuitry.}
+}
+
+@ARTICLE{gait,  author={Lee, T.-T. and Liao, C.-M. and Chen, T.K.},  journal={IEEE Journal on Robotics and Automation},   title={On the stability properties of hexapod tripod gait},   year={1988},  volume={4},  number={4},  pages={427-434},  doi={10.1109/56.808}}
+
+@book{genetic,
+  title={An introduction to genetic algorithms},
+  author={Mitchell, Melanie},
+  year={1998},
+  publisher={MIT press}
+}
+
+@inproceedings{perlin,
+author = {Perlin, Ken},
+title = {Improving Noise},
+year = {2002},
+isbn = {1581135211},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/566570.566636},
+doi = {10.1145/566570.566636},
+abstract = {Two deficiencies in the original Noise algorithm are corrected: second order interpolation
+discontinuity and unoptimal gradient computation. With these defects corrected, Noise
+both looks better and runs faster. The latter change also makes it easier to define
+a uniform mathematical reference standard.},
+booktitle = {Proceedings of the 29th Annual Conference on Computer Graphics and Interactive Techniques},
+pages = {681–682},
+numpages = {2},
+keywords = {procedural texture},
+location = {San Antonio, Texas},
+series = {SIGGRAPH '02}
+}
+
+
+@INPROCEEDINGS{manhatten,
+  author={Malkauthekar, M. D.},
+  booktitle={Third International Conference on Computational Intelligence and Information Technology (CIIT 2013)}, 
+  title={Analysis of euclidean distance and Manhattan Distance measure in face recognition}, 
+  year={2013},
+  volume={},
+  number={},
+  pages={503-507},
+  doi={10.1049/cp.2013.2636}}

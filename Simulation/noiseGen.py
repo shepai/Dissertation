@@ -12,6 +12,8 @@ import random as rnd
 import copy
 from matplotlib.collections import EllipseCollection
 import math as maths
+import os
+import time
 
 SIZE=50
 def generateWorld():
@@ -96,17 +98,27 @@ def getDist(start,end):
 def readIm(map,position,direction,d=5):
     #read the ground around the agent at a radius of i
     r=maths.radians(direction)
-    vector=[d*maths.sin(r),d*maths.cos(r)]
-    line=[[int(abs(d-i)*maths.sin(r)),int(abs(d-i)*maths.cos(r))] for i in range(5)]
+    vector=(int(d*maths.cos(r)),int(d*maths.sin(r)))
+    x,y=position
+    print(x,y)
+    line1=[[x+round(abs(d-i)*maths.cos(r)),y+round(abs(d-i)*maths.sin(r))] for i in range(5)]
+    line2=[[x+round(abs(d-i)*maths.cos(r+maths.radians(10))),y+round(abs(d-i)*maths.sin(r+maths.radians(10)))] for i in range(5)]
+    line3=[[x+round(abs(d-i)*maths.cos(r+maths.radians(20))),y+round(abs(d-i)*maths.sin(r+maths.radians(20)))] for i in range(5)]
+    line4=[[x+round(abs(d-i)*maths.cos(r+maths.radians(30))),y+round(abs(d-i)*maths.sin(r+maths.radians(30)))] for i in range(5)]
     for i in range(len(map)):
         for j in range(len(map[i])):
-            if position==[j,i] or [j,i] in line:
+            if [j,i] in line1 or [j,i] in line2 or [j,i] in line3 or [j,i] in line4:
                 print(1,end = "")
+            elif position==[j,i]:
+                print("O",end = "")
             else:
                 print(0,end = "")
         print("")
-    
 
+    plt.plot(line1)
+    plt.plot(line2)
+    plt.plot(line3)
+    plt.plot(line4)
     return []
 
 def build3D(world):
@@ -116,7 +128,7 @@ def build3D(world):
             for z in range(abs(np.amin(world))+max(world[i][j],0)):
                 m[i][j][z]=1
     return m
-  
+i=0
 while True:
     #generate the world terrain
     world,shape=generateWorld() 
@@ -124,7 +136,11 @@ while True:
     startPos=pickPosition(world,4,LBounds=6)
     vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
     map=build3D(world) 
-    im=readIm(map,startPos,30)
+    print("Angle",i)
+    im=readIm(map,startPos,i)
+    i+=10
+    #time.sleep(1)
+    #os.system('cls')
     #print(canReach(Rmap,startPos,endPos))
     im = plt.imshow(world,cmap='terrain')
     cb = plt.colorbar(im)

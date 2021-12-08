@@ -11,6 +11,7 @@ from mpl_toolkits.mplot3d import axes3d
 import random as rnd
 import copy
 from matplotlib.collections import EllipseCollection
+import math as maths
 
 SIZE=50
 def generateWorld():
@@ -94,6 +95,17 @@ def getDist(start,end):
 
 def readIm(map,position,direction,d=5):
     #read the ground around the agent at a radius of i
+    r=maths.radians(direction)
+    vector=[d*maths.sin(r),d*maths.cos(r)]
+    line=[[int(abs(d-i)*maths.sin(r)),int(abs(d-i)*maths.cos(r))] for i in range(5)]
+    for i in range(len(map)):
+        for j in range(len(map[i])):
+            if position==[j,i] or [j,i] in line:
+                print(1,end = "")
+            else:
+                print(0,end = "")
+        print("")
+    
 
     return []
 
@@ -112,12 +124,12 @@ while True:
     startPos=pickPosition(world,4,LBounds=6)
     vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
     map=build3D(world) 
-    im=readIm(map,startPos)
+    im=readIm(map,startPos,30)
     #print(canReach(Rmap,startPos,endPos))
     im = plt.imshow(world,cmap='terrain')
     cb = plt.colorbar(im)
     plt.setp(cb.ax.get_yticklabels([-1,0,1]), visible=False)
-    
+    plt.scatter(startPos[0],startPos[1])
     plt.show()
     """
     lin_x = np.linspace(0,1,shape[0],endpoint=False)

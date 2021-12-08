@@ -92,9 +92,10 @@ def getDist(start,end):
     d1=((start[0]-end[0])**2 + (start[1]-end[1])**2)**0.5
     return int(d1)
 
-def readIm(r=5):
+def readIm(map,position,direction,d=5):
     #read the ground around the agent at a radius of i
-    pass
+
+    return []
 
 def build3D(world):
     m=np.array([[[0 for i in range(np.amax(world)+abs(np.amin(world)))] for j in range(len(world[i]))]for i in range(len(world))])
@@ -102,17 +103,16 @@ def build3D(world):
         for j in range(len(world[i])):
             for z in range(abs(np.amin(world))+max(world[i][j],0)):
                 m[i][j][z]=1
-    print(m[0][0])
-    print(m[0][1])
-    print(m[1][0])
-    print(m[1][1])
+    return m
+  
 while True:
     #generate the world terrain
     world,shape=generateWorld() 
     #randomly pick a start position
     startPos=pickPosition(world,4,LBounds=6)
     vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
-    build3D(world)
+    map=build3D(world) 
+    im=readIm(map,startPos)
     #print(canReach(Rmap,startPos,endPos))
     im = plt.imshow(world,cmap='terrain')
     cb = plt.colorbar(im)

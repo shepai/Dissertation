@@ -100,26 +100,20 @@ def readIm(map,position,direction,d=5):
     r=maths.radians(direction)
     vector=(int(d*maths.cos(r)),int(d*maths.sin(r)))
     x,y=position
+    image=[]
     print(x,y)
-    line1=[[x+round(abs(d-i)*maths.cos(r)),y+round(abs(d-i)*maths.sin(r))] for i in range(5)]
-    line2=[[x+round(abs(d-i)*maths.cos(r+maths.radians(10))),y+round(abs(d-i)*maths.sin(r+maths.radians(10)))] for i in range(5)]
-    line3=[[x+round(abs(d-i)*maths.cos(r+maths.radians(20))),y+round(abs(d-i)*maths.sin(r+maths.radians(20)))] for i in range(5)]
-    line4=[[x+round(abs(d-i)*maths.cos(r+maths.radians(30))),y+round(abs(d-i)*maths.sin(r+maths.radians(30)))] for i in range(5)]
-    for i in range(len(map)):
-        for j in range(len(map[i])):
-            if [j,i] in line1 or [j,i] in line2 or [j,i] in line3 or [j,i] in line4:
-                print(1,end = "")
-            elif position==[j,i]:
-                print("O",end = "")
-            else:
-                print(0,end = "")
-        print("")
-
-    plt.plot(line1)
-    plt.plot(line2)
-    plt.plot(line3)
-    plt.plot(line4)
-    return []
+    line1=np.array([[x+round(abs(d-i)*maths.cos(r)),y+round(abs(d-i)*maths.sin(r))] for i in range(5)])
+    line2=np.array([[x+round(abs(d-i)*maths.cos(r+maths.radians(20))),y+round(abs(d-i)*maths.sin(r+maths.radians(20)))] for i in range(5)])
+    line3=np.array([[x+round(abs(d-i)*maths.cos(r+maths.radians(40))),y+round(abs(d-i)*maths.sin(r+maths.radians(40)))] for i in range(5)])
+    line4=np.array([[x+round(abs(d-i)*maths.cos(r+maths.radians(60))),y+round(abs(d-i)*maths.sin(r+maths.radians(60)))] for i in range(5)])
+    ##check through each line
+    #place pixel in the height relevant based on terrain height
+    #move up a height
+    plt.plot(line1[:,0],line1[:,1],c="r")
+    #plt.scatter(line2[:,0],line2[:,1])
+    #plt.scatter(line3[:,0],line3[:,1])
+    plt.plot(line4[:,0],line4[:,1],c="r")
+    return image
 
 def build3D(world):
     m=np.array([[[0 for i in range(np.amax(world)+abs(np.amin(world)))] for j in range(len(world[i]))]for i in range(len(world))])
@@ -159,27 +153,3 @@ while True:
     plt.show()
     #"""
 
-"""
-    maxPath=30
-    pathx=[]
-    pathy=[]
-    current=startPos.copy()
-    energy=0
-    last=startPos.copy()
-    for i in range(maxPath):
-        v=rnd.choice(vectors)
-        pathx.append(current[0]+v[0])
-        pathy.append(current[1]+v[1])
-        last=current.copy()
-        current[0]+=v[0]
-        current[1]+=v[1]
-        if current[0]>=0 and current[0]<len(world) and current[1]>=0 and current[1]<len(world[0]):
-            if world[current[0]][current[1]]<=-6:
-                print("water")
-            else:
-                climb=max(0,world[current[0]][current[1]]-world[last[0]][last[1]]) #non 0 value of total climb
-                energy+=1+climb
-                
-    print("total energy consumed",energy)
-    plt.plot(pathy,pathx)
-    #"""

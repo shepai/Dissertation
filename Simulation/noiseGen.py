@@ -94,33 +94,76 @@ def expand(terrain,Map,start):
 def getDist(start,end):
     d1=((start[0]-end[0])**2 + (start[1]-end[1])**2)**0.5
     return int(d1)
-
-def readIm(map,position,direction,d=5):
+def displayColourMap(Arrays):
+    Arrays=np.array(Arrays)*10
+    print(Arrays)
+    plt.imshow(Arrays)
+    plt.show()
+def getSlice(map,line,position):
+    #move up a height
+    height=np.count_nonzero(map[position[0]][position[1]]==1)
+    #max(0,height-map[coord[0]][coord[1]])
+    column=[]
+    past=0
+    c=[]
+    for coord in line[::-1]: #loop through coordinates
+        coord=coord[::-1]
+        try:
+            c.append(np.count_nonzero(map[coord[0]][coord[1]] == 1))
+            count = max(np.count_nonzero(map[coord[0]][coord[1]] == 1)-height,0)
+            #look at depth of block in front of
+            column.append(max(count,past))
+            if np.count_nonzero(map[coord[0]][coord[1]]== 1)<height: #if still lower than current
+                past=count
+            else: past=max(past,count)
+        except IndexError: #if line outside of map bounds
+            column.append(0)
+            c.append(0)
+    print(column)
+    return column
+def readIm(map,position,direction,imSize=(5,5),d=5):
     #read the ground around the agent at a radius of i
+    assert (imSize[1]*20<360) #if the image size requires larger than panoramic this will be stupid
     r=maths.radians(direction)
     vector=(int(d*maths.cos(r)),int(d*maths.sin(r)))
     x,y=position
     image=[]
-    print(x,y)
-    line1=np.array([[x+round(abs(d-i)*maths.cos(r)),y+round(abs(d-i)*maths.sin(r))] for i in range(5)])
-    line2=np.array([[x+round(abs(d-i)*maths.cos(r+maths.radians(20))),y+round(abs(d-i)*maths.sin(r+maths.radians(20)))] for i in range(5)])
-    line3=np.array([[x+round(abs(d-i)*maths.cos(r+maths.radians(40))),y+round(abs(d-i)*maths.sin(r+maths.radians(40)))] for i in range(5)])
-    line4=np.array([[x+round(abs(d-i)*maths.cos(r+maths.radians(60))),y+round(abs(d-i)*maths.sin(r+maths.radians(60)))] for i in range(5)])
+    lines=[]
+    ANG=0
+    for pixX in range(imSize[1]):
+        lines.append(
+            np.array([[x+round(abs(d-i)*maths.cos(r+maths.radians(ANG))),y+round(abs(d-i)*maths.sin(r+maths.radians(ANG)))] for i in range(imSize[0])])
+        )
+        ANG+=20 #increase angle each time
     ##check through each line
     #place pixel in the height relevant based on terrain height
-    #move up a height
-    plt.plot(line1[:,0],line1[:,1],c="r")
+    A=[]
+    for lin in lines:
+        A.append(getSlice(map,lin,position))
+    displayColourMap(A)
+    
+    plt.plot(lines[0][:,0],lines[0][:,1],c="r")
     #plt.scatter(line2[:,0],line2[:,1])
     #plt.scatter(line3[:,0],line3[:,1])
-    plt.plot(line4[:,0],line4[:,1],c="r")
+    plt.plot(lines[-1][:,0],lines[-1][:,1],c="r")
     return image
 
 def build3D(world):
+    #build a 3d representation
+    zSize=abs(np.amin(world))+abs(np.amax(world))
+    print("3D world",zSize)
+    
     m=np.array([[[0 for i in range(np.amax(world)+abs(np.amin(world)))] for j in range(len(world[i]))]for i in range(len(world))])
     for i in range(len(world)):
         for j in range(len(world[i])):
-            for z in range(abs(np.amin(world))+max(world[i][j],0)):
-                m[i][j][z]=1
+            position=world[i][j]
+            bound=0 #set the bound of size
+            if position<0: bound=10-abs(position)
+            else: bound=10+position
+            for z in range(zSize): #show redundant space
+                if z<=bound: #only ad ones to phase
+                    m[i][j][z]=1
+            #
     return m
 i=0
 while True:

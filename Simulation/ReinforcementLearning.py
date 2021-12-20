@@ -12,7 +12,7 @@ SIZE=50
 def generateWorld():
     shape = (SIZE,SIZE)
     scale = 100.0
-    octaves = 10 #rnd.randint(2,20)
+    octaves = 20 #rnd.randint(2,20)
     persistence = 0.5
     lacunarity = 2
 
@@ -211,7 +211,7 @@ def microbial(genes,world,position):
     #microbial selection
     if fitness1>fitness2:
         gene2=copy.deepcopy(crossover(gene2,gene1))
-    else:
+    elif fitness2>fitness1:
         gene1=copy.deepcopy(crossover(gene1,gene1))
     genes[ind_1]=copy.deepcopy(gene1)
     genes[ind_2]=copy.deepcopy(gene2)

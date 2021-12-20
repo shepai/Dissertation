@@ -104,20 +104,24 @@ def getDist(start,end):
     d1=((start[0]-end[0])**2 + (start[1]-end[1])**2)**0.5
     return int(d1)
 
-def getSlice(map,line,position):
+def getSlice(map,line,position,WATER_LEVEL=4):
     #move up a height
     height=np.count_nonzero(map[position[0]][position[1]]==1)
     #max(0,height-map[coord[0]][coord[1]])
     column=[]
     past=0
     c=[]
+    
     for coord in line[::-1]: #loop through coordinates
         coord=coord[::-1]
         try:
             c.append(np.count_nonzero(map[coord[0]][coord[1]] == 1))
             count = max(np.count_nonzero(map[coord[0]][coord[1]] == 1)-height,0)
             #look at depth of block in front of
-            column.append(max(count,past))
+            if np.count_nonzero(map[coord[0]][coord[1]] == 1)<=WATER_LEVEL: #show dangers
+                column.append(-1)
+            else:
+                column.append(max(count,past))
             if np.count_nonzero(map[coord[0]][coord[1]]== 1)<height: #if still lower than current
                 past=count
             else: past=max(past,count)
@@ -144,7 +148,9 @@ def readIm(map,position,direction,imSize=(5,5),d=5):
     A=[]
     for lin in lines:
         A.append(getSlice(map,lin,position))
-    return np.array(A).flatten()
+    A=np.array(A)*10
+    A = A.flatten()
+    return A
 
 def build3D(world):
     #build a 3d representation
@@ -220,7 +226,7 @@ def microbial(genes,world,position):
         else: BEST=[p2x,p2y,copy.deepcopy(world)]
     genes[ind_1]=copy.deepcopy(gene1)
     genes[ind_2]=copy.deepcopy(gene2)
-    return genes
+    return genes,max(fitness1,fitness2)
 BEST=[]
 BESTFIT=0
 world,shape=generateWorld()
@@ -239,7 +245,7 @@ for i in range(pop_size): #vary from 10 to 20 depending on purpose of robot
     gene=np.random.normal(0, 0.8, (whegBot.num_genes))
     gene_pop.append(copy.deepcopy(gene))#create
 
-
+fitnesses=[]
 for gen in range(Generations):
     print("Gen",gen+1)
     #generate the world terrain
@@ -250,10 +256,18 @@ for gen in range(Generations):
     #randomly pick a start position
     startPos=pickPosition(world,4,LBounds=6)
     #genes have been selected
-    gene_pop=microbial(gene_pop,world,startPos)
-    
+    gene_pop,fit=microbial(gene_pop,world,startPos)
+    fitnesses.append(max([fit]+fitnesses))
+
 
 plt.plot(BEST[1],BEST[0]) #show best path
 #print(canReach(Rmap,startPos,endPos))
 plt.imshow(BEST[2],cmap='terrain') #show best show
+plt.show()
+
+plt.cla()
+plt.plot([i for i in range(Generations)],fitnesses) #show fintesses over generations
+plt.title("Results of population fitness over "+str(Generations)+" generations")
+plt.ylabel("Fitness Units")
+plt.xlabel("Generation")
 plt.show()

@@ -47,6 +47,7 @@ class Agent:
         return torch.mm(x,self.weights4.T) + self.bias #third layer
         
     def get_action(self, x):
+        vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
         arr=list(self.forward(x)[0])
         ind=np.argmax(arr)
-        return action
+        return vectors[ind]

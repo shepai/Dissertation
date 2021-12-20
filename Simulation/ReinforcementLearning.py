@@ -12,7 +12,7 @@ SIZE=50
 def generateWorld():
     shape = (SIZE,SIZE)
     scale = 100.0
-    octaves = rnd.randint(2,20)
+    octaves = 10 #rnd.randint(2,20)
     persistence = 0.5
     lacunarity = 2
 
@@ -29,7 +29,7 @@ def generateWorld():
                                         base=42)
     world=world*100 #normalize numbers
     world=world.astype(int)
-    print("Octaves:",octaves)
+    #print("Octaves:",octaves)
     return world,shape
 
 def mutation(gene, mean=0, std=0.5):
@@ -162,7 +162,59 @@ def build3D(world):
             #
     return m
 
-def microbial_trial(genes):
+def run_trial(gene,runs=30):
+    pathx=[]
+    pathy=[]
+    current=startPos.copy()
+    energy=0
+    last=startPos.copy()
+    broke=False
+    routeValues=[]
+    v=rnd.choice(vectors)
+    whegBot.set_genes(gene) #set the genes of the agent
+    map=build3D(world) 
+    for i in range(runs): #loop through and generate path
+        dir=maths.cos(v[1]) #get angle from y-axis
+        im=readIm(map,current,dir) #read the image that the agent sees
+        assert len(im)==25, "Panoramic Camera failed"+str(len(im)) #assert length correct
+        v=whegBot.get_action(im) #get action from the agent
+        last=current.copy()
+        pathx.append(current[0]+v[0])
+        pathy.append(current[1]+v[1])
+        current[0]+=v[0]
+        current[1]+=v[1]
+        if current[0]>=0 and current[0]<len(world)-1 and current[1]>=0 and current[1]<len(world[0])-1:
+            if world[current[0]][current[1]]<=-6: #do not allow the rover to enter water
+                print("water")
+                broke=True
+                break
+            else: #calculate energy usage
+                climb=max(-1,world[current[0]][current[1]]-world[last[0]][last[1]]) #non 0 value of total climb
+                routeValues.append(abs(climb))
+                energy+=1+climb
+    print("total energy consumed",energy,"fitness",fitness(broke,energy,runs,routeValues))
+    return pathy,pathx,fitness(broke,energy,runs,routeValues)
+
+def microbial(genes,world,position):
+    #microbial algorithm trial
+    ind_1 = rnd.randint(0,len(genes)-1)
+    ind_2 = rnd.randint(0,len(genes)-1)
+    #get two random positions
+    gene1=mutation(genes[ind_1])
+    gene2=mutation(genes[ind_2])
+    #run trial for each
+    p1x,p1y,fitness1=run_trial(gene1)
+    p2x,p2y,fitness2=run_trial(gene2)
+    #show results
+    plt.plot(p1y,p1x)
+    plt.plot(p2y,p2x)
+    #microbial selection
+    if fitness1>fitness2:
+        gene2=copy.deepcopy(crossover(gene2,gene1))
+    else:
+        gene1=copy.deepcopy(crossover(gene1,gene1))
+    genes[ind_1]=copy.deepcopy(gene1)
+    genes[ind_2]=copy.deepcopy(gene2)
     return genes
 world,shape=generateWorld()
 startPos=[int(SIZE/2),int(SIZE/2)] #centre point
@@ -180,7 +232,7 @@ for i in range(pop_size): #vary from 10 to 20 depending on purpose of robot
     gene=np.random.normal(0, 0.8, (whegBot.num_genes))
     gene_pop.append(copy.deepcopy(gene))#create
 
-  
+
 for gen in range(Generations):
     #generate the world terrain
     world,shape=generateWorld()
@@ -189,38 +241,11 @@ for gen in range(Generations):
     world=np.pad(np.array(world), (1,1), 'constant',constant_values=(-8,-8))
     #randomly pick a start position
     startPos=pickPosition(world,4,LBounds=6)
-    maxPath=30
-    pathx=[]
-    pathy=[]
-    current=startPos.copy()
-    energy=0
-    last=startPos.copy()
-    broke=False
-    routeValues=[]
-    v=rnd.choice(vectors)
     
-    for i in range(maxPath): #loop through and generate path
-        v=rnd.choice(vectors)
-        map=build3D(world) 
-        dir=maths.cos(v[1]) #get angle from y-axis
-        im=readIm(map,current,dir) #read the image that the agent sees
-        assert len(im)==25, "Panoramic Camera failed"+str(len(im)) #assert length correct
-        last=current.copy()
-        pathx.append(current[0]+v[0])
-        pathy.append(current[1]+v[1])
-        current[0]+=v[0]
-        current[1]+=v[1]
-        if current[0]>=0 and current[0]<len(world)-1 and current[1]>=0 and current[1]<len(world[0])-1:
-            if world[current[0]][current[1]]<=-6:
-                print("water")
-                broke=True
-                break
-            else:
-                climb=max(-1,world[current[0]][current[1]]-world[last[0]][last[1]]) #non 0 value of total climb
-                routeValues.append(abs(climb))
-                energy+=1+climb
-    print("total energy consumed",energy,"fitness",fitness(broke,energy,maxPath,routeValues))
-    plt.plot(pathy,pathx)
+    #genes have been selected
+    maxPath=30
+    gene_pop=microbial(gene_pop,world,startPos)
+    
     #print(canReach(Rmap,startPos,endPos))
     plt.imshow(world,cmap='terrain')
     plt.show()

@@ -196,6 +196,8 @@ def run_trial(gene,runs=30):
     return pathy,pathx,fitness(broke,energy,runs,routeValues)
 
 def microbial(genes,world,position):
+    global BESTFIT
+    global BEST
     #microbial algorithm trial
     ind_1 = rnd.randint(0,len(genes)-1)
     ind_2 = rnd.randint(0,len(genes)-1)
@@ -206,22 +208,27 @@ def microbial(genes,world,position):
     p1x,p1y,fitness1=run_trial(gene1)
     p2x,p2y,fitness2=run_trial(gene2)
     #show results
-    plt.plot(p1y,p1x)
-    plt.plot(p2y,p2x)
+     
     #microbial selection
     if fitness1>fitness2:
         gene2=copy.deepcopy(crossover(gene2,gene1))
     elif fitness2>fitness1:
         gene1=copy.deepcopy(crossover(gene1,gene1))
+    if max(fitness1,fitness2)>BESTFIT:
+        BESTFIT=max(fitness1,fitness2) #gather the maximum
+        if fitness1>fitness2: BEST=[p1x,p1y,copy.deepcopy(world)]
+        else: BEST=[p2x,p2y,copy.deepcopy(world)]
     genes[ind_1]=copy.deepcopy(gene1)
     genes[ind_2]=copy.deepcopy(gene2)
     return genes
+BEST=[]
+BESTFIT=0
 world,shape=generateWorld()
 startPos=[int(SIZE/2),int(SIZE/2)] #centre point
 
 map=build3D(world)
 testIm=readIm(map,[25,25],30) #read the image that the agent sees
-Generations=50
+Generations=100
 vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 
 whegBot=Agent(testIm.shape[0],5,5,5,len(vectors)) #define the agent
@@ -234,6 +241,7 @@ for i in range(pop_size): #vary from 10 to 20 depending on purpose of robot
 
 
 for gen in range(Generations):
+    print("Gen",gen+1)
     #generate the world terrain
     world,shape=generateWorld()
     world=np.pad(np.array(world), (2,2), 'constant',constant_values=(-6,-6))
@@ -241,25 +249,11 @@ for gen in range(Generations):
     world=np.pad(np.array(world), (1,1), 'constant',constant_values=(-8,-8))
     #randomly pick a start position
     startPos=pickPosition(world,4,LBounds=6)
-    
     #genes have been selected
-    maxPath=30
     gene_pop=microbial(gene_pop,world,startPos)
     
-    #print(canReach(Rmap,startPos,endPos))
-    plt.imshow(world,cmap='terrain')
-    plt.show()
-    """
-    lin_x = np.linspace(0,1,shape[0],endpoint=False)
-    lin_y = np.linspace(0,1,shape[1],endpoint=False)
-    x,y = np.meshgrid(lin_x,lin_y)
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection="3d")
-    ax.plot_surface(x,y,world,cmap='terrain')
 
-    ax.scatter((startPos[0]+1)/SIZE,(startPos[1]+1)/100,world[startPos[0]][startPos[1]]+2,c="b")
-    ax.scatter((endPos[0]+1)/SIZE,(endPos[1]+1)/100,world[endPos[0]][endPos[1]]+2,c="r")
-
-    plt.show()
-    #"""
-
+plt.plot(BEST[1],BEST[0]) #show best path
+#print(canReach(Rmap,startPos,endPos))
+plt.imshow(BEST[2],cmap='terrain') #show best show
+plt.show()

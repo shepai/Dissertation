@@ -6,6 +6,7 @@ from mpl_toolkits.mplot3d import axes3d
 import random as rnd
 import copy
 from agent import Agent
+import math as maths
 
 SIZE=50
 def generateWorld():
@@ -40,7 +41,7 @@ def mutation(gene, mean=0, std=0.5):
 
 def crossover(loser, winner, p_crossover=0.5): #provide a crossover function
     for i,gene in enumerate(winner):
-      if random.random() <= p_crossover:
+      if rnd.random() <= p_crossover:
         loser[i] = winner[i]
     return loser
 
@@ -103,32 +104,71 @@ def getDist(start,end):
     d1=((start[0]-end[0])**2 + (start[1]-end[1])**2)**0.5
     return int(d1)
 
-def readIm(terrain,point,r=5):
+def getSlice(map,line,position):
+    #move up a height
+    height=np.count_nonzero(map[position[0]][position[1]]==1)
+    #max(0,height-map[coord[0]][coord[1]])
+    column=[]
+    past=0
+    c=[]
+    for coord in line[::-1]: #loop through coordinates
+        coord=coord[::-1]
+        try:
+            c.append(np.count_nonzero(map[coord[0]][coord[1]] == 1))
+            count = max(np.count_nonzero(map[coord[0]][coord[1]] == 1)-height,0)
+            #look at depth of block in front of
+            column.append(max(count,past))
+            if np.count_nonzero(map[coord[0]][coord[1]]== 1)<height: #if still lower than current
+                past=count
+            else: past=max(past,count)
+        except IndexError: #if line outside of map bounds
+            column.append(0)
+            c.append(0)
+    return column
+def readIm(map,position,direction,imSize=(5,5),d=5):
     #read the ground around the agent at a radius of i
-    
-    x = np.arange(0, len(terrain))
-    y = np.arange(0, len(terrain))
-    arr=copy.deepcopy(terrain)
-    cx = point[1]
-    cy = point[0]
-    # The two lines below could be merged, but I stored the mask
-    # for code clarity.
-    mask = (x[np.newaxis,:]-cx)**2 + (y[:,np.newaxis]-cy)**2 < r**2
-    return np.array(arr[mask])
-    
-    layers=[]
-    #for m in 
-    LOffset,ROffset=0,0
-    return layers
-    
+    assert (imSize[1]*20<360) #if the image size requires larger than panoramic this will be stupid
+    r=direction
+    vector=(int(d*maths.cos(r)),int(d*maths.sin(r)))
+    x,y=position
+    image=[]
+    lines=[]
+    ANG=0
+    for pixX in range(imSize[1]):
+        lines.append(
+            np.array([[x+round(abs(d-i)*maths.cos(r+maths.radians(ANG))),y+round(abs(d-i)*maths.sin(r+maths.radians(ANG)))] for i in range(imSize[0])])
+        )
+        ANG+=20 #increase angle each time
+    ##check through each line
+    #place pixel in the height relevant based on terrain height
+    A=[]
+    for lin in lines:
+        A.append(getSlice(map,lin,position))
+    return np.array(A).flatten()
+
+def build3D(world):
+    #build a 3d representation
+    zSize=abs(np.amin(world))+abs(np.amax(world))    
+    m=np.array([[[0 for i in range(np.amax(world)+abs(np.amin(world)))] for j in range(len(world[i]))]for i in range(len(world))])
+    for i in range(len(world)):
+        for j in range(len(world[i])):
+            position=world[i][j]
+            bound=0 #set the bound of size
+            if position<0: bound=10-abs(position)
+            else: bound=10+position
+            for z in range(zSize): #show redundant space
+                if z<=bound: #only ad ones to phase
+                    m[i][j][z]=1
+            #
+    return m
 
 def microbial_trial(genes):
     return genes
 world,shape=generateWorld()
 startPos=[int(SIZE/2),int(SIZE/2)] #centre point
 
-testIm=readIm(world,startPos)#.flatten()
-print(testIm)
+map=build3D(world)
+testIm=readIm(map,[25,25],30) #read the image that the agent sees
 Generations=50
 vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 
@@ -149,23 +189,25 @@ for gen in range(Generations):
     world=np.pad(np.array(world), (1,1), 'constant',constant_values=(-8,-8))
     #randomly pick a start position
     startPos=pickPosition(world,4,LBounds=6)
-   
     maxPath=30
     pathx=[]
     pathy=[]
     current=startPos.copy()
     energy=0
     last=startPos.copy()
-    im=readIm(world,startPos)
     broke=False
     routeValues=[]
-    assert len(im)==69, "Panoramic Camera failed"+str(len(im)) #assert length correct
+    v=rnd.choice(vectors)
+    
     for i in range(maxPath): #loop through and generate path
-        #print(readIm(world,))
         v=rnd.choice(vectors)
+        map=build3D(world) 
+        dir=maths.cos(v[1]) #get angle from y-axis
+        im=readIm(map,current,dir) #read the image that the agent sees
+        assert len(im)==25, "Panoramic Camera failed"+str(len(im)) #assert length correct
+        last=current.copy()
         pathx.append(current[0]+v[0])
         pathy.append(current[1]+v[1])
-        last=current.copy()
         current[0]+=v[0]
         current[1]+=v[1]
         if current[0]>=0 and current[0]<len(world)-1 and current[1]>=0 and current[1]<len(world[0])-1:

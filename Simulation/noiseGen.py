@@ -78,8 +78,8 @@ def canReach(terrain,start,goal,endmarked=[[False for i in range(SIZE)] for j in
 def getBestRoute(terrain,start,end):
     #find the least cost route from A to B
     #return metrics
-    
     return []
+    
 def expand(terrain,Map,start):
     for i in range(len(terrain)):
         for j in range(len(terrain[i])):

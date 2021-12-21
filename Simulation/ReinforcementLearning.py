@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import axes3d
 import random as rnd
 import copy
-from agent import Agent
+from agent import *
 import math as maths
 
 SIZE=50
@@ -234,10 +234,10 @@ startPos=[int(SIZE/2),int(SIZE/2)] #centre point
 
 map=build3D(world)
 testIm=readIm(map,[25,25],30) #read the image that the agent sees
-Generations=100
+Generations=500
 vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 
-whegBot=Agent(testIm.shape[0],5,5,5,len(vectors)) #define the agent
+whegBot=Agent_defineLayers(testIm.shape[0],[10,10],len(vectors)) #define the agent
 
 pop_size=10
 gene_pop=[]

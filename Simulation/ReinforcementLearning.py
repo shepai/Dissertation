@@ -58,8 +58,9 @@ def pickPosition(terrain,value,deny=[],LBounds=8,UBounds=4):
 def fitness(broke,energy,mx,route):
     if broke:
         return 0
-    print(sum(route),mx)
-    return 1-(max(0,energy)/(mx+sum(route)))
+    #print(sum(route),mx)
+    #return 1-(max(0,energy)/(mx+sum(route)))
+    return 100-energy
 
 #canReach will make sure the problem is solvable
 def canReach(terrain,start,goal,endmarked=[[False for i in range(SIZE)] for j in range(SIZE)]):

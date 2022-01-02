@@ -77,7 +77,7 @@ class Agent_defineLayers:
         for i in range(len(self.hidden)-1):
             current+=self.hidden[i]*self.hidden[i+1]
             weights_idxs.append(current)
-        print(weights_idxs[-1])
+        #print(weights_idxs[-1])
         weights_idxs.append(self.hidden[-1] * self.num_output + weights_idxs[-1])
         bias_idxs = weights_idxs[-1]+ self.num_output #sizes of biases
         w = gene[0 : weight_idxs].reshape(self.hidden[0], self.num_input)   #merge genes

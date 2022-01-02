@@ -55,12 +55,12 @@ def pickPosition(terrain,value,deny=[],LBounds=8,UBounds=4):
             current=terrain[cords[0],cords[1]]
     return cords
 
-def fitness(broke,energy,mx,route):
-    if broke:
+def fitness(broke,energy,endDist):
+    if broke or endDist>10:
         return 0
     #print(sum(route),mx)
     #return 1-(max(0,energy)/(mx+sum(route)))
-    return 100-energy
+    return (((100-energy)/100)*0.3 + ((10-endDist)/10)*0.7)*100
 
 #canReach will make sure the problem is solvable
 def canReach(terrain,start,goal,endmarked=[[False for i in range(SIZE)] for j in range(SIZE)]):
@@ -169,6 +169,22 @@ def build3D(world):
             #
     return m
 
+def getCircleCoord(centre,radius):
+    #(x-centre[0])^2 + (y-centre[1])^2 = radius^2
+    coords=[]
+    bx=-2*(centre[0])
+    cx=centre[0]**2
+    by=-2*(centre[1])
+    cy=centre[1]**2
+    for y in range(centre[1]-radius,centre[1]+radius,1):
+        c=(y**2) + by*(y) + cy #get y filled in
+        c=cx+c-(radius**2) #normalize for x quadratic
+        #apply quadratic form
+        x1=((-1*bx)+math.sqrt((bx**2)-(4*c)))/(2)
+        x2=((-1*bx)-math.sqrt((bx**2)-(4*1*c)))/(2)
+        coords.append([x1,y])
+        coords.append([x2,y])
+    return coords
 def run_trial(gene,runs=30):
     pathx=[]
     pathy=[]
@@ -180,11 +196,25 @@ def run_trial(gene,runs=30):
     v=rnd.choice(vectors)
     whegBot.set_genes(gene) #set the genes of the agent
     map=build3D(world) 
-    for i in range(runs): #loop through and generate path
+    radius=10
+    valid=False
+    cords=[]
+    coords=getCircleCoord(startPos,radius)
+    while not valid: #validate random destination
+        cords=random.choice(coords)
+        tmp=cords
+        cords=[int(cords[0]),int(cords[1])]
+        if world[cords[1]][cords[0]]>-6:
+            valid=True
+        else:
+            coords.remove(tmp) #prevent from picking
+    cords=np.array(cords)
+    i=0
+    while i<runs and not broke and getDist(current,cords)>1: #loop through and generate path
         dir=maths.cos(v[1]) #get angle from y-axis
         im=readIm(map,current,dir) #read the image that the agent sees
         assert len(im)==25, "Panoramic Camera failed"+str(len(im)) #assert length correct
-        v=whegBot.get_action(im) #get action from the agent
+        v=whegBot.get_action(np.concatenate((im, cords))) #get action from the agent
         last=current.copy()
         pathx.append(current[0]+v[0])
         pathy.append(current[1]+v[1])
@@ -194,13 +224,14 @@ def run_trial(gene,runs=30):
             if world[current[0]][current[1]]<=-6: #do not allow the rover to enter water
                 print("water")
                 broke=True
-                break
             else: #calculate energy usage
                 climb=max(-1,world[current[0]][current[1]]-world[last[0]][last[1]]) #non 0 value of total climb
                 routeValues.append(abs(climb))
                 energy+=1+climb
-    print("total energy consumed",energy,"fitness",fitness(broke,energy,runs,routeValues))
-    return pathy,pathx,fitness(broke,energy,runs,routeValues)
+        i+=1
+    endDist=getDist(current,cords)
+    print("total energy consumed",energy,"fitness",fitness(broke,energy,endDist),"endDist:",endDist)
+    return pathy,pathx,fitness(broke,energy,endDist),cords
 
 def microbial(genes,world,position):
     global BESTFIT
@@ -212,8 +243,19 @@ def microbial(genes,world,position):
     gene1=mutation(genes[ind_1])
     gene2=mutation(genes[ind_2])
     #run trial for each
-    p1x,p1y,fitness1=run_trial(gene1)
-    p2x,p2y,fitness2=run_trial(gene2)
+    p1x,p1y,fitness1,endCord1=run_trial(gene1)
+    p2x,p2y,fitness2,endCord2=run_trial(gene2)
+
+    #run same trial again to generate different coord
+    a,b,fitnessa1,c=run_trial(gene1)
+    a,b,fitnessa2,c=run_trial(gene2)
+    a,b,fitnessb1,c=run_trial(gene1)
+    a,b,fitnessb2,c=run_trial(gene2)
+
+    #generate average fitness
+    fitness1=(fitness1+fitnessa1+fitnessb1)/3
+    fitness2=(fitness2+fitnessa2+fitnessb2)/3
+    print(max(fitness1,fitness2),"% over 3 trials")
     #show results
      
     #microbial selection
@@ -223,8 +265,9 @@ def microbial(genes,world,position):
         gene1=copy.deepcopy(crossover(gene1,gene1))
     if max(fitness1,fitness2)>BESTFIT:
         BESTFIT=max(fitness1,fitness2) #gather the maximum
-        if fitness1>fitness2: BEST=[p1x,p1y,copy.deepcopy(world)]
-        else: BEST=[p2x,p2y,copy.deepcopy(world)]
+        if fitness1>fitness2: BEST=[copy.deepcopy(p1x),copy.deepcopy(p1y),copy.deepcopy(world),endCord1]
+        else: BEST=[copy.deepcopy(p2x),copy.deepcopy(p2y),copy.deepcopy(world),endCord2]
+    if BESTFIT==0: BEST=[copy.deepcopy(p2x),copy.deepcopy(p2y),copy.deepcopy(world),endCord2] #default
     genes[ind_1]=copy.deepcopy(gene1)
     genes[ind_2]=copy.deepcopy(gene2)
     return genes,max(fitness1,fitness2)
@@ -237,13 +280,20 @@ map=build3D(world)
 testIm=readIm(map,[25,25],30) #read the image that the agent sees
 Generations=500
 vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
+#network input:
+#   image, x_dest, y_dest
+#layer 1
+#   10
+#layer 2
+#   10
+#output
+#   vectors possible (8)
+whegBot=Agent_defineLayers(testIm.shape[0]+2,[10,10],len(vectors)) #define the agent
 
-whegBot=Agent_defineLayers(testIm.shape[0],[10,10],len(vectors)) #define the agent
-
-pop_size=10
+pop_size=20
 gene_pop=[]
 for i in range(pop_size): #vary from 10 to 20 depending on purpose of robot
-    gene=np.random.normal(0, 0.8, (whegBot.num_genes))
+    gene=np.random.normal(0, 2, (whegBot.num_genes))
     gene_pop.append(copy.deepcopy(gene))#create
 
 fitnesses=[]
@@ -262,6 +312,8 @@ for gen in range(Generations):
 
 
 plt.plot(BEST[1],BEST[0]) #show best path
+plt.title("Results of best fitness at "+str(BESTFIT)+"% after generations")
+plt.scatter(BEST[3][0],BEST[3][1])
 #print(canReach(Rmap,startPos,endPos))
 plt.imshow(BEST[2],cmap='terrain') #show best show
 plt.show()

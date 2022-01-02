@@ -39,11 +39,15 @@ def mutation(gene, mean=0, std=0.5):
     gene[gene < -4] = -4
     return gene
 
-def crossover(loser, winner, p_crossover=0.5): #provide a crossover function
-    for i,gene in enumerate(winner):
-      if rnd.random() <= p_crossover:
-        loser[i] = winner[i]
-    return loser
+def crossover(winning, losing, p_crossover=0.5): #provide a crossover function
+    for g in range(len(winning)):
+        winner=winning[g]
+        loser=losing[g]
+        for i,gene in enumerate(winner):
+            if rnd.random() <= p_crossover:
+                loser[i] = winner[i]
+        losing[g]=loser
+    return losing
 
 def pickPosition(terrain,value,deny=[],LBounds=8,UBounds=4):
     current=-100
@@ -270,14 +274,14 @@ def group(genes,world,position):
      
     #microbial selection
     if fitness1>fitness2:
-        gene2=copy.deepcopy(genes1)
+        gene2=copy.deepcopy(crossover(genes1,genes2))
     elif fitness2>fitness1:
-        gene1=copy.deepcopy(genes2)
+        gene1=copy.deepcopy(crossover(genes2,genes1))
     if max(fitness1,fitness2)>BESTFIT:
         BESTFIT=max(fitness1,fitness2) #gather the maximum
-        if fitness1>fitness2: BEST=[copy.deepcopy(p1x),copy.deepcopy(p1y),copy.deepcopy(world),endCord1]
-        else: BEST=[copy.deepcopy(p2x),copy.deepcopy(p2y),copy.deepcopy(world),endCord2]
-    if BESTFIT==0: BEST=[copy.deepcopy(p2x),copy.deepcopy(p2y),copy.deepcopy(world),endCord2] #default
+        if fitness1>fitness2: BEST=[copy.deepcopy(p1x),copy.deepcopy(p1y),copy.deepcopy(world),endCord1,ind_1]
+        else: BEST=[copy.deepcopy(p2x),copy.deepcopy(p2y),copy.deepcopy(world),endCord2,ind_2]
+    if BESTFIT==0: BEST=[copy.deepcopy(p2x),copy.deepcopy(p2y),copy.deepcopy(world),endCord2,ind_2] #default
     genes[ind_1]=copy.deepcopy(genes1)
     genes[ind_2]=copy.deepcopy(genes2)
     return genes,max(fitness1,fitness2)
@@ -288,7 +292,7 @@ startPos=[int(SIZE/2),int(SIZE/2)] #centre point
 
 map=build3D(world)
 testIm=readIm(map,[25,25],30) #read the image that the agent sees
-Generations=500
+Generations=100
 vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 #network input:
 #   image, x_dest, y_dest
@@ -324,13 +328,16 @@ for gen in range(Generations):
     gene_pop,fit=group(gene_pop,world,startPos)
     fitnesses.append(max([fit]+fitnesses))
 
+genes=gene_pop[BEST[4]]
 
-plt.plot(BEST[1],BEST[0]) #show best path
-plt.title("Results of best fitness at "+str(BESTFIT)+"% after generations")
-plt.scatter(BEST[3][0],BEST[3][1])
-#print(canReach(Rmap,startPos,endPos))
-plt.imshow(BEST[2],cmap='terrain') #show best show
-plt.show()
+for gene in genes:
+    p1x,p1y,fit,endCord1=run_trial(gene)
+    plt.plot(p1x,p1y) #show best path
+    plt.title("Results of best fitness at "+str(fit)+"% after generations")
+    plt.scatter(endCord1[0],endCord1[1])
+    #print(canReach(Rmap,startPos,endPos))
+    plt.imshow(BEST[2],cmap='terrain') #show best show
+    plt.show()
 
 plt.cla()
 plt.plot([i for i in range(Generations)],fitnesses) #show fintesses over generations

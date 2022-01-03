@@ -35,8 +35,8 @@ def generateWorld():
 def mutation(gene, mean=0, std=0.5):
     gene = gene + np.random.normal(mean, std, size=gene.shape) #mutate the gene via normal 
     # constraint
-    gene[gene >4] = 4
-    gene[gene < -4] = -4
+    gene[gene >1] = 1
+    gene[gene < -1] = -1
     return gene
 
 def crossover(loser, winner, p_crossover=0.5): #provide a crossover function
@@ -292,7 +292,7 @@ whegBot=Agent_defineLayers(testIm.shape[0]+2,[10,10],len(vectors)) #define the a
 pop_size=10
 gene_pop=[]
 for i in range(pop_size): #vary from 10 to 20 depending on purpose of robot
-    gene=np.random.normal(0, 1, (whegBot.num_genes))
+    gene=np.random.normal(0, 0.2, (whegBot.num_genes))
     gene_pop.append(copy.deepcopy(gene))#create
 
 fitnesses=[]
@@ -313,7 +313,7 @@ bestFit=0
 for gene in gene_pop:
     p1x,p1y,fit,endCord1=run_trial(gene)
     plt.plot(p1x,p1y) #show best path
-    plt.title("Best gene "+str(fit)+"% after generations")
+    plt.title("Gene "+str(fit)+"% after generations")
     plt.scatter(endCord1[1],endCord1[0])
     plt.scatter(p1x[0],p1y[0],c="r")
     #print(canReach(Rmap,startPos,endPos))
@@ -326,7 +326,7 @@ print("How best performs")
 for i in range(5):
     p1x,p1y,fit,endCord1=run_trial(bestGene)
     plt.plot(p1x,p1y) #show best path
-    plt.title("Results of gene fitness at "+str(fit)+"% after generations")
+    plt.title("The best trials "+str(fit)+"% after generations")
     plt.scatter(endCord1[1],endCord1[0])
     plt.scatter(p1x[0],p1y[0],c="r")
     #print(canReach(Rmap,startPos,endPos))

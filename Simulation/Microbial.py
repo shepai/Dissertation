@@ -260,11 +260,11 @@ def microbial(genes,world,position):
      
     #microbial selection
     if fitness1>fitness2:
-        gene2=copy.deepcopy(crossover(gene2,gene1))
-        genes[ind_2]=copy.deepcopy(gene2)
+        gene2=copy.deepcopy((gene1)) #crossover
+        genes[ind_2]=copy.deepcopy(crossover(gene2,gene1))
     elif fitness2>fitness1:
-        gene1=copy.deepcopy(crossover(gene1,gene1))
-        genes[ind_1]=copy.deepcopy(gene1)
+        gene1=copy.deepcopy((gene2)) #crossover
+        genes[ind_1]=copy.deepcopy(crossover(gene1,gene2))
     if max(fitness1,fitness2)>BESTFIT:
         BESTFIT=max(fitness1,fitness2) #gather the maximum
         if fitness1>fitness2: BEST=[copy.deepcopy(p1x),copy.deepcopy(p1y),copy.deepcopy(world),endCord1]
@@ -279,7 +279,7 @@ startPos=[int(SIZE/2),int(SIZE/2)] #centre point
 
 map=build3D(world)
 testIm=readIm(map,[25,25],30) #read the image that the agent sees
-Generations=300
+Generations=100
 vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 #network input:
 #   image, x_dest, y_dest
@@ -315,7 +315,8 @@ for gene in gene_pop:
     p1x,p1y,fit,endCord1=run_trial(gene)
     plt.plot(p1x,p1y) #show best path
     plt.title("Results of gene fitness at "+str(fit)+"% after generations")
-    plt.scatter(endCord1[0],endCord1[1])
+    plt.scatter(endCord1[1],endCord1[0])
+    plt.scatter(p1x[0],p1y[0],c="r")
     #print(canReach(Rmap,startPos,endPos))
     plt.imshow(BEST[2],cmap='terrain') #show best show
     plt.show()
@@ -323,6 +324,7 @@ for gene in gene_pop:
 plt.plot(BEST[1],BEST[0]) #show best path
 plt.title("Results of best fitness at "+str(BESTFIT)+"% after generations")
 plt.scatter(BEST[3][0],BEST[3][1])
+plt.scatter(BEST[1][0],BEST[0][0],c="r")
 #print(canReach(Rmap,startPos,endPos))
 plt.imshow(BEST[2],cmap='terrain') #show best show
 plt.show()

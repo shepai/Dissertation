@@ -249,8 +249,8 @@ def group(genes,world,position):
     genes1=[]
     genes2=[]
     for i in range(len(genes[ind_1])):
-        gene1=mutation(genes[ind_1][i])
-        gene2=mutation(genes[ind_2][i])
+        gene1=(genes[ind_1][i])
+        gene2=(genes[ind_2][i])
         genes1.append(gene1)
         genes2.append(gene2)
         #run trial for each
@@ -274,9 +274,11 @@ def group(genes,world,position):
      
     #microbial selection
     if fitness1>fitness2:
-        gene2=copy.deepcopy(crossover(genes1,genes2))
+        arr=[mutation(g) for g in genes1] #copy over mutated winners
+        gene2=copy.deepcopy(arr)
     elif fitness2>fitness1:
-        gene1=copy.deepcopy(crossover(genes2,genes1))
+        arr=[mutation(g) for g in genes2]
+        gene1=copy.deepcopy(arr)
     if max(fitness1,fitness2)>BESTFIT:
         BESTFIT=max(fitness1,fitness2) #gather the maximum
         if fitness1>fitness2: BEST=[copy.deepcopy(p1x),copy.deepcopy(p1y),copy.deepcopy(world),endCord1,ind_1]

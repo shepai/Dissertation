@@ -279,7 +279,7 @@ startPos=[int(SIZE/2),int(SIZE/2)] #centre point
 
 map=build3D(world)
 testIm=readIm(map,[25,25],30) #read the image that the agent sees
-Generations=100
+Generations=1000
 vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 #network input:
 #   image, x_dest, y_dest
@@ -291,7 +291,7 @@ vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 #   vectors possible (8)
 whegBot=Agent_defineLayers(testIm.shape[0]+2,[10,10],len(vectors)) #define the agent
 
-pop_size=20
+pop_size=10
 gene_pop=[]
 for i in range(pop_size): #vary from 10 to 20 depending on purpose of robot
     gene=np.random.normal(0, 0.8, (whegBot.num_genes))

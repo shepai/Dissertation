@@ -307,7 +307,7 @@ vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 whegBot=Agent_defineLayers(testIm.shape[0]+2,[10,10],len(vectors)) #define the agent
 
 group_size=5
-pop_size=20
+pop_size=10
 gene_pop=[]
 for i in range(pop_size):
     gene_group=[]

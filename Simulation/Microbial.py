@@ -85,11 +85,7 @@ def canReach(terrain,start,goal,endmarked=[[False for i in range(SIZE)] for j in
     
 
 #getBestRoute will be used to measure how fit an evolved route is
-def getBestRoute(terrain,start,end):
-    #find the least cost route from A to B
-    #return metrics
-    
-    return []
+
 def expand(terrain,Map,start):
     for i in range(len(terrain)):
         for j in range(len(terrain[i])):
@@ -204,7 +200,7 @@ def run_trial(gene,runs=30):
         cords=random.choice(coords)
         tmp=cords
         cords=[int(cords[0]),int(cords[1])]
-        if world[cords[1]][cords[0]]>-6:
+        if world[cords[1]][cords[0]]>-6 and world[cords[1]][cords[0]]<=10:
             valid=True
         else:
             coords.remove(tmp) #prevent from picking
@@ -221,8 +217,8 @@ def run_trial(gene,runs=30):
         current[0]+=v[0]
         current[1]+=v[1]
         if current[0]>=0 and current[0]<len(world)-1 and current[1]>=0 and current[1]<len(world[0])-1:
-            if world[current[0]][current[1]]<=-6: #do not allow the rover to enter water
-                print("water")
+            if world[current[0]][current[1]]<=-6 or world[cords[1]][cords[0]]>10: #do not allow the rover to enter water
+                print("water/snow")
                 broke=True
             else: #calculate energy usage
                 climb=max(-1,world[current[0]][current[1]]-world[last[0]][last[1]]) #non 0 value of total climb
@@ -296,7 +292,7 @@ whegBot=Agent_defineLayers(testIm.shape[0]+2,[10,10],len(vectors)) #define the a
 pop_size=10
 gene_pop=[]
 for i in range(pop_size): #vary from 10 to 20 depending on purpose of robot
-    gene=np.random.normal(0, 0.8, (whegBot.num_genes))
+    gene=np.random.normal(0, 1, (whegBot.num_genes))
     gene_pop.append(copy.deepcopy(gene))#create
 
 fitnesses=[]
@@ -312,9 +308,23 @@ for gen in range(Generations):
     #genes have been selected
     gene_pop,fit=microbial(gene_pop,world,startPos)
     fitnesses.append(max([fit]+fitnesses))
-
+bestGene=[]
+bestFit=0
 for gene in gene_pop:
     p1x,p1y,fit,endCord1=run_trial(gene)
+    plt.plot(p1x,p1y) #show best path
+    plt.title("Best gene "+str(fit)+"% after generations")
+    plt.scatter(endCord1[1],endCord1[0])
+    plt.scatter(p1x[0],p1y[0],c="r")
+    #print(canReach(Rmap,startPos,endPos))
+    plt.imshow(BEST[2],cmap='terrain') #show best show
+    plt.show()
+    if fit>bestFit:
+        bestFit=fit
+        bestGene=copy.deepcopy(gene)
+print("How best performs")
+for i in range(5):
+    p1x,p1y,fit,endCord1=run_trial(bestGene)
     plt.plot(p1x,p1y) #show best path
     plt.title("Results of gene fitness at "+str(fit)+"% after generations")
     plt.scatter(endCord1[1],endCord1[0])

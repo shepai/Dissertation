@@ -239,9 +239,11 @@ def microbial(genes,world,position):
     #microbial algorithm trial
     ind_1 = rnd.randint(0,len(genes)-1)
     ind_2 = rnd.randint(0,len(genes)-1)
+    while ind_1==ind_2: #make value unique
+        ind_2 = rnd.randint(0,len(genes)-1)
     #get two random positions
-    gene1=mutation(genes[ind_1])
-    gene2=mutation(genes[ind_2])
+    gene1=(genes[ind_1])
+    gene2=(genes[ind_2])
     #run trial for each
     p1x,p1y,fitness1,endCord1=run_trial(gene1)
     p2x,p2y,fitness2,endCord2=run_trial(gene2)
@@ -261,10 +263,10 @@ def microbial(genes,world,position):
     #microbial selection
     if fitness1>fitness2:
         gene2=copy.deepcopy((gene1)) #crossover
-        genes[ind_2]=copy.deepcopy(crossover(gene2,gene1))
+        genes[ind_2]=copy.deepcopy(crossover(gene2,mutation(gene1)))
     elif fitness2>fitness1:
         gene1=copy.deepcopy((gene2)) #crossover
-        genes[ind_1]=copy.deepcopy(crossover(gene1,gene2))
+        genes[ind_1]=copy.deepcopy(crossover(gene1,mutation(gene2)))
     if max(fitness1,fitness2)>BESTFIT:
         BESTFIT=max(fitness1,fitness2) #gather the maximum
         if fitness1>fitness2: BEST=[copy.deepcopy(p1x),copy.deepcopy(p1y),copy.deepcopy(world),endCord1]
@@ -279,7 +281,7 @@ startPos=[int(SIZE/2),int(SIZE/2)] #centre point
 
 map=build3D(world)
 testIm=readIm(map,[25,25],30) #read the image that the agent sees
-Generations=1000
+Generations=100
 vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 #network input:
 #   image, x_dest, y_dest

@@ -243,6 +243,8 @@ def group(genes,world,position):
     #microbial algorithm trial
     ind_1 = rnd.randint(0,len(genes)-1)
     ind_2 = rnd.randint(0,len(genes)-1)
+    while ind_1==ind_2: #make value unique
+        ind_2 = rnd.randint(0,len(genes)-1)
     #get two random positions
     fitness1=0
     fitness2=0

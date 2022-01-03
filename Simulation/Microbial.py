@@ -278,7 +278,7 @@ startPos=[int(SIZE/2),int(SIZE/2)] #centre point
 
 map=build3D(world)
 testIm=readIm(map,[25,25],30) #read the image that the agent sees
-Generations=500
+Generations=300
 vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 #network input:
 #   image, x_dest, y_dest
@@ -310,6 +310,14 @@ for gen in range(Generations):
     gene_pop,fit=microbial(gene_pop,world,startPos)
     fitnesses.append(max([fit]+fitnesses))
 
+for gene in gene_pop:
+    p1x,p1y,fit,endCord1=run_trial(gene)
+    plt.plot(p1x,p1y) #show best path
+    plt.title("Results of gene fitness at "+str(fit)+"% after generations")
+    plt.scatter(endCord1[0],endCord1[1])
+    #print(canReach(Rmap,startPos,endPos))
+    plt.imshow(BEST[2],cmap='terrain') #show best show
+    plt.show()
 
 plt.plot(BEST[1],BEST[0]) #show best path
 plt.title("Results of best fitness at "+str(BESTFIT)+"% after generations")

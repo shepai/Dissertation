@@ -99,26 +99,17 @@ def displayColourMap(Arrays):
     print(Arrays)
     plt.imshow(Arrays)
     plt.show()
-def getSlice(map,line,position):
+def getSlice(map,line,position,imH=5):
     #move up a height
-    height=np.count_nonzero(map[position[0]][position[1]]==1)
+    height=map[position[0]][position[1]]
     #max(0,height-map[coord[0]][coord[1]])
     column=[]
     past=0
     c=[]
-    for coord in line[::-1]: #loop through coordinates
-        coord=coord[::-1]
-        try:
-            c.append(np.count_nonzero(map[coord[0]][coord[1]] == 1))
-            count = max(np.count_nonzero(map[coord[0]][coord[1]] == 1)-height,0)
-            #look at depth of block in front of
-            column.append(max(count,past))
-            if np.count_nonzero(map[coord[0]][coord[1]]== 1)<height: #if still lower than current
-                past=count
-            else: past=max(past,count)
-        except IndexError: #if line outside of map bounds
-            column.append(0)
-            c.append(0)
+    passes=0 #allow building
+    
+    for coord in line[::-1]:
+        column.append(map[coord[0]][coord[1]]-height+50)
     print(column)
     return column
 def readIm(map,position,direction,imSize=(5,5),d=5):
@@ -127,7 +118,6 @@ def readIm(map,position,direction,imSize=(5,5),d=5):
     r=maths.radians(direction)
     vector=(int(d*maths.cos(r)),int(d*maths.sin(r)))
     x,y=position
-    image=[]
     lines=[]
     ANG=0
     for pixX in range(imSize[1]):
@@ -139,14 +129,14 @@ def readIm(map,position,direction,imSize=(5,5),d=5):
     #place pixel in the height relevant based on terrain height
     A=[]
     for lin in lines:
-        A.append(getSlice(map,lin,position))
+        A.append(getSlice(map,lin,position,imH=imSize[0]))
     displayColourMap(A)
     
     plt.plot(lines[0][:,0],lines[0][:,1],c="r")
     #plt.scatter(line2[:,0],line2[:,1])
     #plt.scatter(line3[:,0],line3[:,1])
     plt.plot(lines[-1][:,0],lines[-1][:,1],c="r")
-    return image
+    return A
 
 def build3D(world):
     #build a 3d representation
@@ -172,9 +162,9 @@ while True:
     #randomly pick a start position
     startPos=pickPosition(world,4,LBounds=6)
     vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
-    map=build3D(world) 
+    #map=build3D(world) 
     print("Angle",i)
-    im=readIm(map,startPos,i)
+    im=readIm(world,startPos,i)
     i+=10
     #time.sleep(1)
     #os.system('cls')

@@ -206,11 +206,13 @@ def run_trial(gene,runs=30):
             coords.remove(tmp) #prevent from picking
     cords=np.array(cords)
     i=0
+    
     while i<runs and not broke and getDist(current,cords)>1: #loop through and generate path
         dir=maths.cos(v[1]) #get angle from y-axis
         im=readIm(map,current,dir) #read the image that the agent sees
         assert len(im)==25, "Panoramic Camera failed"+str(len(im)) #assert length correct
-        v=whegBot.get_action(np.concatenate((im, cords))) #get action from the agent
+        VectorBetween=[coords[0]-current[0],coords[1]-current[1]]
+        v=whegBot.get_action(np.concatenate((im, VectorBetween))) #get action from the agent
         last=current.copy()
         pathx.append(current[0]+v[0])
         pathy.append(current[1]+v[1])

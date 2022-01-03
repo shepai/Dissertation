@@ -35,8 +35,8 @@ def generateWorld():
 def mutation(gene, mean=0, std=0.5):
     gene = gene + np.random.normal(mean, std, size=gene.shape) #mutate the gene via normal 
     # constraint
-    gene[gene >1] = 1
-    gene[gene < -1] = -1
+    gene[gene >4] = 4
+    gene[gene < -4] = -4
     return gene
 
 def crossover(loser, winner, p_crossover=0.5): #provide a crossover function
@@ -211,9 +211,9 @@ def run_trial(gene,runs=30):
         dir=maths.cos(v[1]) #get angle from y-axis
         im=readIm(map,current,dir) #read the image that the agent sees
         assert len(im)==25, "Panoramic Camera failed"+str(len(im)) #assert length correct
-        VectorBetween=[coords[0]-current[0],coords[1]-current[1]]
+        VectorBetween=[cords[0]-current[0],cords[1]-current[1]]
         v=whegBot.get_action(np.concatenate((im, VectorBetween))) #get action from the agent
-        last=current.copy()
+        last=current.copy() 
         pathx.append(current[0]+v[0])
         pathy.append(current[1]+v[1])
         current[0]+=v[0]
@@ -279,7 +279,7 @@ startPos=[int(SIZE/2),int(SIZE/2)] #centre point
 
 map=build3D(world)
 testIm=readIm(map,[25,25],30) #read the image that the agent sees
-Generations=100
+Generations=200
 vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 #network input:
 #   image, x_dest, y_dest
@@ -314,16 +314,17 @@ bestGene=[]
 bestFit=0
 for gene in gene_pop:
     p1x,p1y,fit,endCord1=run_trial(gene)
-    plt.plot(p1x,p1y) #show best path
-    plt.title("Gene "+str(fit)+"% after generations")
-    plt.scatter(endCord1[1],endCord1[0])
-    plt.scatter(p1x[0],p1y[0],c="r")
-    #print(canReach(Rmap,startPos,endPos))
-    plt.imshow(BEST[2],cmap='terrain') #show best show
-    plt.show()
-    if fit>bestFit:
-        bestFit=fit
-        bestGene=copy.deepcopy(gene)
+    if fit>0:
+        plt.plot(p1x,p1y) #show best path
+        plt.title("Gene "+str(fit)+"% after generations")
+        plt.scatter(endCord1[1],endCord1[0])
+        plt.scatter(p1x[0],p1y[0],c="r")
+        #print(canReach(Rmap,startPos,endPos))
+        plt.imshow(BEST[2],cmap='terrain') #show best show
+        plt.show()
+        if fit>bestFit:
+            bestFit=fit
+            bestGene=copy.deepcopy(gene)
 print("How best performs")
 for i in range(5):
     p1x,p1y,fit,endCord1=run_trial(bestGene)

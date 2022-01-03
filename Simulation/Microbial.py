@@ -261,15 +261,16 @@ def microbial(genes,world,position):
     #microbial selection
     if fitness1>fitness2:
         gene2=copy.deepcopy(crossover(gene2,gene1))
+        genes[ind_2]=copy.deepcopy(gene2)
     elif fitness2>fitness1:
         gene1=copy.deepcopy(crossover(gene1,gene1))
+        genes[ind_1]=copy.deepcopy(gene1)
     if max(fitness1,fitness2)>BESTFIT:
         BESTFIT=max(fitness1,fitness2) #gather the maximum
         if fitness1>fitness2: BEST=[copy.deepcopy(p1x),copy.deepcopy(p1y),copy.deepcopy(world),endCord1]
         else: BEST=[copy.deepcopy(p2x),copy.deepcopy(p2y),copy.deepcopy(world),endCord2]
     if BESTFIT==0: BEST=[copy.deepcopy(p2x),copy.deepcopy(p2y),copy.deepcopy(world),endCord2] #default
-    genes[ind_1]=copy.deepcopy(gene1)
-    genes[ind_2]=copy.deepcopy(gene2)
+    
     return genes,max(fitness1,fitness2)
 BEST=[]
 BESTFIT=0

@@ -133,7 +133,7 @@ def readIm(map,position,direction,imSize=(5,5),d=5):
     for lin in lines:
         A.append(getSlice(map,lin,position,imH=imSize[0]))
 
-    A=np.array(A)/10
+    A=np.array(A)/50
     A = A.flatten()
     return A
 
@@ -267,7 +267,7 @@ whegBot=Agent_defineLayers(testIm.shape[0]+2,[10,10],len(vectors)) #define the a
 pop_size=10
 gene_pop=[]
 for i in range(pop_size): #vary from 10 to 20 depending on purpose of robot
-    gene=np.random.normal(0, 0.7, (whegBot.num_genes))
+    gene=np.random.normal(0, 0.5, (whegBot.num_genes))
     gene_pop.append(copy.deepcopy(gene))#create
 
 fitnesses=[]

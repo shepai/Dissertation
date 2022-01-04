@@ -109,38 +109,25 @@ def getDist(start,end):
     d1=((start[0]-end[0])**2 + (start[1]-end[1])**2)**0.5
     return int(d1)
 
-def getSlice(map,line,position,WATER_LEVEL=4):
+def getSlice(map,line,position,imH=5):
     #move up a height
-    height=np.count_nonzero(map[position[0]][position[1]]==1)
+    height=map[position[0]][position[1]]
     #max(0,height-map[coord[0]][coord[1]])
     column=[]
     past=0
     c=[]
+    passes=0 #allow building
     
-    for coord in line[::-1]: #loop through coordinates
-        coord=coord[::-1]
-        try:
-            c.append(np.count_nonzero(map[coord[0]][coord[1]] == 1))
-            count = max(np.count_nonzero(map[coord[0]][coord[1]] == 1)-height,0)
-            #look at depth of block in front of
-            if np.count_nonzero(map[coord[0]][coord[1]] == 1)<=WATER_LEVEL: #show dangers
-                column.append(-1)
-            else:
-                column.append(max(count,past))
-            if np.count_nonzero(map[coord[0]][coord[1]]== 1)<height: #if still lower than current
-                past=count
-            else: past=max(past,count)
-        except IndexError: #if line outside of map bounds
-            column.append(0)
-            c.append(0)
+    for coord in line[::-1]:
+        column.append(map[coord[0]][coord[1]]-height+50)
+
     return column
 def readIm(map,position,direction,imSize=(5,5),d=5):
     #read the ground around the agent at a radius of i
     assert (imSize[1]*20<360) #if the image size requires larger than panoramic this will be stupid
-    r=direction
+    r=maths.radians(direction)
     vector=(int(d*maths.cos(r)),int(d*maths.sin(r)))
     x,y=position
-    image=[]
     lines=[]
     ANG=0
     for pixX in range(imSize[1]):
@@ -152,26 +139,11 @@ def readIm(map,position,direction,imSize=(5,5),d=5):
     #place pixel in the height relevant based on terrain height
     A=[]
     for lin in lines:
-        A.append(getSlice(map,lin,position))
-    A=np.array(A)*10
+        A.append(getSlice(map,lin,position,imH=imSize[0]))
+
+    A=np.array(A)/50
     A = A.flatten()
     return A
-
-def build3D(world):
-    #build a 3d representation
-    zSize=abs(np.amin(world))+abs(np.amax(world))    
-    m=np.array([[[0 for i in range(np.amax(world)+abs(np.amin(world)))] for j in range(len(world[i]))]for i in range(len(world))])
-    for i in range(len(world)):
-        for j in range(len(world[i])):
-            position=world[i][j]
-            bound=0 #set the bound of size
-            if position<0: bound=10-abs(position)
-            else: bound=10+position
-            for z in range(zSize): #show redundant space
-                if z<=bound: #only ad ones to phase
-                    m[i][j][z]=1
-            #
-    return m
 
 def getCircleCoord(centre,radius):
     #(x-centre[0])^2 + (y-centre[1])^2 = radius^2
@@ -199,7 +171,6 @@ def run_trial(gene,runs=30):
     routeValues=[]
     v=rnd.choice(vectors)
     whegBot.set_genes(gene) #set the genes of the agent
-    map=build3D(world) 
     radius=10
     valid=False
     cords=[]
@@ -216,7 +187,7 @@ def run_trial(gene,runs=30):
     i=0
     while i<runs and not broke and getDist(current,cords)>1: #loop through and generate path
         dir=maths.cos(v[1]) #get angle from y-axis
-        im=readIm(map,current,dir) #read the image that the agent sees
+        im=readIm(world,current,dir) #read the image that the agent sees
         assert len(im)==25, "Panoramic Camera failed"+str(len(im)) #assert length correct
         VectorBetween=[cords[0]-current[0],cords[1]-current[1]]
         v=whegBot.get_action(np.concatenate((im, VectorBetween))) #get action from the agent
@@ -295,8 +266,8 @@ BESTFIT=0
 world,shape=generateWorld()
 startPos=[int(SIZE/2),int(SIZE/2)] #centre point
 
-map=build3D(world)
-testIm=readIm(map,[25,25],30) #read the image that the agent sees
+
+testIm=readIm(world,[25,25],30) #read the image that the agent sees
 Generations=100
 vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 #network input:

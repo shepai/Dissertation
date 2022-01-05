@@ -268,7 +268,7 @@ startPos=[int(SIZE/2),int(SIZE/2)] #centre point
 
 
 testIm=readIm(world,[25,25],30) #read the image that the agent sees
-Generations=100
+Generations=500
 vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 #network input:
 #   image, x_dest, y_dest

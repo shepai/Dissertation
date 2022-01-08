@@ -1,0 +1,208 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with`a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{titling}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{xcolor}
+\usepackage{siunitx}
+\usepackage{subcaption}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{pdfpages}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+\begin{document}
+\begin{titlepage}
+   \begin{center}
+   % Centre the page to look neat
+       \vspace*{2cm}
+        % Set space from top
+       \textbf{\LARGE Bio-Inspired Robotic Navigation On Varied Terrain}
+% Name separated by break lines and supervisor name
+    
+       \vspace{1cm}
+       % Set space from title
+        \textbf{Dexter R Shepherd [candNo: 215819] \\ Supervisor: Dr James Knight}
+
+       \vfill
+       % allow it to stretch and sink verticaly
+            % Smaller text with title and course name
+       Final Report\\
+       Computer Science and Artificial Intelligence\, BSc
+            
+       \vspace{0.8cm}
+       % Set space from details
+     % Display photo of the logo (small size)
+     
+       \includegraphics[width=0.2\textwidth]{University_of_Sussex_Logo.png}
+       
+         % Display establishment information
+       Department of Informatics\\
+       University of Sussex \\
+       
+       2021
+            
+   \end{center}
+\end{titlepage}
+
+\newpage 
+\includegraphics[width=0.6\linewidth]{Dyslexia Sticker (2).jpg}
+\\\\
+
+        % Set space from top
+       \textbf{\LARGE Statement of authenticity}
+       \vspace{0.8cm}
+       
+       This report is submitted as part requirement for the degree of Computer Science and Artificial Intelligence (BSc) at the University of Sussex. It is the product of my own labour except where indicated in the text. The report may be freely copied and distributed provided the source is acknowledged. I hereby give permission for a copy of this report to be loaned out to students in future years
+       \vspace{2cm}
+       \\Signed:\\
+       \vspace{0.8cm}
+       \includegraphics[width=0.5\textwidth]{sig.PNG}
+
+       Dexter R Shepherd
+       
+\vspace*{1cm}
+        % Set space from top
+       \textbf{\LARGE Acknowledgements}
+       \vspace{0.8cm}
+       \\
+        TODO
+ 
+         \\
+\vspace*{1cm}
+        % Set space from top
+       \textbf{\LARGE Summary}
+       \vspace{0.8cm}
+       \\
+       TODO
+       
+       \\
+\newpage 
+\tableofcontents
+\newpage
+
+\section{Introduction}
+In this project, I am going to investigate autonomous robotic navigation through localized decisions based on previous experience. Nearly all organisms are limited at some point when it comes to movement. For example, an octopus can fit through an aperture that is bigger than its beak \cite{octopus} and a person can climb over rocks, but only if they have grip points for hands and feet. These environmental barriers define constraints to an organism’s ability to traverse across it. When a path looks too arduous, we will often choose a more accessible route if possible. 
+
+These constraints also apply to robots. Consider a Mars Rover over 395 million km away from the person controlling it. If the Rover were to get stuck, there would be no one to recover it and -- as it takes 181 seconds for a signal to get from Earth to Mars -- real-time control is impossible. Therefore, a robot, like a biological organism, needs a sense of self-preservation so needs to know its limitations and not attempt tasks of movement outside these physical constraints.
+\cite{reinforcementLearning} 
+
+Our agent will be set a target location and will need to reach it while avoiding hazardous/overly complex terrain within the environment. Success will be defined as whether the agent got there safely, and how much extra energy was consumed.
+When deciding on routes, there may be the scenario that all paths are within the constraints but some are simpler to navigate than others. In this situation, the agent will need to pick the option which requires the “least” effort. The best-case scenario for the agent I am developing is governed by the level of complexity of movement necessary to overcome the obstacle. If the agent gets stuck it will get no reward, if the agent makes unnecessary movement while moving over simple terrain, it will get little reward.
+
+I will initially explore this problem using simulation before moving to a robot platform with a back actuator, stabilizer and neck actuator. The robot will need to learn to use these features to help it navigate over the landscape. This robot will perform this task by using computer vision techniques, which forms a prediction on the best route to take via a movement instructions generated at each move.
+
+\section{Professional and Ethical considerations}
+
+In line with the BCS Code of Conduct, we must only undertake research within our competency. The Computer Vision and Acquired Intelligence; and Adaptive Behaviour modules have given me the relevant knowledge to attempt the task of terrain navigation. In addition to this, the Junior Research Associate scheme has given me a valuable background in robotics and evolving hardware. 
+
+While no ethical approval is needed for this project, there are indisputable risks of dual use in AI research. However, at the fundamental level that I am working on, I have made a conscious decision to prioritise Open Science and all of my code will be publicly available on Github. 
+
+Because we will train our robot on images of real world environments, we will have to consider the dangers of people being in view and thus consider the GDPR rules. However, as the resolution of images will be low, this will not be recognizable. 
+
+Another ethical consideration is the safety involved in testing as the robot could be a trip hazard. Therefore, we will test the robot in an environment that it cannot hit people. This will be the safety netted area of the Future Technologies Lab. 
+
+%BODY OF REPORT
+
+\section{Requirement analysis}
+Existing  robotic solutions have not combined bio-inspired chassis design with reinforcement learning. This project will use a physical robot platform and a simulation of this platform for the gathering of data.
+
+\subsection{User Needs and ideal features}
+The agent will need to learn how to recognize the differences between rough and smooth terrain based on visual information and furthermore learn how to traverse it. Ideally, the physical robot will use its back actuator to improve its ability to climb over terrain. 
+
+The agent will need to understand its limitations and not attempt routes that it will get stuck on. Ideally this will be demonstrated on a physical robot but, if time pressure prevents this, it is still essential the algorithm works in simulation. 
+
+\subsection{Limitations}
+This project does not intend to create a robot that can climb any terrain. While the Wheg design will improve the robot's climbing ability, it will not make it impervious to the laws of physics! 
+
+\subsection{Problem the system is solving}
+
+\section{Methods}
+
+\subsection{Simulation}
+
+\subsubsection{Environment}
+
+\subsubsection{Model and rewards}
+
+\subsubsection{Evolutionary strategies}
+
+
+
+\subsection{Robot platform}
+
+\subsubsection{Chassis}
+The chassis was built using aluminium servo parts, typically used for biped robots and robotic arms. This was used due to easily fitting standard servos, which made it compatible with the continuous rotation servos used for the robot's locomotion. In addition, it made it simpler to fit suspension and the cockroach inspired back. Figure~\ref{fig:whegv3} shows the robot within outdoor trials. 
+
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.7\columnwidth]{DSC_0336.JPG}
+
+\caption{Wheg robot with improved multi-direction climb and back actuation}
+\label{fig:whegv3}
+\end{figure}
+
+The robot chassis incorporated a wheg design. This design was able to climb over terrain while maintaining stability under initial tests with an xbox controller. The main chassis of the robot used the suspension system shown in figure~\ref{fig:suspension} so that a higher incline on one extremity does not tilt the overall robot. This design was inspired by a Tamiya radio controlled car~\cite{tamiya}. 
+
+\begin{figure}[H]
+\centering
+\subfloat[Neutral position]{%
+  \includegraphics[clip,width=0.3\columnwidth]{sus1.PNG}%
+}
+\subfloat[Activated position]{%
+  \includegraphics[clip,width=0.3\columnwidth]{sus2.PNG}%
+}
+\caption{Figure showing the movement of the suspension system design moving over hardware. This uses a single spring shock absorber per Wheg.}
+\label{fig:suspension}
+\end{figure}
+
+The neck used a pan and tilt mechanism where the front of the robot chassis panned left to right, to improve turning left and right within an environment. The tilt will be up and down on the axis of gravity acting as a back. A bend in the back will redistribute weight -- the exact process applied in the cockroach research~\cite{cockroach}. 
+
+For control, the chassis used a Raspberry Pi for its low energy consumption yet reasonable processing power. 
+
+\subsubsection{Vision}
+
+\section{Testing and results}
+
+
+\section{Conclusions}
+
+\bibliographystyle{unsrt}
+\bibliography{sample}
+
+\section{Appendices}
+\end{document}

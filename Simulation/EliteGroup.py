@@ -303,7 +303,7 @@ for i in range(epochs):
     gene_pop={}
     for i,gene in enumerate(topGenes):
         gene_pop[i]=[copy.deepcopy(gene),0]
-    for i in range(len(gene_pop)+1,pop_size):
+    for i in range(len(gene_pop)+1,pop_size): #repopulate
         gene_pop[i]=[copy.deepcopy(mutation(random.choice(topGenes))),0]
 
 

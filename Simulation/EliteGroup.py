@@ -192,7 +192,7 @@ def run_trial(gene,runs=30):
         current[1]+=v[1]
         if current[0]>=0 and current[0]<len(world[0])-1 and current[1]>=0 and current[1]<len(world)-1:
             if world[current[1]][current[0]]<=-6: #do not allow the rover to enter water
-                print("water")
+                #print("water")
                 
                 broke=True
             else: #calculate energy usage
@@ -201,7 +201,7 @@ def run_trial(gene,runs=30):
                 energy+=1+climb
         i+=1
     endDist=getDist(current,cords)
-    print("total energy consumed",energy,"fitness",fitness(broke,energy,endDist),"endDist:",endDist)
+    #print("total energy consumed",energy,"fitness",fitness(broke,energy,endDist),"endDist:",endDist)
     
     return pathx,pathy,fitness(broke,energy,endDist),cords
 
@@ -227,7 +227,7 @@ def microbial(genes,world,position):
     #generate average fitness
     fitness1=(fitness1+fitnessa1+fitnessb1)/3
     fitness2=(fitness2+fitnessa2+fitnessb2)/3
-    print(max(fitness1,fitness2),"% over 3 trials")
+    #print(max(fitness1,fitness2),"% over 3 trials")
     #show results
      
     #microbial selection
@@ -249,21 +249,21 @@ def getTopGenes(genes,x):
         p=genes[key][1]
         placed=False
         for i,item in enumerate(arr): #loop through and make a weighted list
-            if item[1]>=p:
-                arr.insert(key,[key,p]) #add items where they should be
+            if item[1]<=p:
+                arr.insert(i,[key,p]) #add items where they should be
                 placed=True
                 break
         if not placed: arr.append([key,p])
     genesToReturn=[]
     for i in range(x): #grab top x amount
-        genesToReturn.append(copy.deepcopy(genes[arr[i]][0]))
+        genesToReturn.append(copy.deepcopy(genes[arr[i][0]][0]))
     return genesToReturn
 
 world,shape=generateWorld()
 startPos=[int(SIZE/2),int(SIZE/2)] #centre point
 
 testIm=readIm(world,[25,25],30) #read the image that the agent sees
-Generations=200
+Generations=500
 vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 #network input:
 #   image, x_dest, y_dest
@@ -275,7 +275,7 @@ vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 #   vectors possible (8)
 whegBot=Agent_defineLayers(testIm.shape[0]+2,[10,10],len(vectors)) #define the agent
 
-pop_size=10
+pop_size=25
 gene_pop={}
 for i in range(pop_size): #vary from 10 to 20 depending on purpose of robot
     gene=np.random.normal(0, 0.5, (whegBot.num_genes))
@@ -303,14 +303,30 @@ for i in range(epochs):
     gene_pop={}
     for i,gene in enumerate(topGenes):
         gene_pop[i]=[copy.deepcopy(gene),0]
-    for i in range(len(gene_pop)+1,pop_size): #repopulate
+    for i in range(len(gene_pop),pop_size): #repopulate
         gene_pop[i]=[copy.deepcopy(mutation(random.choice(topGenes))),0]
 
 
 
+#run every single gene left for viewing
+
+for gene in gene_pop:
+    gene=gene_pop[gene][0]
+    startPos=pickPosition(world,4,LBounds=6)
+    p1x,p1y,fit,endCord1=run_trial(gene)
+    if fit>0:
+        plt.plot(p1x,p1y) #show best path
+        plt.title("Gene "+str(fit)+"% after generations")
+        plt.scatter(endCord1[0],endCord1[1])
+        plt.scatter(p1x[0],p1y[0],c="r")
+        #print(canReach(Rmap,startPos,endPos))
+        plt.imshow(world,cmap='terrain') #show best show
+        plt.show()
+
+#
 plt.cla()
-plt.plot([i for i in range(Generations)],fitnesses) #show fintesses over generations
-plt.title("Results of population fitness over "+str(Generations)+" generations")
+plt.plot([i for i in range(len(fitnesses))],fitnesses) #show fintesses over generations
+plt.title("Results of population fitness over "+str(len(fitnesses))+" generations")
 plt.ylabel("Fitness Units")
 plt.xlabel("Generation")
 plt.show()

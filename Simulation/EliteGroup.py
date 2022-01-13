@@ -188,10 +188,11 @@ def run_trial(gene,runs=30):
         last=current.copy() 
         pathx.append(current[0]+v[0])
         pathy.append(current[1]+v[1])
+        lastH=world[current[1]][current[0]]
         current[0]+=v[0]
         current[1]+=v[1]
         if current[0]>=0 and current[0]<len(world[0])-1 and current[1]>=0 and current[1]<len(world)-1:
-            if world[current[1]][current[0]]<=-6 or last-world[current[1]][current[0]]>1: #do not allow the rover to enter water
+            if world[current[1]][current[0]]<=-6 or lastH-world[current[1]][current[0]]>1: #do not allow the rover to enter water
                 #or if there is a substanial step
                 broke=True
             else: #calculate energy usage

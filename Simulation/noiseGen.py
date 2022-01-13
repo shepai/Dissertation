@@ -19,8 +19,8 @@ SIZE=50
 def generateWorld():
     shape = (SIZE,SIZE)
     scale = 100.0
-    octaves = rnd.randint(2,20)
-    persistence = 0.5
+    octaves = 10 #rnd.randint(2,20)
+    persistence = 0.7
     lacunarity = 2
 
     world = np.zeros(shape)

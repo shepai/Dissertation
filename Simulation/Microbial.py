@@ -12,8 +12,8 @@ SIZE=50
 def generateWorld():
     shape = (SIZE,SIZE)
     scale = 100.0
-    octaves = 20 #rnd.randint(2,20)
-    persistence = 0.5
+    octaves = 10 #rnd.randint(2,20)
+    persistence = 0.7
     lacunarity = 2
 
     world = np.zeros(shape)
@@ -178,7 +178,7 @@ def run_trial(gene,runs=30):
             coords.remove(tmp) #prevent from picking
     cords=np.array(cords)
     i=0
-    
+    last=0
     while i<runs and not broke and getDist(current,cords)>1: #loop through and generate path
         dir=maths.cos(v[1]) #get angle from y-axis
         im=readIm(world,current,dir) #read the image that the agent sees
@@ -188,12 +188,12 @@ def run_trial(gene,runs=30):
         last=current.copy() 
         pathx.append(current[0]+v[0])
         pathy.append(current[1]+v[1])
+        last=world[current[1]][current[0]]
         current[0]+=v[0]
         current[1]+=v[1]
         if current[0]>=0 and current[0]<len(world[0])-1 and current[1]>=0 and current[1]<len(world)-1:
-            if world[current[1]][current[0]]<=-6: #do not allow the rover to enter water
-                print("water")
-                
+            if world[current[1]][current[0]]<=-6 or last-world[current[1]][current[0]]>1: #do not allow the rover to enter water
+                #or if there is a substanial step
                 broke=True
             else: #calculate energy usage
                 climb=max(-1,world[current[1]][current[0]]-world[last[1]][last[0]]) #non 0 value of total climb

@@ -192,7 +192,7 @@ def run_trial(gene,runs=30):
         current[0]+=v[0]
         current[1]+=v[1]
         if current[0]>=0 and current[0]<len(world[0])-1 and current[1]>=0 and current[1]<len(world)-1:
-            if world[current[1]][current[0]]<=-6 or lastH-world[current[1]][current[0]]>1: #do not allow the rover to enter water
+            if world[current[1]][current[0]]<=-6 or lastH-world[current[1]][current[0]]>3: #do not allow the rover to enter water
                 #or if there is a substanial step
                 broke=True
             else: #calculate energy usage
@@ -282,11 +282,11 @@ for i in range(pop_size): #vary from 10 to 20 depending on purpose of robot
     gene_pop[i]=[copy.deepcopy(gene),0] #create gene,fitness
 
 
-fitnesses=[]
+fitnesses=[0]
 epochs=5
 for i in range(epochs):
     for gen in range(Generations):
-        print("Gen",gen+1)
+        print("Gen",gen+1, max(fitnesses))
         #generate the world terrain
         world,shape=generateWorld()
         world=np.pad(np.array(world), (2,2), 'constant',constant_values=(-6,-6))

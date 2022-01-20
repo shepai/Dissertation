@@ -116,15 +116,15 @@
 \newpage
 
 \section{Introduction}
-In this project, I am going to investigate autonomous robotic navigation through localized decisions based on previous experience. Nearly all organisms are limited at some point when it comes to movement. For example, an octopus can fit through an aperture that is bigger than its beak \cite{octopus} and a person can climb over rocks, but only if they have grip points for hands and feet. These environmental barriers define constraints to an organism’s ability to traverse across it. When a path looks too arduous, we will often choose a more accessible route if possible. 
+In this project, I have investigated autonomous robotic navigation through localized decisions based on previous experience. Nearly all organisms are limited at some point when it comes to movement. For example, an octopus can fit through an aperture that is bigger than its beak \cite{octopus} and a person can climb over rocks, but only if they have grip points for hands and feet. These environmental barriers define constraints to an organism’s ability to traverse across it. When a path looks too arduous, we will often choose a more accessible route if possible. 
 
 These constraints also apply to robots. Consider a Mars Rover over 395 million km away from the person controlling it. If the Rover were to get stuck, there would be no one to recover it and -- as it takes 181 seconds for a signal to get from Earth to Mars -- real-time control is impossible. Therefore, a robot, like a biological organism, needs a sense of self-preservation so needs to know its limitations and not attempt tasks of movement outside these physical constraints.
 \cite{reinforcementLearning} 
 
-Our agent will be set a target location and will need to reach it while avoiding hazardous/overly complex terrain within the environment. Success will be defined as whether the agent got there safely, and how much extra energy was consumed.
+Our agent was set a target location and had to reach it while avoiding hazardous/overly complex terrain within the environment. Success was defined as whether the agent got there safely, and how much extra energy was consumed.
 When deciding on routes, there may be the scenario that all paths are within the constraints but some are simpler to navigate than others. In this situation, the agent will need to pick the option which requires the “least” effort. The best-case scenario for the agent I am developing is governed by the level of complexity of movement necessary to overcome the obstacle. If the agent gets stuck it will get no reward, if the agent makes unnecessary movement while moving over simple terrain, it will get little reward.
 
-I will initially explore this problem using simulation before moving to a robot platform with a back actuator, stabilizer and neck actuator. The robot will need to learn to use these features to help it navigate over the landscape. This robot will perform this task by using computer vision techniques, which forms a prediction on the best route to take via a movement instructions generated at each move.
+I initially explored this problem using simulation before moving to a robot platform with a back actuator, stabilizer and neck actuator. The robot needed to learn to use these features to help it navigate over the landscape. This robot performed this task by using computer vision techniques, which forms a prediction on the best route to take via a movement instructions generated at each move.
 
 \section{Professional and Ethical considerations}
 

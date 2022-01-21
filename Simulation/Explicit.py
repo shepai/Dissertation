@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import axes3d
 import random as rnd
 import math as maths
+import random
+import copy
 
 SIZE=50
 def generateWorld():
@@ -152,6 +154,22 @@ def getCircleCoord(centre,radius):
         coords.append([x2,y])
     return coords
 
+def getDirection(cords,current,dir): #get the nearest vector
+    VectorBetween=[cords[0]-current[0],cords[1]-current[1]]
+    vectorMag=[]
+    mags={}
+    #pointAim=[current[0]+VectorBetween[0],current[1]+VectorBetween[1]] #get point aiming for
+    nearest=[0,0]
+    nearestDist=100
+    for vec in vectors:
+        point=[current[0]+vec[0],current[1]+vec[1]] #apply vector to current coord
+        x=getDist(point,cords)
+        if nearestDist>x:
+            nearestDist=x
+            nearest=copy.deepcopy(point)
+
+    return nearest
+
 world,shape=generateWorld()
 startPos=[int(SIZE/2),int(SIZE/2)] #centre point
 
@@ -167,4 +185,48 @@ for gen in range(Generations):
     world=np.pad(np.array(world), (3,3), 'constant',constant_values=(-7,-7))
     world=np.pad(np.array(world), (1,1), 'constant',constant_values=(-8,-8))
     #randomly pick a start position
+    startPos=[int(SIZE/2),int(SIZE/2)] #centre point
+    valid=False
+    cords=[]
+    radius=10
+    coords=getCircleCoord(startPos,radius)
+    while not valid: #validate random destination
+        cords=random.choice(coords)
+        tmp=cords
+        cords=[int(cords[0]),int(cords[1])]
+        if world[cords[1]][cords[0]]>-6 and world[cords[1]][cords[0]]<=10:
+            valid=True
+        else:
+            coords.remove(tmp) #prevent from picking
+    cords=np.array(cords)
+    i=0
+    last=0
+    broke=False
+    current=startPos
+    runs=30
+    pathx=[]
+    pathy=[]
+    energy=0
+    while i<runs and not broke and getDist(current,cords)>1: #loop through and generate path
+        last=copy.deepcopy(current)
+        current=getDirection(cords,current,dir) #get chosen direction
+        pathx.append(current[0])
+        pathy.append(current[1])
+        lastH=world[current[1]][current[0]]
+        if current[0]>=0 and current[0]<len(world[0])-1 and current[1]>=0 and current[1]<len(world)-1:
+            if world[current[1]][current[0]]<=-6 or lastH-world[current[1]][current[0]]>3: #do not allow the rover to enter water
+                #or if there is a substanial step
+                broke=True
+            else: #calculate energy usage
+                climb=max(-1,world[current[1]][current[0]]-world[last[1]][last[0]]) #non 0 value of total climb
+                energy+=1+climb
+        i+=1
+    fit=fitness(broke,energy,getDist(current,cords))
+    plt.plot(pathx,pathy) #show best path
+    plt.title("Gene "+str(fit)+"% after generations")
+    plt.scatter(cords[0],cords[1])
+    plt.scatter(startPos[0],startPos[1],c="r")
+    #print(canReach(Rmap,startPos,endPos))
+    plt.imshow(world,cmap='terrain') #show best show
+    plt.show()
     

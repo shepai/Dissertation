@@ -155,6 +155,10 @@ def getCircleCoord(centre,radius):
     return coords
 
 def getDirection(cords,current,image): #get the nearest vector
+    #will need to:
+    #weight the best direction to take via vector
+    #weight the best direction based on image
+    #combine weights and pick vector
     VectorBetween=[cords[0]-current[0],cords[1]-current[1]]
     vectorMag=[]
     mags={}

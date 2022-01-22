@@ -154,7 +154,7 @@ def getCircleCoord(centre,radius):
         coords.append([x2,y])
     return coords
 
-def getDirection(cords,current,dir): #get the nearest vector
+def getDirection(cords,current,image): #get the nearest vector
     VectorBetween=[cords[0]-current[0],cords[1]-current[1]]
     vectorMag=[]
     mags={}
@@ -166,7 +166,7 @@ def getDirection(cords,current,dir): #get the nearest vector
         x=getDist(point,cords)
         if nearestDist>x:
             nearestDist=x
-            nearest=copy.deepcopy(point)
+            nearest=copy.deepcopy(vec)
 
     return nearest
 
@@ -202,14 +202,19 @@ for gen in range(Generations):
     i=0
     last=0
     broke=False
-    current=startPos
+    current=copy.deepcopy(startPos)
     runs=30
     pathx=[]
     pathy=[]
     energy=0
+    v=rnd.choice(vectors)
     while i<runs and not broke and getDist(current,cords)>1: #loop through and generate path
+        dir=maths.cos(v[1]) #get angle from y-axis
+        im=readIm(world,current,dir) #read the image that the agent sees
         last=copy.deepcopy(current)
-        current=getDirection(cords,current,dir) #get chosen direction
+        v=getDirection(cords,current,im) #get chosen direction
+        current[0]+=v[0]
+        current[1]+=v[1]
         pathx.append(current[0])
         pathy.append(current[1])
         lastH=world[current[1]][current[0]]

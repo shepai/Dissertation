@@ -20,7 +20,8 @@
 \usepackage{float}
 \usepackage{listings}
 \usepackage{pdfpages}
-
+\usepackage{algorithm}
+\usepackage{algorithmic}
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
@@ -154,14 +155,89 @@ This project does not intend to create a robot that can climb any terrain. While
 \section{Methods}
 
 \subsection{Simulation}
+I set up a Python simulation by generating a 2D map using Perlin noise, seen in figure ~\ref{fig:perlin}. Perlin noise is a type of gradient noise commonly used to procedurally generate terrain~\cite{perlin} where the value of the space between two points changes smoothly. A grid of ($n$) dimensions is created. Each index is assigned a random vector, where the dot product is calculated, which allows interpolation to generate noise.
 
-\subsubsection{Environment}
+%We present the interpolation between the dot products mathematically using $a$ to represent a grid node, with $0$ and $1$ being the grid node index. 
 
-\subsubsection{Model and rewards}
+\begin{figure}[H]
+\centering
+  \includegraphics[width=0.9\linewidth]{Sim2d.png}
+  \caption{2D simulation plot of a 3D terrain. Random generated points are shown to show the position of agents and rewards. }
+  \label{fig:perlin}
+\end{figure}
+The smoothstep function represents a sigmoid-like interpolation. 
+The persistence,  octaves, and lacunarity are all altered via parameters in the world creation function. The octave is generate via a combination of frequency-amplitudes. Each octave adds a layer of detail to the world, where the contribution of each octave is defined by persistence. The lucunarity defines how much detail is added or removed at each layer. This function formed a map held as a two-dimensional array representing terrain heights numerically. 
 
-\subsubsection{Evolutionary strategies}
+In such simulations, we can find how far a point is from the start position and the terrain steepness (gradient) at any point. The energy consumed ($E$) by a robot in a given trial is denoted by the number of steps taken ($S$) and the accumulated terrain value of each place ($P$). This terrain value is the step $S$ up, down, or across from the current height. The Manhattan distanced is used as a measure of how far the agent has travelled. This which was picked in place of the euclidean distance due to increased accuracy with high dimensionality~\cite{manhatten}.
+
+\begin{equation}
+E_{nergy} = (\mid x1 - x2 \mid  + \mid  y1 - y2 \mid ) \cdot \sum_{i=1}^{S} (P_{i})
+\end{equation}
+
+\subsubsection{Environment, model and rewards}
+The environmental conditions could be changed by altering the persistence parameter. By increasing the value, the terrain would become more complex with more simulated dangers such as water. 
+\begin{figure}[H]
+\centering
+\subfloat[ ]{%
+  \includegraphics[clip,width=0.5\columnwidth]{what its seeing.png}
+  }
+  \subfloat[ ]{%
+  \includegraphics[clip,width=0.5\columnwidth]{harderTerrain.png}
+  }
+\caption{ Left: Model with low persistence. Right: Model with high persistence.}
+\label{fig:persist}
+\end{figure}
+No real challenges would exist for an agent in Figure \ref{fig:persist}a due to the smooth terrain with a very small danger of water. An agent within Figure \ref{fig:persist}b has several pools and large changes in climb that it would need to take into consideration. Persistence was chosen at value 0.7 for the trials. 
+
+Vision was generated as a disparity map of changes within visual perception of the agent. The first person view was generated via taking several vectors off of agent at altered angles of 20 degrees per reading. The red lines within Figure \ref{fig:persist} show the visual perception of 100 degrees. x and y represent the current agent position, and the iteration of $x_{i}$ and $y_{i}$ represents the next coordinates at the next iteration. $\alpha$ represents the start angle that the agent is facing in. 
+
+\begin{equation}
+    x_{i}, y_{i} = x+ROUND(\left|d \cdot cos(\alpha +20i) \right|), y+ROUND(\left|d \cdot sin(\alpha +20i)\right|)
+\end{equation}
+The round function converts the values to integers so that the pixel coordinates can be accessed. 
+
+\subsubsection{Strategies}
+Three genetic algorithm (GA) approaches were taken to solving this task, then an alternative rule based approach was explored to find whether GAs were over-fitting the problem. 
+
+The first GA was a simple microbial algorithm. This generated a population of varied sizes. The optimal was found at between 10-20 genes. Two genes would be selected from the sample, trialed on three different maps with randomly generated coordinates, and then fitnesses calculated. The winner would copy over to the losing gene with a crossover between a mutation of the winning gene and the current gene. 
 
 
+\begin{algorithm}
+\caption{Microbial}\label{euclid}
+\begin{algorithmic}
+\REQUIRE $gene_population$
+
+\STATE $gene1 \leftarrow randomPopItem(gene\_population)$
+\STATE $gene2 \leftarrow randomPopItem(gene\_population)$
+
+\STATE $fitness1 \leftarrow runTrial(gene1)$
+\STATE $fitness2 \leftarrow runTrial(gene2)$
+\IF{$fitness1>fitness2$}
+\STATE $gene1 \leftarrow crossover(gene2,mutate(gene1))$
+\ENDIF
+\IF{$fitness2>fitness1$}
+\STATE $gene2 \leftarrow crossover(gene1,mutate(gene2))$
+\ENDIF
+\STATE $gene_population \leftarrow gene1$
+\STATE $gene_population \leftarrow gene2$
+\RETURN $gene\_population$
+\end{algorithmic}
+\end{algorithm}
+\newpage 
+
+An alternative gene was explored, inspired by groups of genes within a larger population. This was used as research showed that it outperformed microbial algorithms due to having more diversity of genes within winning groups, thus preventing convergence on sub-optimal solutions.~\cite{gaMethod} Fitness was measured by the summation of the fitnesses of all genes within a group.
+
+\begin{equation}
+   GroupFitness = \sum_{i=1}^{n}(fitness(gene_{i}))
+\end{equation}
+
+//insert psuedocode
+
+The previous strategies had few converging solutions at the end of trials. This inspired the creation of the final GA algorithm, which would perform a microbial normally for x-amount of generations, then repopulate the population with mutations of the top gene. This improved the accuracies of the agents. 
+
+//insert psuedocode
+
+The last approach used a rule based method. This would take into consideration the vector which takes the robot closest to the target, and avoid terrain that showed significant climb (or water). 
 
 \subsection{Robot platform}
 

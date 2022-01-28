@@ -217,6 +217,10 @@ The generated $newPixel$ at the indices of $k,l$ will have the pixel intensity o
 \label{fig:persist}
 \end{figure}
 
+Each trial would generate a random coordinate for the agent to start in, with the condition that this start point was not in water so that the agent would not receive 0 fitness before starting. An end goal point would be generated randomly from an array of coordinated on the circumference of a circle at a set radius. 
+
+
+
 \subsubsection{Strategies}
 Three genetic algorithm (GA) approaches were taken to solving this task, then an alternative rule based approach was explored to find whether GAs were over-fitting the problem. 
 
@@ -226,7 +230,7 @@ The first GA was a simple microbial algorithm. This generated a population of va
 \begin{algorithm}
 \caption{Microbial}\label{euclid}
 \begin{algorithmic}
-\REQUIRE $gene_population$
+\REQUIRE $gene\_population$
 
 \STATE $gene1 \leftarrow randomPopItem(gene\_population)$
 \STATE $gene2 \leftarrow randomPopItem(gene\_population)$
@@ -239,8 +243,8 @@ The first GA was a simple microbial algorithm. This generated a population of va
 \IF{$fitness2>fitness1$}
 \STATE $gene2 \leftarrow crossover(gene1,mutate(gene2))$
 \ENDIF
-\STATE $gene_population \leftarrow gene1$
-\STATE $gene_population \leftarrow gene2$
+\STATE $gene\_population \leftarrow gene\_population.push(gene1)$
+\STATE $gene\_population \leftarrow gene\_population.push(gene2)$
 \RETURN $gene\_population$
 \end{algorithmic}
 \end{algorithm}
@@ -255,7 +259,7 @@ An alternative gene was explored, inspired by groups of genes within a larger po
 \begin{algorithm}
 \caption{Group Microbial}\label{euclid}
 \begin{algorithmic}
-\REQUIRE $gene_population$
+\REQUIRE $gene\_population$
 
 \STATE $group1 \leftarrow randomPopItem(gene\_population)$
 \STATE $group2 \leftarrow randomPopItem(gene\_population)$
@@ -271,16 +275,51 @@ An alternative gene was explored, inspired by groups of genes within a larger po
 \IF{$fitness2>fitness1$}
 \STATE $group2 \leftarrow crossover(group1,mutate(group2))$
 \ENDIF
-\STATE $gene_population \leftarrow gene1$
-\STATE $gene_population \leftarrow gene2$
+\STATE $gene\_population \leftarrow gene\_population.push(group1)$
+\STATE $gene\_population \leftarrow gene\_population.push(group2)$
 \RETURN $gene\_population$
 \end{algorithmic}
 \end{algorithm}
+
+
+The previous strategies had few converging solutions at the end of trials. This inspired the creation of the final GA algorithm, which would perform a microbial normally for x-amount of generations, then repopulate the population with mutations of the top gene. This improved the accuracy of the agents. 
+
+\begin{algorithm}
+\caption{Choose best}\label{euclid}
+\begin{algorithmic}
+\REQUIRE $gene\_population,gene\_fitnesses,x$
+
+\STATE $topGenes \leftarrow [0...LENGTH(gene\_population)]$
+\STATE $marker \leftarrow 0$
+\For{$i \gets 0$ to $LENGTH(gene\_population)$}
+   \STATE $fitness \leftarrow gene\_fitnesses[i]$
+   \STATE $placed \leftarrow False$
+   \STATE $count \leftarrow 0$
+   \WHILE{$count<marker$ and $NOT placed$}
+        \IF{$topGenes[count]<fitness$}
+        \STATE $topGenes.insert(count,gene\_population)$
+        \STATE $placed \leftarrow True$
+        \ENDIF
+    \STATE $count \leftarrow count + 1$
+    \ENDWHILE
+   \IF{$NOT placed$}
+        \STATE $topGenes.insert(marker,gene\_population)$
+    \ENDIF 
+    \STATE $marker \leftarrow marker + 1$
+   
+\EndFor
+\STATE $fitness2 \leftarrow fitness2 + runTrial(group2[i])$
+
+\STATE $gene\_population \leftarrow [0...LENGTH(gene\_population)]$
+
+\For{$i \gets 0$ to $LENGTH(gene\_population)$}
+    \STATE $n \leftarrow RANDOM(0,x)$
+    \STATE $gene\_population[i] \leftarrow mutate(topGenes[n])$
+\EndFor
+\RETURN $gene\_population $
+\end{algorithmic}
+\end{algorithm}
 \newpage 
-
-The previous strategies had few converging solutions at the end of trials. This inspired the creation of the final GA algorithm, which would perform a microbial normally for x-amount of generations, then repopulate the population with mutations of the top gene. This improved the accuracies of the agents. 
-
-//insert psuedocode
 
 The last approach used a rule based method. This would take into consideration the vector which takes the robot closest to the target, and avoid terrain that showed significant climb (or water). 
 

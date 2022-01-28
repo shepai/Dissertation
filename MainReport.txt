@@ -22,6 +22,8 @@
 \usepackage{pdfpages}
 \usepackage{algorithm}
 \usepackage{algorithmic}
+\usepackage{algpseudocode}
+\usepackage{tabto}
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
@@ -231,7 +233,31 @@ An alternative gene was explored, inspired by groups of genes within a larger po
    GroupFitness = \sum_{i=1}^{n}(fitness(gene_{i}))
 \end{equation}
 
-//insert psuedocode
+\begin{algorithm}
+\caption{Group Microbial}\label{euclid}
+\begin{algorithmic}
+\REQUIRE $gene_population$
+
+\STATE $group1 \leftarrow randomPopItem(gene\_population)$
+\STATE $group2 \leftarrow randomPopItem(gene\_population)$
+\STATE $fitness1 \leftarrow 0$
+\STATE $fitness2 \leftarrow 0$
+\For{$i \gets 0$ to $LENGTH(group1)$}
+   \STATE $fitness1 \leftarrow fitness1 + runTrial(group1[i])$
+\STATE $fitness2 \leftarrow fitness2 + runTrial(group2[i])$
+\EndFor
+\IF{$fitness1>fitness2$}
+\STATE $group1 \leftarrow crossover(group2,mutate(group1))$
+\ENDIF
+\IF{$fitness2>fitness1$}
+\STATE $group2 \leftarrow crossover(group1,mutate(group2))$
+\ENDIF
+\STATE $gene_population \leftarrow gene1$
+\STATE $gene_population \leftarrow gene2$
+\RETURN $gene\_population$
+\end{algorithmic}
+\end{algorithm}
+\newpage 
 
 The previous strategies had few converging solutions at the end of trials. This inspired the creation of the final GA algorithm, which would perform a microbial normally for x-amount of generations, then repopulate the population with mutations of the top gene. This improved the accuracies of the agents. 
 

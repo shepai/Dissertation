@@ -219,7 +219,9 @@ The generated $newPixel$ at the indices of $k,l$ will have the pixel intensity o
 
 Each trial would generate a random coordinate for the agent to start in, with the condition that this start point was not in water so that the agent would not receive 0 fitness before starting. An end goal point would be generated randomly from an array of coordinated on the circumference of a circle at a set radius. 
 
+The agent was written as its own class, where on initialization the network structure could be determined. Weights an biases are generated when an array of Gaussian noise is entered through the $set\_genes$ method as a parameter. Using a forward function, the network generates output that is converted to a vector choice using the $argmax$ function. There are 8 directions that the agent can take, therefore the network is expected to generate the probabilities of a success of each vector. 
 
+Architecture of the network was decided through several trials of all networks. Using a microbial algorithm with the same network for 10 trials, the results of network performance was quantified. The tests used a population of 15 and 200 generations. 
 
 \subsubsection{Strategies}
 Three genetic algorithm (GA) approaches were taken to solving this task, then an alternative rule based approach was explored to find whether GAs were over-fitting the problem. 

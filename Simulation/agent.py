@@ -79,14 +79,13 @@ class Agent_defineLayers:
             weights_idxs.append(current)
         bias_idxs=None
         weights_idxs.append(self.hidden[-1] * self.num_output + weights_idxs[-1]) #add last layer heading to output
-        weights_idxs.pop(0) #remove first idx
+        #weights_idxs.pop(0) #remove first idx
         bias_idxs = weights_idxs[-1]+ self.num_output #sizes of biases
         w = gene[0 : weight_idxs].reshape(self.hidden[0], self.num_input)   #merge genes
         ws=[]
         for i in range(len(self.hidden)-2):
             ws.append(gene[weights_idxs[i] : weights_idxs[i+1]].reshape(self.hidden[i+1], self.hidden[i]))
-        if len(self.hidden)>1:
-            ws.append(gene[weights_idxs[-2] : weights_idxs[-1]].reshape(self.num_output, self.hidden[-1]))
+        ws.append(gene[weights_idxs[-2] : weights_idxs[-1]].reshape(self.num_output, self.hidden[-1]))
         b = gene[weights_idxs[-1]: bias_idxs].reshape(self.num_output,) #merge genes
 
         self.weights = torch.from_numpy(w) #assign weights

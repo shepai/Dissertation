@@ -252,7 +252,7 @@ world,shape=generateWorld()
 startPos=[int(SIZE/2),int(SIZE/2)] #centre point
 
 testIm=readIm(world,[25,25],30) #read the image that the agent sees
-Generations=200
+
 vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 #network input:
 #   image, x_dest, y_dest
@@ -263,10 +263,13 @@ vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 #output
 #   vectors possible (8)
 
-Bots=[Agent_defineLayers(testIm.shape[0]+2,[20],len(vectors)),
+Bots=[Agent_defineLayers(testIm.shape[0]+2,[10],len(vectors)),
+Agent_defineLayers(testIm.shape[0]+2,[20],len(vectors)),
+Agent_defineLayers(testIm.shape[0]+2,[50],len(vectors)),
 Agent_defineLayers(testIm.shape[0]+2,[10,10],len(vectors)),
 Agent_defineLayers(testIm.shape[0]+2,[20,20],len(vectors)),
-Agent_defineLayers(testIm.shape[0]+2,[5,5],len(vectors))]
+Agent_defineLayers(testIm.shape[0]+2,[5,5],len(vectors))] 
+Generations=5
 fitnessBundle=[]
 for i in range(len(Bots)): #trial different networks
     whegBot=Bots[i] #define the agent
@@ -290,42 +293,19 @@ for i in range(len(Bots)): #trial different networks
         #genes have been selected
         gene_pop,fit=microbial(gene_pop,world,startPos)
         fitnesses.append(max([fit]+fitnesses))
-    bestGene=[]
-    bestFit=0
-    for gene in gene_pop:
-        startPos=pickPosition(world,4,LBounds=6)
-        p1x,p1y,fit,endCord1=run_trial(gene)
-        if fit>0:
-            plt.plot(p1x,p1y) #show best path
-            plt.title("Gene "+str(fit)+"% after generations")
-            plt.scatter(endCord1[0],endCord1[1])
-            plt.scatter(p1x[0],p1y[0],c="r")
-            #print(canReach(Rmap,startPos,endPos))
-            plt.imshow((BEST[2]),cmap='terrain') #show best show
-            plt.show()
-            if fit>bestFit:
-                bestFit=fit
-                bestGene=copy.deepcopy(gene)
-    if bestGene!=[]:
-        print("How best performs",bestGene)
-        for i in range(5):
-            startPos=pickPosition(world,4,LBounds=6)
-            p1x,p1y,fit,endCord1=run_trial(bestGene)
-            plt.plot(p1x,p1y) #show best path
-            plt.title("The best trials "+str(fit)+"% after generations")
-            plt.scatter(endCord1[0],endCord1[1])
-            plt.scatter(p1x[0],p1y[0],c="r")
-            #print(canReach(Rmap,startPos,endPos))
-            plt.imshow(BEST[2],cmap='terrain') #show best show
-            plt.show()
+    
     fitnessBundle.append(copy.deepcopy(fitnesses))
 
-
+labels=["1 layer of 10","1 layer of 20","1 layer of 50","2 layers of 10 each","2 layers of 20 each","2 layers of 5 each"]
+c=["b","r","g","y","c","m"]
 plt.cla()
-plt.plot([i for i in range(Generations)],fitnesses) #show fintesses over generations
+for i in range(len(labels)):
+    plt.plot([i for i in range(len(fitnessBundle[i]))],fitnessBundle[i],c=c[i],label=labels[i]) #show fintesses over generations
+
 plt.title("Results of population fitness over "+str(Generations)+" generations")
 plt.ylabel("Fitness Units")
 plt.xlabel("Generation")
+plt.legend(loc="lower right")
 plt.show()
 
 

@@ -274,8 +274,8 @@ fitnessBundle=[]
 for i in range(len(Bots)): #trial different networks
     whegBot=Bots[i] #define the agent
     average=[]
-    for i in range(3):
-        pop_size=10
+    for i in range(10):
+        pop_size=15
         gene_pop=[]
         for i in range(pop_size): #vary from 10 to 20 depending on purpose of robot
             gene=np.random.normal(0, 0.5, (whegBot.num_genes))

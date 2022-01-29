@@ -269,31 +269,34 @@ Agent_defineLayers(testIm.shape[0]+2,[50],len(vectors)),
 Agent_defineLayers(testIm.shape[0]+2,[10,10],len(vectors)),
 Agent_defineLayers(testIm.shape[0]+2,[20,20],len(vectors)),
 Agent_defineLayers(testIm.shape[0]+2,[5,5],len(vectors))] 
-Generations=5
+Generations=200
 fitnessBundle=[]
 for i in range(len(Bots)): #trial different networks
     whegBot=Bots[i] #define the agent
+    average=[]
+    for i in range(3):
+        pop_size=10
+        gene_pop=[]
+        for i in range(pop_size): #vary from 10 to 20 depending on purpose of robot
+            gene=np.random.normal(0, 0.5, (whegBot.num_genes))
+            gene_pop.append(copy.deepcopy(gene))#create
 
-    pop_size=10
-    gene_pop=[]
-    for i in range(pop_size): #vary from 10 to 20 depending on purpose of robot
-        gene=np.random.normal(0, 0.5, (whegBot.num_genes))
-        gene_pop.append(copy.deepcopy(gene))#create
-
-    fitnesses=[]
-    for gen in range(Generations):
-        print("Gen",gen+1)
-        #generate the world terrain
-        world,shape=generateWorld()
-        world=np.pad(np.array(world), (2,2), 'constant',constant_values=(-6,-6))
-        world=np.pad(np.array(world), (3,3), 'constant',constant_values=(-7,-7))
-        world=np.pad(np.array(world), (1,1), 'constant',constant_values=(-8,-8))
-        #randomly pick a start position
-        
-        #genes have been selected
-        gene_pop,fit=microbial(gene_pop,world,startPos)
-        fitnesses.append(max([fit]+fitnesses))
-    
+        fitnesses=[]
+        for gen in range(Generations):
+            print("Gen",gen+1)
+            #generate the world terrain
+            world,shape=generateWorld()
+            world=np.pad(np.array(world), (2,2), 'constant',constant_values=(-6,-6))
+            world=np.pad(np.array(world), (3,3), 'constant',constant_values=(-7,-7))
+            world=np.pad(np.array(world), (1,1), 'constant',constant_values=(-8,-8))
+            #randomly pick a start position
+            
+            #genes have been selected
+            gene_pop,fit=microbial(gene_pop,world,startPos)
+            fitnesses.append(max([fit]+fitnesses))
+        average.append(np.array(fitnesses))
+    fitnesses=np.add(average[0],average[1],average[2])
+    fitnesses/=3
     fitnessBundle.append(copy.deepcopy(fitnesses))
 
 labels=["1 layer of 10","1 layer of 20","1 layer of 50","2 layers of 10 each","2 layers of 20 each","2 layers of 5 each"]

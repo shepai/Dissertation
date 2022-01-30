@@ -142,12 +142,12 @@ Another ethical consideration is the safety involved in testing as the robot cou
 %BODY OF REPORT
 
 \section{Requirement analysis}
-Existing  robotic solutions have not combined bio-inspired chassis design with reinforcement learning. This project will use a physical robot platform and a simulation of this platform for the gathering of data.
+Existing robotic solutions have not combined bio-inspired chassis design with evolved learning. This project will use a physical robot platform and a simulation of this platform for the gathering of data. Simulation provides a proof of concept by trialing navigation much quicker than a physical robot. 
 
 \subsection{User Needs and ideal features}
 The agent will need to learn how to recognize the differences between rough and smooth terrain based on visual information and furthermore learn how to traverse it. Ideally, the physical robot will use its back actuator to improve its ability to climb over terrain. 
 
-The agent will need to understand its limitations and not attempt routes that it will get stuck on. Ideally this will be demonstrated on a physical robot but, if time pressure prevents this, it is still essential the algorithm works in simulation. 
+The agent will need to understand its limitations and not attempt routes that it will get stuck on. Ideally this will be demonstrated on a physical robot but, if real world noise prevents this, it is still essential the algorithm works in simulation as proof of concept. 
 
 \subsection{Limitations}
 This project does not intend to create a robot that can climb any terrain. While the Wheg design will improve the robot's climbing ability, it will not make it impervious to the laws of physics! 
@@ -155,6 +155,7 @@ This project does not intend to create a robot that can climb any terrain. While
 \subsection{Problem the system is solving}
 The problem this research is solving is to improve autonomous robotic navigation for danger detection without the use of training data as a robot can be deployed within different environments, which makes obstacle recognition harder. 
 
+Additionally, from an engineering point of view the robot is trialing Wheg designs which are arguably higher performing than wheels. Most robotic navigation projects use conventional apparatus, however, Whegs remain unrepresented. 
 \section{Methods}
 
 \subsection{Simulation}
@@ -222,6 +223,15 @@ Each trial would generate a random coordinate for the agent to start in, with th
 The agent was written as its own class, where on initialization the network structure could be determined. Weights an biases are generated when an array of Gaussian noise is entered through the $set\_genes$ method as a parameter. Using a forward function, the network generates output that is converted to a vector choice using the $argmax$ function. There are 8 directions that the agent can take, therefore the network is expected to generate the probabilities of a success of each vector. 
 
 Architecture of the network was decided through several trials of all networks. Using a microbial algorithm with the same network for 10 trials, the results of network performance was quantified. The tests used a population of 15 and 200 generations. 
+
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.9\columnwidth]{NetworkArchMain.png}
+
+\caption{Averaged results of different architectures on the same task using the microbial algorithm}
+\label{fig:architecture}
+\end{figure}
+Notably in Figure~\ref{fig:architecture} the fitness units are very low due to averaging different trials of the same network. The population is regenerated randomly each time which leads to some trials having a low fitness bearing population by default. The best networks tended to have multiple layers. The network chosen for the testing was of two hidden layers of 10 nodes each as it performed well and was the between sizes 5 and 20 who also performed well. The smaller network of two layers of 5 performed equally well to two layers of 10 nodes, but as there is an element of randomness to these results the medium architecture seemed optimal. 
 
 \subsubsection{Strategies}
 Three genetic algorithm (GA) approaches were taken to solving this task, then an alternative rule based approach was explored to find whether GAs were over-fitting the problem. 

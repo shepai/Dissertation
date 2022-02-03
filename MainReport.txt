@@ -177,7 +177,8 @@ In such simulations, we can find how far a point is from the start position and 
 \begin{equation}
 E_{nergy} = (\mid x1 - x2 \mid  + \mid  y1 - y2 \mid ) \cdot \sum_{i=1}^{S} (P_{i})
 \end{equation}
-
+\subsubsection{Previous methods}
+TODO
 \subsubsection{Environment, model and rewards}
 The environmental conditions could be changed by altering the persistence parameter. By increasing the value, the terrain would become more complex with more simulated dangers such as water. 
 \begin{figure}[H]

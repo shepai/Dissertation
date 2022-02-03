@@ -212,6 +212,7 @@ for gen in range(Generations):
     pathy=[]
     energy=0
     v=rnd.choice(vectors)
+    
     while i<runs and not broke and getDist(current,cords)>1: #loop through and generate path
         dir=maths.cos(v[1]) #get angle from y-axis
         im=readIm(world,current,dir) #read the image that the agent sees
@@ -230,7 +231,10 @@ for gen in range(Generations):
                 climb=max(-1,world[current[1]][current[0]]-world[last[1]][last[0]]) #non 0 value of total climb
                 energy+=1+climb
         i+=1
+        
     fit=fitness(broke,energy,getDist(current,cords))
+    fitnesses.append(fit)
+    """
     plt.plot(pathx,pathy) #show best path
     plt.title("Gene "+str(fit)+"% after generations")
     plt.scatter(cords[0],cords[1])
@@ -238,4 +242,11 @@ for gen in range(Generations):
     #print(canReach(Rmap,startPos,endPos))
     plt.imshow(world,cmap='terrain') #show best show
     plt.show()
-    
+    """
+
+plt.plot([i for i in range(len(fitnesses))],fitnesses)
+plt.title("Results of population fitness over "+str(Generations)+" generations")
+plt.ylabel("Fitness Units")
+plt.xlabel("Generation")
+plt.legend(loc="lower right")
+plt.show()

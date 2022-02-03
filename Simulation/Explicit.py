@@ -244,6 +244,24 @@ for gen in range(Generations):
     plt.show()
     """
 
+
+fitnesses=np.around(np.array(fitnesses),1)
+d={}
+for i in fitnesses:
+    d[i]=d.get(i,0)+1
+
+plt.bar(range(len(d)), list(d.values()), align='center')
+plt.xticks(range(len(d)), list(d.keys()))
+# # for python 2.x:
+# plt.bar(range(len(D)), D.values(), align='center')  # python 2.x
+# plt.xticks(range(len(D)), D.keys())  # in python 2.x
+plt.title("Bar graph of rounded fitnesses to 1dp over "+str(Generations)+" generations")
+
+plt.ylabel("Fitness Units")
+plt.xlabel("Trial")
+plt.show()
+
+
 plt.plot([i for i in range(len(fitnesses))],fitnesses)
 plt.title("Results of population fitness over "+str(Generations)+" generations")
 plt.ylabel("Fitness Units")

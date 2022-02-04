@@ -178,7 +178,20 @@ In such simulations, we can find how far a point is from the start position and 
 E_{nergy} = (\mid x1 - x2 \mid  + \mid  y1 - y2 \mid ) \cdot \sum_{i=1}^{S} (P_{i})
 \end{equation}
 \subsubsection{Previous methods}
-TODO
+
+Different methods have been proposed to classify the energy consumption of simulated robotics~\cite{chassisTerrain}. A study that held relevance to the task this thesis is exploring used slippage, required torque, and minimum friction coefficient. These metrics create an overall score, plotted throughout each trial. $\mu$ represents the friction coefficient needed for tangential ($R$) and normal ($N$) force with ($r$) given by the radius of the wheel with torque ($T$). 
+\begin{equation}
+\mu _{needed} = \frac{R}{N}=\frac{T\cdot r}{N}
+\end{equation}
+
+Slippage consumes energy without making the robot move forward. Slippage was calculated using the encoders on wheels. Distance is calculated using the following equation which uses encoder values. The wheel encoder ($\Delta _{coder}$) is used and multiplied by the circumference of the wheel ($2 \cdot \pi \cdot r$). This divides over the pulse/turn multiplied by the gear ratio.
+\begin{equation}
+\text{Distance} = \frac{\Delta _{coder}\cdot 2 \cdot \pi \cdot r}{N_{pulse}\cdot R_{gearbox}} 
+\end{equation}
+The slippage is the difference of ground truth and wheel odometry~\cite{chassisTerrain}.
+These factors form a Max and Min G score. Both robot robots could provide enough torque, but that does not mean equal performance. The G score is taken from all the G values, calculated from the torque needed. 
+
+
 \subsubsection{Environment, model and rewards}
 The environmental conditions could be changed by altering the persistence parameter. By increasing the value, the terrain would become more complex with more simulated dangers such as water. 
 \begin{figure}[H]
@@ -334,7 +347,7 @@ The previous strategies had few converging solutions at the end of trials. This 
 \end{algorithm}
 \newpage 
 
-The last approach used a rule based method. This would take into consideration the vector which takes the robot closest to the target, and avoid terrain that showed significant climb (or water). 
+The last approach used a rule based method. This would take into consideration the vector which takes the robot closest to the target, and avoid terrain that showed significant climb (or water). This was achieved by viewing the vectors possible and looking at each decision and removing any that would cause damage to the robot, such as falling in water. 
 
 \subsection{Robot platform}
 
@@ -390,12 +403,59 @@ The neck used a pan and tilt mechanism was placed at the front of the robot chas
 For control, the chassis used a Raspberry Pi for its low energy consumption yet reasonable processing power. It was also setup with Linux which allowed SSH control of the robot and ease of gathering results from trials. 
 
 \subsubsection{Vision}
+TODO
 
-\section{Testing and results}
+\subsubsection{Testing environment}
+TODO
 
+\section{Testing, Results and Discussion}
+The tests for simulation gave varied results based on the different algorithms used. The most effective was the group of microbial with re-selection of the best genes. 
+
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.7\columnwidth]{results1000.png}
+
+\caption{Results of the microbial algorithm after 1000 generations. It is clear that the results converge on a solution which is clearly sub-optimal, and eventually cannot improve above this.}
+\label{fig:Microbial}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.7\columnwidth]{groupFitness.png}
+
+\caption{Using a grouped population there was belief that more internal diversity would provide eloquent solutions and prevent convergent of sub-optimal solutions too early. The results show the fitness of these grouped populations to be considerably lower than the other algorithms. }
+\label{fig:Group}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.7\columnwidth]{results.png}
+
+\caption{Results of the elitist algorithm that picks the best genes and repopulates at the end of each sub-generation. This converged on the highest fitness out the trialed genetic approaches, though took longer to converge on a high fitness compared to the singular microbial approach. }
+\label{fig:Elite}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.8\columnwidth]{ExplicitResGen.png}
+
+\caption{Results of Explicit rule-based agents shows the current agent fitness at each generation, rather than the top of the population. This is because the algorithm and instructions are unchanging, unlike the genetic approach where random mutations affect the outcome of the results. This method converged on much higher fitnesses than the genetic approaches without failure. }
+\label{fig:Explicit}
+\end{figure}
+
+A revised graph for displaying the information of~\ref{fig:Explicit} is using a bar graph. This was generated by rounding all the fitness values to 1 decimal place. Each class was counted and displayed.
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.8\columnwidth]{Explicit.png}
+
+\caption{Results of Explicit rule-based agents placed into a bar graph to present the amount of high fitness solutions the agent generates. The average of 200 trials had a fitness of 88.9\% which was much higher than the average fitness of the genetic approaches. }
+\label{fig:Explicit}
+\end{figure}
+
+This shows that the rule based method performs better than the genetic approach for simulation, suggesting a neural network was over-fitting the problem. 
 
 \section{Conclusions}
-
+TODO
 \bibliographystyle{unsrt}
 \bibliography{sample}
 

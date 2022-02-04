@@ -257,8 +257,8 @@ plt.xticks(range(len(d)), list(d.keys()))
 # plt.xticks(range(len(D)), D.keys())  # in python 2.x
 plt.title("Bar graph of rounded fitnesses to 1dp over "+str(Generations)+" generations")
 
-plt.ylabel("Fitness Units")
-plt.xlabel("Trial")
+plt.ylabel("Amount of trials")
+plt.xlabel("Fitness Units")
 plt.show()
 
 

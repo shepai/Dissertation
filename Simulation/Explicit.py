@@ -250,6 +250,10 @@ d={}
 for i in fitnesses:
     d[i]=d.get(i,0)+1
 
+dictionary_items = d.items()
+d=sorted(dictionary_items)
+print(d)
+d=dict(d)
 plt.bar(range(len(d)), list(d.values()), align='center')
 plt.xticks(range(len(d)), list(d.keys()))
 # # for python 2.x:

@@ -165,10 +165,13 @@ def getDirection(cords,current,image): #get the nearest vector
     #pointAim=[current[0]+VectorBetween[0],current[1]+VectorBetween[1]] #get point aiming for
     nearest=[0,0]
     nearestDist=100
+    currentH=world[current[1]][current[0]]
+
     for vec in vectors:
         point=[current[0]+vec[0],current[1]+vec[1]] #apply vector to current coord
         x=getDist(point,cords)
-        if nearestDist>x:
+        h=world[point[1]][point[0]]
+        if nearestDist>x and abs(currentH-h)<5 and h>-6:
             nearestDist=x
             nearest=copy.deepcopy(vec)
 
@@ -242,7 +245,7 @@ for gen in range(Generations):
     #print(canReach(Rmap,startPos,endPos))
     plt.imshow(world,cmap='terrain') #show best show
     plt.show()
-    """
+    #"""
 
 
 fitnesses=np.around(np.array(fitnesses),1)

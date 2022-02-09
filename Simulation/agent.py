@@ -79,7 +79,6 @@ class Agent_defineLayers:
             weights_idxs.append(current)
         bias_idxs=None
         weights_idxs.append(self.hidden[-1] * self.num_output + weights_idxs[-1]) #add last layer heading to output
-        #weights_idxs.pop(0) #remove first idx
         bias_idxs = weights_idxs[-1]+ self.num_output #sizes of biases
         w = gene[0 : weight_idxs].reshape(self.hidden[0], self.num_input)   #merge genes
         ws=[]

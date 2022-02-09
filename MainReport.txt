@@ -247,6 +247,7 @@ Architecture of the network was decided through several trials of all networks. 
 \end{figure}
 Notably in Figure~\ref{fig:architecture} the fitness units are very low due to averaging different trials of the same network. The population is regenerated randomly each time which leads to some trials having a low fitness bearing population by default. The best networks tended to have multiple layers. The network chosen for the testing was of two hidden layers of 10 nodes each as it performed well and was the between sizes 5 and 20 who also performed well. The smaller network of two layers of 5 performed equally well to two layers of 10 nodes, but as there is an element of randomness to these results the medium architecture seemed optimal. 
 
+
 \subsubsection{Strategies}
 Three genetic algorithm (GA) approaches were taken to solving this task, then an alternative rule based approach was explored to find whether GAs were over-fitting the problem. 
 
@@ -349,6 +350,8 @@ The previous strategies had few converging solutions at the end of trials. This 
 
 The last approach used a rule based method. This would take into consideration the vector which takes the robot closest to the target, and avoid terrain that showed significant climb (or water). This was achieved by viewing the vectors possible and looking at each decision and removing any that would cause damage to the robot, such as falling in water. 
 
+Different restrictions were added to the rule based method, and it was found that reducing the significance of the climb distance difference, but making sure that the routes that lead to potential dangers were ignored. 
+
 \subsection{Robot platform}
 
 \subsubsection{Chassis}
@@ -404,6 +407,19 @@ For control, the chassis used a Raspberry Pi for its low energy consumption yet 
 
 \subsubsection{Vision}
 TODO
+
+Things I did:
+
+Disparity
+-changed parameters
+
+K means
+
+Blur
+
+Remove differences in image
+
+dilation
 
 \subsubsection{Testing environment}
 TODO

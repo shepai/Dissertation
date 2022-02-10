@@ -315,6 +315,8 @@ for gene in genes:
     plt.imshow(BEST[2],cmap='terrain') #show best show
     plt.show()
 
+np.save("group.npy", fitnesses)
+
 plt.cla()
 plt.plot([i for i in range(Generations)],fitnesses) #show fintesses over generations
 plt.title("Results of population fitness over "+str(Generations)+" generations")

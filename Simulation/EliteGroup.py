@@ -323,7 +323,8 @@ for gene in gene_pop:
         plt.imshow(world,cmap='terrain') #show best show
         plt.show()
 
-#
+np.save("elite.npy", fitnesses)
+
 plt.cla()
 plt.plot([i for i in range(len(fitnesses))],fitnesses) #show fintesses over generations
 plt.title("Results of population fitness over "+str(len(fitnesses))+" generations")

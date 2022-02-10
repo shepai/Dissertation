@@ -257,7 +257,7 @@ dictionary_items = d.items()
 d=sorted(dictionary_items)
 print(d)
 d=dict(d)
-plt.bar(range(len(d)), list(d.values()), align='center')
+plt.bar(range(len(d)), list(d.values()), align='center',width=1.0)
 plt.xticks(range(len(d)), list(d.keys()))
 # # for python 2.x:
 # plt.bar(range(len(D)), D.values(), align='center')  # python 2.x

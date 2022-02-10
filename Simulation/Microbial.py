@@ -252,7 +252,7 @@ world,shape=generateWorld()
 startPos=[int(SIZE/2),int(SIZE/2)] #centre point
 
 testIm=readIm(world,[25,25],30) #read the image that the agent sees
-Generations=200
+Generations=500
 vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 #network input:
 #   image, x_dest, y_dest
@@ -264,7 +264,7 @@ vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 #   vectors possible (8)
 whegBot=Agent_defineLayers(testIm.shape[0]+2,[10,10],len(vectors)) #define the agent
 
-pop_size=10
+pop_size=15
 gene_pop=[]
 for i in range(pop_size): #vary from 10 to 20 depending on purpose of robot
     gene=np.random.normal(0, 0.5, (whegBot.num_genes))
@@ -312,6 +312,8 @@ if bestGene!=[]:
         plt.imshow(BEST[2],cmap='terrain') #show best show
         plt.show()
 
+np.save("microbial.npy", fitnesses)
+"""
 plt.plot(BEST[0],BEST[1]) #show best path
 plt.title("Results of best fitness at "+str(BESTFIT)+"% after generations")
 plt.scatter(BEST[3][0],BEST[3][1])
@@ -319,7 +321,7 @@ plt.scatter(BEST[0][0],BEST[1][0],c="r")
 #print(canReach(Rmap,startPos,endPos))
 plt.imshow(BEST[2],cmap='terrain') #show best show
 plt.show()
-
+"""
 plt.cla()
 plt.plot([i for i in range(Generations)],fitnesses) #show fintesses over generations
 plt.title("Results of population fitness over "+str(Generations)+" generations")

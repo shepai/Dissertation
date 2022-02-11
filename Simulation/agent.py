@@ -103,7 +103,7 @@ class Agent_Conv:
 
     def forward(self, x):
         #create conv layer
-        m = torch.nn.Conv1d(len(x), len(self.weights), 3, stride=2,padding=2)
+        m = torch.nn.Conv1d(len(x), len(self.weights), 3, stride=2,padding=1)
         #Format input
         H=len(x)
         x = np.reshape(torch.from_numpy(x.flatten()/255).unsqueeze(0),(1,H,1))
@@ -111,7 +111,7 @@ class Agent_Conv:
         x = m(torch.tensor(x.float()))
         x = torch.tensor(np.dot(self.weights.T.float(),x.detach().numpy()).flatten())
         #run through forward layers
-        x = torch.mm(x.reshape(1,len(x)), self.weights.T.float()) #first layer
+        x = torch.mm(x.reshape(1,H), self.weights.T.float()) #first layer
         for i in range(len(self.hidden_weights)-1):
             x =torch.mm(x,self.hidden_weights[i].T.float()) #second layer
         return torch.mm(x,self.hidden_weights[-1].T.float()) + self.bias #third layer

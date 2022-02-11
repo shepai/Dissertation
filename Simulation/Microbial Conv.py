@@ -288,7 +288,7 @@ bestFit=0
 for gene in gene_pop:
     startPos=pickPosition(world,4,LBounds=6)
     p1x,p1y,fit,endCord1=run_trial(gene)
-    if fit>0:
+    if fit>60:
         plt.plot(p1x,p1y) #show best path
         plt.title("Gene "+str(fit)+"% after generations")
         plt.scatter(endCord1[0],endCord1[1])
@@ -299,6 +299,7 @@ for gene in gene_pop:
         if fit>bestFit:
             bestFit=fit
             bestGene=copy.deepcopy(gene)
+"""
 if bestGene!=[]:
     print("How best performs",bestGene)
     for i in range(5):
@@ -311,6 +312,7 @@ if bestGene!=[]:
         #print(canReach(Rmap,startPos,endPos))
         plt.imshow(BEST[2],cmap='terrain') #show best show
         plt.show()
+"""
 
 np.save("microbial.npy", fitnesses)
 """

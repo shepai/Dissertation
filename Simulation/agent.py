@@ -102,17 +102,18 @@ class Agent_Conv:
         self.bias = torch.from_numpy(b) #assign biases
 
     def forward(self, x):
-        m = torch.nn.Conv1d(len(x), len(self.weights), 1, stride=2)
-        x = np.reshape(torch.from_numpy(x.flatten()/255).unsqueeze(0),(1,27,1))
+        #create conv layer
+        m = torch.nn.Conv1d(len(x), len(self.weights), 2, stride=2,padding=1)
+        #Format input
+        H=len(x)
+        x = np.reshape(torch.from_numpy(x.flatten()/255).unsqueeze(0),(1,H,1))
+        #place through network conv layer
         x = m(torch.tensor(x.float()))
         x = torch.tensor(np.dot(self.weights.T.float(),x.detach().numpy()).flatten())
-        #print("----",x.shape)
-        #print("----",self.weights.T.shape)
+        #run through forward layers
         x = torch.mm(x.reshape(1,27), self.weights.T.float()) #first layer
-        #print(len(self.hidden_weights))
         for i in range(len(self.hidden_weights)-1):
             x =torch.mm(x,self.hidden_weights[i].T.float()) #second layer
-        #print("------",torch.mm(x,self.hidden_weights[-1].T.float()))
         return torch.mm(x,self.hidden_weights[-1].T.float()) + self.bias #third layer
         
     def get_action(self, x):

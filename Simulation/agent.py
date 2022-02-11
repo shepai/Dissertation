@@ -90,7 +90,7 @@ class Agent_Conv:
         bias_idxs = weights_idxs[-1]+ self.num_output #sizes of biases
         w = gene[0 : weight_idxs].reshape(self.hidden[0], self.num_input)   #merge genes
         ws=[]
-        for i in range(len(self.hidden)-2):
+        for i in range(len(self.hidden)-1):
             ws.append(gene[weights_idxs[i] : weights_idxs[i+1]].reshape(self.hidden[i+1], self.hidden[i]))
         ws.append(gene[weights_idxs[-2] : weights_idxs[-1]].reshape(self.num_output, self.hidden[-1]))
         b = gene[weights_idxs[-1]: bias_idxs].reshape(self.num_output,) #merge genes
@@ -104,12 +104,14 @@ class Agent_Conv:
     def forward(self, x):
         m = torch.nn.Conv1d(len(x), len(self.hidden_weights[0]), 1, stride=2)
         x = np.reshape(torch.from_numpy(x.flatten()/255).unsqueeze(0),(1,27,1))
-        x = m(torch.tensor(x))
-        print(type(x))
-        #x = torch.mm(x, self.weights.T) #first layer
+        x = m(torch.tensor(x.float())).flatten()
+        
+        x = torch.mm(x, self.weights.T.float()) #first layer
+        print(len(self.hidden_weights))
         for i in range(len(self.hidden_weights)-1):
-            x =torch.mm(x,self.hidden_weights[i].T) #second layer
-        return torch.mm(x,self.hidden_weights[-1].T) + self.bias #third layer
+            x =torch.mm(x,self.hidden_weights[i].T.float()) #second layer
+        #print("------",torch.mm(x,self.hidden_weights[-1].T.float()))
+        return torch.mm(x,self.hidden_weights[-1].T.float()) + self.bias #third layer
         
     def get_action(self, x):
         vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves

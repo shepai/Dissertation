@@ -406,7 +406,7 @@ The neck used a pan and tilt mechanism was placed at the front of the robot chas
 For control, the chassis used a Raspberry Pi for its low energy consumption yet reasonable processing power. It was also setup with Linux which allowed SSH control of the robot and ease of gathering results from trials. 
 
 \subsubsection{Vision}
-TODO
+To begin with I worked on the stereo vision using two USB Arducam modules and the cv2 disparity function. The initial visual representation was less accurate than needed so I trialed different pre-processing and post-processing techniques. 
 
 Things I did:
 
@@ -429,26 +429,12 @@ The tests for simulation gave varied results based on the different algorithms u
 
 \begin{figure}[H]
 \centering
-  \includegraphics[clip,width=0.7\columnwidth]{results1000.png}
+  \includegraphics[clip,width=0.7\columnwidth]{resultsAllGenetic.png}
 
-\caption{Results of the microbial algorithm after 1000 generations. It is clear that the results converge on a solution which is clearly sub-optimal, and eventually cannot improve above this.}
+\caption{Results of the microbial algorithm after 1000 generations. It is clear that the results converge on a solution which is clearly sub-optimal, and eventually cannot improve above this. 
+Using a grouped population there was belief that more internal diversity would provide eloquent solutions and prevent convergent of sub-optimal solutions too early. The results show the fitness of these grouped populations to be considerably lower than the other algorithms. 
+Results of the elitist algorithm that picks the best genes and repopulates at the end of each sub-generation: This converged on the highest fitness out the trialed genetic approaches, though took longer to converge on a high fitness compared to the singular microbial approach.}
 \label{fig:Microbial}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-  \includegraphics[clip,width=0.7\columnwidth]{groupFitness.png}
-
-\caption{Using a grouped population there was belief that more internal diversity would provide eloquent solutions and prevent convergent of sub-optimal solutions too early. The results show the fitness of these grouped populations to be considerably lower than the other algorithms. }
-\label{fig:Group}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-  \includegraphics[clip,width=0.7\columnwidth]{results.png}
-
-\caption{Results of the elitist algorithm that picks the best genes and repopulates at the end of each sub-generation. This converged on the highest fitness out the trialed genetic approaches, though took longer to converge on a high fitness compared to the singular microbial approach. }
-\label{fig:Elite}
 \end{figure}
 
 \begin{figure}[H]

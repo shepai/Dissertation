@@ -210,9 +210,11 @@ def microbial(genes,world,position):
     global BEST
     #microbial algorithm trial
     ind_1 = rnd.randint(0,len(genes)-1)
-    ind_2 = rnd.randint(0,len(genes)-1)
-    while ind_1==ind_2: #make value unique
-        ind_2 = rnd.randint(0,len(genes)-1)
+    ind_2=0
+    if ind_1>0: ind_2 = ind_1-1
+    else: ind_2= ind_1+1
+    #while ind_1==ind_2: #make value unique
+    #    ind_2 = rnd.randint(0,len(genes)-1)
     #get two random positions
     gene1=(genes[ind_1])
     gene2=(genes[ind_2])

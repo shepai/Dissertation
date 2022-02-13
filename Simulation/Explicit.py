@@ -236,7 +236,8 @@ for gen in range(Generations):
         i+=1
         
     fit=fitness(broke,energy,getDist(current,cords))
-    fitnesses.append(fit)
+    fitnesses.append(max(fit,max(fitnesses+[0])))
+    #fitnesses.append(fit)
     """
     plt.plot(pathx,pathy) #show best path
     plt.title("Gene "+str(fit)+"% after generations")
@@ -262,7 +263,7 @@ plt.xticks(range(len(d)), list(d.keys()))
 # # for python 2.x:
 # plt.bar(range(len(D)), D.values(), align='center')  # python 2.x
 # plt.xticks(range(len(D)), D.keys())  # in python 2.x
-plt.title("Bar graph of rounded fitnesses to 1dp over "+str(Generations)+" generations")
+plt.title("Graph of rounded fitnesses to 1dp over "+str(Generations)+" generations")
 
 plt.ylabel("Amount of trials")
 plt.xlabel("Fitness Units")

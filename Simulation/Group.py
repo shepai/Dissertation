@@ -214,9 +214,9 @@ def group(genes,world,position):
     global BEST
     #microbial algorithm trial
     ind_1 = rnd.randint(0,len(genes)-1)
-    ind_2 = rnd.randint(0,len(genes)-1)
-    while ind_1==ind_2: #make value unique
-        ind_2 = rnd.randint(0,len(genes)-1)
+    ind_2=0
+    if ind_1>0: ind_2 = ind_1-1
+    else: ind_2= ind_1+1
     #get two random positions
     fitness1=0
     fitness2=0
@@ -268,7 +268,7 @@ startPos=[int(SIZE/2),int(SIZE/2)] #centre point
 
 
 testIm=readIm(world,[25,25],30) #read the image that the agent sees
-Generations=500
+Generations=1000
 vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 #network input:
 #   image, x_dest, y_dest

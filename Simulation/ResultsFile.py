@@ -12,8 +12,8 @@ with open(path+'group.npy', 'rb') as f:
     b = np.load(f)
 with open(path+'elite.npy', 'rb') as f:
     c = np.load(f)
-    c=c[0:500]
-with open('microbialConv.npy', 'rb') as f:
+    c=c[0:len(a)]
+with open(path+'microbialConv.npy', 'rb') as f:
     d = np.load(f)
 print(a.shape,b.shape,c.shape)
 

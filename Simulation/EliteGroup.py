@@ -62,27 +62,6 @@ def fitness(broke,energy,endDist):
     #return 1-(max(0,energy)/(mx+sum(route)))
     return (((100-energy)/100)*0.3 + ((10-endDist)/10)*0.7)*100
 
-#canReach will make sure the problem is solvable
-def canReach(terrain,start,goal,endmarked=[[False for i in range(SIZE)] for j in range(SIZE)]):
-    #check whether the bot can reach the other
-    #expand out from end and make paths
-    y,x=start[0],start[1]
-    val=False
-    if terrain[x][y]!=-1 and not endmarked[x][y]:
-        endmarked[x][y]=True
-        if x-1>=0:
-            val=canReach(terrain,[x-1,y],goal,endmarked=endmarked)
-        if x+1<SIZE:
-            val=canReach(terrain,[x+1,y],goal,endmarked=endmarked)
-        if y-1>0:
-            val=canReach(terrain,[x,y-1],goal,endmarked=endmarked)
-        if y+1<SIZE:
-            val=canReach(terrain,[x,y+1],goal,endmarked=endmarked)
-    if x==goal[1] and y==goal[0]:
-        val=True
-    return val
-    
-    
 
 #getBestRoute will be used to measure how fit an evolved route is
 
@@ -208,9 +187,9 @@ def run_trial(gene,runs=30):
 def microbial(genes,world,position):
     #microbial algorithm trial
     ind_1 = rnd.randint(0,len(genes)-1)
-    ind_2 = rnd.randint(0,len(genes)-1)
-    while ind_1==ind_2: #make value unique
-        ind_2 = rnd.randint(0,len(genes)-1)
+    ind_2=0
+    if ind_1>0: ind_2 = ind_1-1
+    else: ind_2= ind_1+1
     #get two random positions
     gene1=(genes[ind_1][0])
     gene2=(genes[ind_2][0])

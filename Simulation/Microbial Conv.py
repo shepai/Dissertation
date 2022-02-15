@@ -61,27 +61,6 @@ def fitness(broke,energy,endDist):
     #print(sum(route),mx)
     #return 1-(max(0,energy)/(mx+sum(route)))
     return (((100-energy)/100)*0.3 + ((10-endDist)/10)*0.7)*100
-
-#canReach will make sure the problem is solvable
-def canReach(terrain,start,goal,endmarked=[[False for i in range(SIZE)] for j in range(SIZE)]):
-    #check whether the bot can reach the other
-    #expand out from end and make paths
-    y,x=start[0],start[1]
-    val=False
-    if terrain[x][y]!=-1 and not endmarked[x][y]:
-        endmarked[x][y]=True
-        if x-1>=0:
-            val=canReach(terrain,[x-1,y],goal,endmarked=endmarked)
-        if x+1<SIZE:
-            val=canReach(terrain,[x+1,y],goal,endmarked=endmarked)
-        if y-1>0:
-            val=canReach(terrain,[x,y-1],goal,endmarked=endmarked)
-        if y+1<SIZE:
-            val=canReach(terrain,[x,y+1],goal,endmarked=endmarked)
-    if x==goal[1] and y==goal[0]:
-        val=True
-    return val
-    
     
 
 #getBestRoute will be used to measure how fit an evolved route is
@@ -201,8 +180,7 @@ def run_trial(gene,runs=30):
                 energy+=1+climb
         i+=1
     endDist=getDist(current,cords)
-    print("total energy consumed",energy,"fitness",fitness(broke,energy,endDist),"endDist:",endDist)
-    
+    #print("total energy consumed",energy,"fitness",fitness(broke,energy,endDist),"endDist:",endDist)
     return pathx,pathy,fitness(broke,energy,endDist),cords
 
 def microbial(genes,world,position):
@@ -231,7 +209,7 @@ def microbial(genes,world,position):
     #generate average fitness
     fitness1=(fitness1+fitnessa1+fitnessb1)/3
     fitness2=(fitness2+fitnessa2+fitnessb2)/3
-    print(max(fitness1,fitness2),"% over 3 trials")
+    #print(max(fitness1,fitness2),"% over 3 trials")
     #show results
      
     #microbial selection
@@ -254,7 +232,7 @@ world,shape=generateWorld()
 startPos=[int(SIZE/2),int(SIZE/2)] #centre point
 
 testIm=readIm(world,[25,25],30) #read the image that the agent sees
-Generations=500
+Generations=1000
 vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 #network input:
 #   image, x_dest, y_dest
@@ -316,7 +294,7 @@ if bestGene!=[]:
         plt.show()
 """
 
-np.save("microbialConv.npy", fitnesses)
+np.save("D:/Documents/Computer Science/Year 3/Dissertation/microbialConv.npy", fitnesses)
 """
 plt.plot(BEST[0],BEST[1]) #show best path
 plt.title("Results of best fitness at "+str(BESTFIT)+"% after generations")

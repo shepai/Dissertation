@@ -32,8 +32,11 @@ def generateWorld():
     #print("Octaves:",octaves)
     return world,shape
 
-def mutation(gene, mean=0, std=0.5):
-    gene = gene + np.random.normal(mean, std, size=gene.shape) #mutate the gene via normal 
+def mutation(gene, mean=0, std=0.5,size=100):
+    assert size<len(gene)
+    n=random.randint(0,len(gene)-size-1)
+    array=np.random.normal(mean,std,size=size)
+    gene = gene[n:n+size] + array #mutate the gene via normal 
     # constraint
     gene[gene >4] = 4
     gene[gene < -4] = -4
@@ -179,7 +182,7 @@ def run_trial(gene,runs=30):
                 energy+=1+climb
         i+=1
     endDist=getDist(current,cords)
-    print("total energy consumed",energy,"fitness",fitness(broke,energy,endDist),"endDist:",endDist)
+    #print("total energy consumed",energy,"fitness",fitness(broke,energy,endDist),"endDist:",endDist)
     
     return pathx,pathy,fitness(broke,energy,endDist),cords
 
@@ -209,7 +212,7 @@ def microbial(genes,world,position):
     #generate average fitness
     fitness1=(fitness1+fitnessa1+fitnessb1)/3
     fitness2=(fitness2+fitnessa2+fitnessb2)/3
-    print(max(fitness1,fitness2),"% over 3 trials")
+    #print(max(fitness1,fitness2),"% over 3 trials")
     #show results
      
     #microbial selection
@@ -263,6 +266,7 @@ for gen in range(Generations):
     #genes have been selected
     gene_pop,fit=microbial(gene_pop,world,startPos)
     fitnesses.append(max([fit]+fitnesses))
+    print(max(fitnesses))
 bestGene=[]
 bestFit=0
 for gene in gene_pop:
@@ -292,7 +296,7 @@ if bestGene!=[]:
         plt.imshow(BEST[2],cmap='terrain') #show best show
         plt.show()
 
-np.save("microbial.npy", fitnesses)
+np.save("microbialPart.npy", fitnesses)
 """
 plt.plot(BEST[0],BEST[1]) #show best path
 plt.title("Results of best fitness at "+str(BESTFIT)+"% after generations")

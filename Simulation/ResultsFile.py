@@ -27,3 +27,24 @@ plt.ylabel("Fitness Units")
 plt.xlabel("Generation")
 plt.legend(loc="upper left")
 plt.show()
+
+"""
+Show results of alternative mutation function
+
+"""
+
+with open(path+'microbialPart.npy', 'rb') as f:
+    aa = np.load(f)
+with open(path+'groupPart.npy', 'rb') as f:
+    bb = np.load(f)
+
+plt.plot([i for i in range(len(aa))],aa,c="b",label="Microbial") #show fintesses over generations
+plt.plot([i for i in range(len(bb))],bb,c="r",label="Group") #show fintesses over generations
+plt.plot([i for i in range(len(a))],a,c="g",label="Microbial old") #show fintesses over generations
+plt.plot([i for i in range(len(b))],b,c="y",label="Group old") #show fintesses over generations
+
+plt.title("Results of population fitness over "+str(len(a))+" generations with alternative mutation")
+plt.ylabel("Fitness Units")
+plt.xlabel("Generation")
+plt.legend(loc="upper left")
+plt.show()

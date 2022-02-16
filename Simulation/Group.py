@@ -32,6 +32,16 @@ def generateWorld():
     #print("Octaves:",octaves)
     return world,shape
 
+def mutationNew(gene, mean=0, std=0.5,size=100):
+    assert size<len(gene)
+    n=random.randint(0,len(gene)-size-1)
+    array=np.random.normal(mean,std,size=size)
+    gene = gene[n:n+size] + array #mutate the gene via normal 
+    # constraint
+    gene[gene >4] = 4
+    gene[gene < -4] = -4
+    return gene
+
 def mutation(gene, mean=0, std=0.5):
     gene = gene + np.random.normal(mean, std, size=gene.shape) #mutate the gene via normal 
     # constraint
@@ -222,6 +232,7 @@ def group(genes,world,position):
     fitness2=0
     genes1=[]
     genes2=[]
+    maxFitness=0
     for i in range(len(genes[ind_1])):
         gene1=(genes[ind_1][i])
         gene2=(genes[ind_2][i])
@@ -236,14 +247,17 @@ def group(genes,world,position):
         a,b,fitnessa2,c=run_trial(gene2)
         a,b,fitnessb1,c=run_trial(gene1)
         a,b,fitnessb2,c=run_trial(gene2)
+        
         #generate average fitness
         fitness1+=(fitnessa+fitnessa1+fitnessb1)/3
         fitness2+=(fitnessb+fitnessa2+fitnessb2)/3
+        temp=max([(fitnessa+fitnessa1+fitnessb1)/3,(fitnessb+fitnessa2+fitnessb2)/3])
+        if temp>maxFitness:maxFitness=temp
     #get group fitness
     fitness1=fitness1/len(genes[ind_1])
     fitness2=fitness2/len(genes[ind_1])
 
-    print(max(fitness1,fitness2),"% over 3 trials")
+    #print(max(fitness1,fitness2),"% over 3 trials")
     #show results
      
     #microbial selection
@@ -260,7 +274,7 @@ def group(genes,world,position):
     if BESTFIT==0: BEST=[copy.deepcopy(p2x),copy.deepcopy(p2y),copy.deepcopy(world),endCord2,ind_2] #default
     genes[ind_1]=copy.deepcopy(genes1)
     genes[ind_2]=copy.deepcopy(genes2)
-    return genes,max(fitness1,fitness2)
+    return genes,max(fitness1,fitness2),maxFitness
 BEST=[]
 BESTFIT=0
 world,shape=generateWorld()
@@ -301,11 +315,11 @@ for gen in range(Generations):
     #randomly pick a start position
     startPos=pickPosition(world,4,LBounds=6)
     #genes have been selected
-    gene_pop,fit=group(gene_pop,world,startPos)
-    fitnesses.append(max([fit]+fitnesses))
-
+    gene_pop,fit,Max=group(gene_pop,world,startPos)
+    fitnesses.append(max([Max]+fitnesses)) #max([fit]+fitnesses)
+    print(max(fitnesses))
 genes=gene_pop[BEST[4]]
-
+"""
 for gene in genes:
     p1x,p1y,fit,endCord1=run_trial(gene)
     plt.plot(p1x,p1y) #show best path
@@ -314,7 +328,7 @@ for gene in genes:
     #print(canReach(Rmap,startPos,endPos))
     plt.imshow(BEST[2],cmap='terrain') #show best show
     plt.show()
-
+"""
 np.save("group.npy", fitnesses)
 
 plt.cla()

@@ -249,8 +249,24 @@ Notably in Figure~\ref{fig:architecture} the fitness units are very low due to a
 
 After this, the addition of the Convolutional neural network was applied with the Microbial algorithm. This had a computer vision input which made convolutions within the input layer a potential solution for high results. 
 
+Fitness calculations must take into consideration the importance of energy efficiency as well as ending up on target. It is more important that an agent reaches the target, however, solutions that are more energy efficient are favoured. This gave a weighting of 70\% to the distance traveled (calculated based off of the end distance to the point), and a 30\% weighting to the energy efficiency calculation. As it is only possible to get 100\% energy efficiency by travelling down hill, it is likely that most trials are only able to get a top fitness within the 90s. 
+
+\begin{equation}
+Fitness=((\frac{100-energy}{100})*0.3 + (\frac{10-endDist}{10})*0.7)*100
+\end{equation}
+
+The final step of fitness calculation is to multiply the value by 100 to get it in percentage format. If an agent falls into water (where the position in the world has a value less than or equal to -6) or finishes further away from the end position than where it started, the fitness will be 0.
+
+
 \subsubsection{Strategies}
 Three genetic algorithm (GA) approaches were taken to solving this task, then an alternative rule based approach was explored to find whether GAs were over-fitting the problem. 
+
+To begin with I wrote some GA functions that would be standard across all algorithms. This would be the mutation, crossover, and fitness evaluation. The population generation was the same random Gaussian distribution generated arrays, but would be applied in the format appropriate to each algorithm.
+
+Mutation occurred by applying another Gaussian distribution over the top of a genotype. The standard deviation and mean would be entered as parameters. I implemented a max and min value at 4 and -4 to prevent values getting too high or too low and having an over-significant biased to the performance of the network. 
+
+Crossover functions have a probability of crossover parameter which will copy a value from the winning genotype over to the losing genotype randomly with the probability parameter.
+
 
 The first GA was a simple microbial algorithm. This generated a population of varied sizes. The optimal was found at between 10-20 genes. Two genes would be selected from the sample, trialed on three different maps with randomly generated coordinates, and then fitnesses calculated. The winner would copy over to the losing gene with a crossover between a mutation of the winning gene and the current gene. 
 
@@ -353,9 +369,15 @@ The last approach used a rule based method. This would take into consideration t
 
 Different restrictions were added to the rule based method, and it was found that reducing the significance of the climb distance difference, but making sure that the routes that lead to potential dangers were ignored. 
 
-For initial genotype selection the population had two random indices selected. This allowed tournament selection between both. A later approach would select one index and select a neighbouring genotype to have a slower convergence on sub-optimal solutions. This improved the accuracy of the end genotype. 
+For initial genotype selection the population had two random indices selected. This allowed tournament selection between both. A later approach would select one index and select a neighbouring genotype to have a slower convergence on sub-optimal solutions. This improved the accuracy of the end genotype. These indicies were selected randomly, and the sample size was given as a parameter. I used 40 as the size of mutated weights.
 
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.8\columnwidth]{resultsNewMut.png}
 
+\caption{The results of the old and new mutation types on the fitness evolution. The old is denoted by the dotted lines.}
+\label{fig:mut}
+\end{figure}
 
 \subsubsection{Chassis}
 
@@ -415,18 +437,18 @@ For control, the chassis used a Raspberry Pi for its low energy consumption yet 
 \subsubsection{Vision}
 To begin with I worked on the stereo vision using two USB Arducam modules and the cv2 disparity function. The initial visual representation was less accurate than needed so I trialed different pre-processing and post-processing techniques. 
 
-Things I did:
+To begin with the cameras were distanced along an aluminium profile to secure them on the same axis. Both were USB thus could be directly connected to a main computer for testing. At this stage there was no need to use the control board of the Robot as it would be much slower than a PC.
+%isparity map
+A disparity map was calculated using the cv2 library. The initial results were disappointing, even with calibration. Calibration was attempted through changing parameters of block size and number of disparities. The larger the block size, the more noticeable features are. 
 
-Disparity
--changed parameters
+%k means clustering
+As there was a too much noise within the images, I applied K-means clustering to the pixels in order to reduce the noise and change within an environment. 
 
-K means
+%Blur
 
-Blur
+%Remove differences in image
 
-Remove differences in image
-
-dilation
+%dilation
 
 \subsubsection{Testing environment}
 TODO
@@ -440,11 +462,13 @@ The tests for simulation gave varied results based on the different algorithms u
 
 \caption{Results of the microbial algorithm after 1000 generations. It is clear that the results converge on a solution which is clearly sub-optimal, and eventually cannot improve above this. 
 Using a grouped population there was belief that more internal diversity would provide eloquent solutions and prevent convergent of sub-optimal solutions too early. The results show the fitness of these grouped populations to be considerably lower than the other algorithms. 
-Results of the elitist algorithm that picks the best genes and repopulates at the end of each sub-generation: This converged on the highest fitness out the trialed genetic approaches, though took longer to converge on a high fitness compared to the singular microbial approach.}
+Results of the elitist algorithm that picks the best genes and repopulates at the end of each sub-generation: This converged on the highest fitness quicker out the trialed genetic approaches, though was over taken by the microbial eventually}
 \label{fig:Microbial}
 \end{figure}
 
 The convolutional neural network was outperformed by the feed-forward network, both using the same microbial algorithm. Experimentation with different kernel sizes did not have dramatic improvement to the fitnesses. Though with genetic approaches there is an element of randomness, after quantitative trials the fitnesses still averaged around 50\%. The convolutional layer is likely highlighting areas of the disparity map that are not significant, while the input is already simplified. It is likely that the convolutional network would be more effective with training data, rather than an evolved process. 
+
+From these results there was little evidence to suggest whether the microbial or elite microbial performed more optimally. The Elite microbial works better with smaller numbers of generations, however, takes longer to run the microbial. With a simulation the microbial offers better functionality as we can run as many trials in short periods of time. On a physical robot each generation will take longer, therefore the elite version offers a better short term answer.
 
 
 \begin{figure}[H]
@@ -479,6 +503,13 @@ This shows that the rule-based method performs better than the genetic approach 
 \subfloat[Convolutional NN evolved agent]{%
   \includegraphics[clip,width=0.5\columnwidth]{Conv1D.png}%
 }
+\subfloat[Convolutional NN evolved agent]{%
+  \includegraphics[clip,width=0.5\columnwidth]{CONV.png}%
+}
+\\
+\subfloat[Elite Microbial evolved agent]{%
+  \includegraphics[clip,width=0.5\columnwidth]{EliteGroup.png}%
+}
 \subfloat[Rule-based agent]{%
   \includegraphics[clip,width=0.5\columnwidth]{avoid problems explicit.png}%
 }
@@ -487,6 +518,10 @@ This shows that the rule-based method performs better than the genetic approach 
 \end{figure}
 
 The evolved process with high fitnesses had contour traversing behaviour. Travelling on contours would use less energy than travelling over terrain in the shortest euclidean distance to the end point. These journeys can be seen in Figure~\ref{fig:maps}(a)(b). 
+
+The convolutional NN example was chosen as it showed an increased diversity of movement compared to alternative neural network architecture. This lead to confused movement near the end before rediscovering the path and moving towards the outcome. Figure~\ref{fig:maps}(d) shows an example of a high fitness attempt that made use of contours and avoided obstacles.
+
+The rule based approach example shows precise navigation around dangerous obstacles such as water pools. This method achieved a high fitness through local decisions. 
 
 \section{Conclusions}
 TODO

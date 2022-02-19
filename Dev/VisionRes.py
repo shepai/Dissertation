@@ -86,12 +86,14 @@ Pastdisp,frame0_new,frame1_new=readAndStereo(imgOriginalSceneA,imgOriginalSceneB
 c=0
 disp,frame0_new,frame1_new=readAndStereo(imgOriginalSceneB,imgOriginalSceneA)
 #disp=getSame(Pastdisp,disp) #remove differences
-disp = cv.dilate(disp,kernel,iterations = 3)
-cv.imshow('disparity ',disp)
-#display original
-cv.imshow('original A',frame0_new)
-cv.imshow('original B',frame1_new)
-Pastdisp=copy.deepcopy(disp)
-cv.waitKey(1)
-#cv.destroyAllWindows()
-input()
+#disp = cv.dilate(disp,kernel,iterations = 3)
+
+plt.subplot(1,3,1)
+plt.imshow(imgOriginalSceneB)
+plt.subplot(1,3,2)
+plt.imshow(imgOriginalSceneA)
+plt.subplot(1,3,3)
+plt.imshow(disp)
+plt.title("Results of stereo imaging on the Arducam")
+
+plt.show()

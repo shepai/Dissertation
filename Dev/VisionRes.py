@@ -82,18 +82,20 @@ kernel = np.ones((5,5),np.float32)/25
 
 imgOriginalSceneA = cv.imread("D:\Documents\Computer Science\Year 3\Dissertation\Dev\Computer vision\StereoDat\ 3L.png")
 imgOriginalSceneB = cv.imread("D:\Documents\Computer Science\Year 3\Dissertation\Dev\Computer vision\StereoDat\ 3R.png")
+#imgOriginalSceneA,imgOriginalSceneB=Kmeans(imgOriginalSceneA,imgOriginalSceneB)
 Pastdisp,frame0_new,frame1_new=readAndStereo(imgOriginalSceneA,imgOriginalSceneB)
 c=0
 disp,frame0_new,frame1_new=readAndStereo(imgOriginalSceneB,imgOriginalSceneA)
-#disp=getSame(Pastdisp,disp) #remove differences
+disp=getSame(Pastdisp,disp) #remove differences
 #disp = cv.dilate(disp,kernel,iterations = 3)
 
 plt.subplot(1,3,1)
 plt.imshow(imgOriginalSceneB)
 plt.subplot(1,3,2)
+plt.title("Results of stereo imaging on the Arducam with image-difference removal")
 plt.imshow(imgOriginalSceneA)
 plt.subplot(1,3,3)
 plt.imshow(disp)
-plt.title("Results of stereo imaging on the Arducam")
+
 
 plt.show()

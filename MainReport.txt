@@ -379,7 +379,6 @@ For initial genotype selection the population had two random indices selected. T
 \label{fig:mut}
 \end{figure}
 
-\subsubsection{Chassis}
 
 \subsection{Robot platform}
 
@@ -438,10 +437,24 @@ For control, the chassis used a Raspberry Pi for its low energy consumption yet 
 To begin with I worked on the stereo vision using two USB Arducam modules and the cv2 disparity function. The initial visual representation was less accurate than needed so I trialed different pre-processing and post-processing techniques. 
 
 To begin with the cameras were distanced along an aluminium profile to secure them on the same axis. Both were USB thus could be directly connected to a main computer for testing. At this stage there was no need to use the control board of the Robot as it would be much slower than a PC.
-%isparity map
-A disparity map was calculated using the cv2 library. The initial results were disappointing, even with calibration. Calibration was attempted through changing parameters of block size and number of disparities. The larger the block size, the more noticeable features are. 
+%disparity map
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=1\columnwidth]{depthNormal.png}
+
+\caption{Disparity map generated using no pre-processing techniques}
+\label{fig:disp}
+\end{figure}
+A disparity map was calculated using the cv2 library. The initial results were disappointing, even with calibration. Calibration was attempted through changing parameters of block size and number of disparities. The larger the block size, the more noticeable features are. Noticeably in Figure~\ref{fig:disp} significant features were located but much of the image goes un-noticed. 
 
 %k means clustering
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=1\columnwidth]{depthKmeans.png}
+
+\caption{K-means clustering as a pre-processing technique on the images}
+\label{fig:kmeans}
+\end{figure}
 As there was a too much noise within the images, I applied K-means clustering to the pixels in order to reduce the noise and change within an environment. 
 
 %Blur

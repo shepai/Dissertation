@@ -113,7 +113,6 @@ def readIm(map,position,direction,imSize=(5,5),d=5):
         A.append(getSlice(map,lin,position,imH=imSize[0]))
 
     A=np.array(A)/50
-    A = A.flatten()
     return A
 
 def getCircleCoord(centre,radius):
@@ -161,9 +160,9 @@ def run_trial(gene,runs=30):
     while i<runs and not broke and getDist(current,cords)>1: #loop through and generate path
         dir=maths.cos(v[1]) #get angle from y-axis
         im=readIm(world,current,dir) #read the image that the agent sees
-        assert len(im)==25, "Panoramic Camera failed"+str(len(im)) #assert length correct
+        assert len(im)==5, "Panoramic Camera failed"+str(len(im)) #assert length correct
         VectorBetween=[cords[0]-current[0],cords[1]-current[1]]
-        v=whegBot.get_action(np.concatenate((im, VectorBetween))) #get action from the agent
+        v=whegBot.get_action(im,VectorBetween) #get action from the agent
         last=current.copy() 
         pathx.append(current[0]+v[0])
         pathy.append(current[1]+v[1])
@@ -242,7 +241,7 @@ vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 #   10
 #output
 #   vectors possible (8)
-whegBot=Agent_Conv(testIm.shape[0]+2,[10,10],len(vectors)) #define the agent
+whegBot=Agent_Conv2D(testIm.shape[0]*testIm.shape[1]+2,[10,10],len(vectors)) #define the agent
 
 pop_size=15
 gene_pop=[]

@@ -162,23 +162,27 @@ class Agent_Conv2D:
             self.hidden_weights.append(torch.from_numpy(w))
         self.bias = torch.from_numpy(b) #assign biases
 
-    def forward(self, x):
+    def forward(self, x, vec):
         #create conv layer
         scharr = np.array([[ -3-3, 0-10,  +3 -3],
                    [-10+0, 0+ 0, +10 +0],
                    [ -3+3, 0+10,  +3 +3]]) # Gx + j*Gy
         x= signal.convolve2d(x, scharr, boundary='symm', mode='same')   
         x=x.flatten()
+        print(vec)
+        x=np.concatenate(x,np.array(vec))
         x=x[:,np.newaxis]      
         x = torch.tensor(np.dot(self.weights.float(),x).flatten()).float()
         #run through forward layers
         x=x[:,np.newaxis]
+        print(vec)
+        x = torch.mm(x, self.weights.T.float()) #first layer
         for i in range(len(self.hidden_weights)-1):
             x = torch.mm(x.T,self.hidden_weights[i].T.float()) #second layer
         return torch.mm(x,self.hidden_weights[-1].T.float()) + self.bias #third layer
     
-    def get_action(self, x):
+    def get_action(self, x,vec):
         vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
-        arr=list(self.forward(x)[0])
+        arr=list(self.forward(x,vec)[0])
         ind=np.argmax(arr)
         return vectors[ind]

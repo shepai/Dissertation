@@ -171,13 +171,13 @@ class Agent_Conv2D:
         x=x.flatten()
         vec=vec.astype(float)
         x=np.concatenate((x,vec))
-        x=x[:,np.newaxis]      
-        x = torch.tensor(np.dot(self.weights.float(),x).flatten()).float()
+        x=torch.tensor(x[:,np.newaxis]).float()  
+        #x = torch.tensor(np.dot(self.weights.float(),x).flatten()).float()
         #run through forward layers
-        x=x[:,np.newaxis]
-        x = torch.mm(x, self.weights.float()) #first layer
+        x = torch.mm(x.T, self.weights.T.float()) #first layer
+
         for i in range(len(self.hidden_weights)-1):
-            x = torch.mm(x.T,self.hidden_weights[i].T.float()) #second layer
+            x = torch.mm(x,self.hidden_weights[i].T.float()) #second layer
         return torch.mm(x,self.hidden_weights[-1].T.float()) + self.bias #third layer
     
     def get_action(self, x,vec):

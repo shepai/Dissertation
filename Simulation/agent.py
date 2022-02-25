@@ -169,19 +169,19 @@ class Agent_Conv2D:
                    [ -3+3, 0+10,  +3 +3]]) # Gx + j*Gy
         x= signal.convolve2d(x, scharr, boundary='symm', mode='same')   
         x=x.flatten()
-        print(vec)
-        x=np.concatenate(x,np.array(vec))
+        vec=vec.astype(float)
+        x=np.concatenate((x,vec))
         x=x[:,np.newaxis]      
         x = torch.tensor(np.dot(self.weights.float(),x).flatten()).float()
         #run through forward layers
         x=x[:,np.newaxis]
-        print(vec)
-        x = torch.mm(x, self.weights.T.float()) #first layer
+        x = torch.mm(x, self.weights.float()) #first layer
         for i in range(len(self.hidden_weights)-1):
             x = torch.mm(x.T,self.hidden_weights[i].T.float()) #second layer
         return torch.mm(x,self.hidden_weights[-1].T.float()) + self.bias #third layer
     
     def get_action(self, x,vec):
+        vec=np.array(vec)
         vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
         arr=list(self.forward(x,vec)[0])
         ind=np.argmax(arr)

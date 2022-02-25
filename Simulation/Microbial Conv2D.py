@@ -293,7 +293,7 @@ if bestGene!=[]:
         plt.show()
 """
 
-np.save("D:/Documents/Computer Science/Year 3/Dissertation/microbialConv.npy", fitnesses)
+np.save("D:/Documents/Computer Science/Year 3/Dissertation/microbialConv2D.npy", fitnesses)
 """
 plt.plot(BEST[0],BEST[1]) #show best path
 plt.title("Results of best fitness at "+str(BESTFIT)+"% after generations")

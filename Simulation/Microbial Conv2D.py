@@ -294,7 +294,7 @@ if bestGene!=[]:
 """
 
 np.save("D:/Documents/Computer Science/Year 3/Dissertation/microbialConv2D.npy", fitnesses)
-"""
+
 plt.plot(BEST[0],BEST[1]) #show best path
 plt.title("Results of best fitness at "+str(BESTFIT)+"% after generations")
 plt.scatter(BEST[3][0],BEST[3][1])
@@ -302,7 +302,7 @@ plt.scatter(BEST[0][0],BEST[1][0],c="r")
 #print(canReach(Rmap,startPos,endPos))
 plt.imshow(BEST[2],cmap='terrain') #show best show
 plt.show()
-"""
+
 plt.cla()
 plt.plot([i for i in range(Generations)],fitnesses) #show fintesses over generations
 plt.title("Results of population fitness over "+str(Generations)+" generations")

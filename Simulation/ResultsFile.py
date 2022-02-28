@@ -6,6 +6,7 @@ b=None
 c=None
 d=None
 e=None
+g=None
 path="D:/Documents/Computer Science/Year 3/Dissertation/"
 with open(path+'microbial.npy', 'rb') as f:
     a = np.load(f)
@@ -18,6 +19,8 @@ with open(path+'microbialConv.npy', 'rb') as f:
     d = np.load(f)
 with open(path+'microbialConv2D.npy', 'rb') as f:
     e = np.load(f)
+with open(path+'group2D.npy', 'rb') as f:
+    g = np.load(f)
 print(a.shape,b.shape,c.shape)
 
 plt.plot([i for i in range(len(a))],a,c="b",label="Microbial") #show fintesses over generations
@@ -25,6 +28,7 @@ plt.plot([i for i in range(len(b))],b,c="r",label="Group") #show fintesses over 
 plt.plot([i for i in range(len(c))],c,c="g",label="Elitist") #show fintesses over generations
 plt.plot([i for i in range(len(d))],d,c="y",label="Convolutional 1D") #show fintesses over generations
 plt.plot([i for i in range(len(e))],e,c="k",label="Convolutional 2D") #show fintesses over generations
+plt.plot([i for i in range(len(g))],e,c="m",label="Convolutional 2D Group") #show fintesses over generations
 
 plt.title("Results of population fitness over "+str(len(a))+" generations")
 plt.ylabel("Fitness Units")

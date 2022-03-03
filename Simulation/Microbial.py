@@ -34,7 +34,7 @@ def generateWorld():
 
 def mutation(gene, mean=0, std=0.5,size=100):
     assert size<len(gene)
-    n=random.randint(0,len(gene)-size-1)
+    n=rnd.randint(0,len(gene)-size-1)
     array=np.random.normal(mean,std,size=size)
     gene = gene[n:n+size] + array #mutate the gene via normal 
     # constraint

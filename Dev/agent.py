@@ -54,10 +54,10 @@ class Agent_defineLayers:
         return torch.mm(x,self.hidden_weights[-1].T) + self.bias #third layer
         
     def get_action(self, x):
-        vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
+        #vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
         arr=list(self.forward(x)[0])
         ind=np.argmax(arr)
-        return vectors[ind]
+        return ind
 
 class Agent_Conv:
     def __init__(self, num_input, layers, num_output):

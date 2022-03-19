@@ -98,6 +98,7 @@ out = cv2.VideoWriter(filename, get_video_type(filename), 25, get_dims(cap, res)
 
 
 kit.servo[4].angle=90
+"""
 while 1:
      try:
         events = get_gamepad()
@@ -156,3 +157,4 @@ while 1:
         backward()
         
 stop()
+"""

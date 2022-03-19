@@ -1,7 +1,7 @@
 from agent import Agent_defineLayers as robot
 import numpy as np
 import copy
-
+from wheg import *
 
 class genetic:
     def __init__(self,agent,pop_size):
@@ -24,7 +24,7 @@ class genetic:
     def place_genes(self,index1,index2,gene1,gene2):
         self.gene_pop[index1]=copy.deepcopy(gene1)
         self.gene_pop[index2]=copy.deepcopy(gene2)
-    def run(self,gene,trials):
+    def run(self,gene,trials): #run with given gene
         start=0
         arr=[]
         for i in range(trials): #run for set amount of trial times
@@ -35,7 +35,7 @@ class genetic:
 
         end=0
         return self.fitness_func(start,end,np.array(arr))
-    def mutation(self,gene, mean=0, std=0.5,size=100):
+    def mutation(self,gene, mean=0, std=0.5,size=100): #mutate a specific part 
         assert size<len(gene)
         n=np.random.randint(0,len(gene)-size-1)
         array=np.random.normal(mean,std,size=size)
@@ -67,9 +67,7 @@ class genetic:
                 W=gene2
 
             L=copy.deepcopy(self.mutate(W,size=9))  #mutate winner and place back
-
             self.place_genes(id1,id2,W,L) #palce back into the pop
-
 
 agent = robot(2,[3,3],3) #define output layer 
 alg = genetic(agent,10)

@@ -13,10 +13,10 @@ class gyro:
         for i in range(200):
             self.a+=int(self.imu.gyro.x*10)
         self.a=int(self.a/200)
-    def movementDetected(self):
+    def movementDetected(self,sensitiviy=10):
         val=abs(int(self.imu.gyro.x*10)-self.a) #get thresholded value
         data=""
-        if val>4: #chec significance
+        if val>sensitiviy: #chec significance
             data = "movement"
         self.getZero() #reevaluate movement threshold
         print(str(val)+data)

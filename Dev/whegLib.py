@@ -83,7 +83,7 @@ class wheg:
         if kit.servo[4].angle-10>=0:
             kit.servo[4].angle-=10
     def isStuck(self,gyro):
-        if (self.movingForward or self.movingBackward) and gyro.movementDetected()!="":
+        if (self.movingForward or self.movingBackward) and gyro.movementDetected()=="":
             return True
         return False
     def getData(self):

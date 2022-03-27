@@ -9,12 +9,30 @@ mpu = adafruit_mpu6050.MPU6050(i2c)
 class Gyro:
     def __init__(self,mpu=mpu):
         self.mpu=mpu
+        self.a=0
+        self.getZero()
     def getAcc(self):
         return self.mpu.acceleration
     def getGyro(self):
         return self.mpu.gyro
     def getTemp(self):
         return self.mpu.temperature
+        
+    def getZero(self): #create a zerod value to detect change
+        self.a=0
+        for i in range(200):
+            self.a+=int(self.getGyro()[2]*10)
+        self.a=int(self.a/200)
+    def movementDetected(self,sensitivity=150):
+        val=abs(int(self.getGyro()[2]*10)-self.a) #get thresholded value
+        data=""
+        if val>sensitivity: #chec significance
+            data = "movement"
+        self.getZero() #reevaluate movement threshold
+        print(str(val)+data)
+        return data
+
+
 
 class wheg:
     def __init__(self,kit=kit):
@@ -64,9 +82,10 @@ class wheg:
     def rotateDown(self):
         if kit.servo[4].angle-10>=0:
             kit.servo[4].angle-=10
-    def isStuck(self):
-        if (self.movingForward or self.movingBackward) and True:
-            pass
+    def isStuck(self,gyro):
+        if (self.movingForward or self.movingBackward) and gyro.movementDetected()!="":
+            return True
+        return False
     def getData(self):
         print("data:")
         dat=self.gyro.getAcc()
@@ -75,10 +94,15 @@ class wheg:
         print("gyro",dat[0]+self.xg0,dat[1]+self.yg0,dat[2]+self.zg0)
         print("temp",self.gyro.getTemp())
 
+
+g=Gyro()
 bot=wheg()
-time.sleep(1)
+bot.stop()
+time.sleep(2)
 bot.getData()
-bot.forward()
+for i in range(10):
+    bot.forward()
+    print(g.movementDetected())
 bot.getData()
 time.sleep(2)
 bot.getData()
@@ -86,4 +110,12 @@ bot.backward()
 bot.getData()
 time.sleep(2)
 bot.stop()
+print(g.movementDetected())
 bot.getData()
+
+
+while True:
+    #print(imu.accel.xyz,imu.gyro.xyz,imu.temperature,end='\r')
+    time.sleep(0.5)
+    g.movementDetected()
+    

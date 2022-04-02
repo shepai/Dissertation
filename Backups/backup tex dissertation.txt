@@ -20,7 +20,10 @@
 \usepackage{float}
 \usepackage{listings}
 \usepackage{pdfpages}
-
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{algpseudocode}
+\usepackage{tabto}
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
@@ -53,7 +56,7 @@
         % Set space from top
        \textbf{\LARGE Bio-Inspired Robotic Navigation On Varied Terrain}
 % Name separated by break lines and supervisor name
-    
+        
        \vspace{1cm}
        % Set space from title
         \textbf{Dexter R Shepherd [candNo: 215819] \\ Supervisor: Dr James Knight}
@@ -61,7 +64,7 @@
        \vfill
        % allow it to stretch and sink verticaly
             % Smaller text with title and course name
-       Interim report\\
+       Final Report\\
        Computer Science and Artificial Intelligence\, BSc
             
        \vspace{0.8cm}
@@ -80,20 +83,51 @@
 \end{titlepage}
 
 \newpage 
+\includegraphics[width=0.6\linewidth]{Dyslexia Sticker (2).jpg}
+\\\\
+
+        % Set space from top
+       \textbf{\LARGE Statement of authenticity}
+       \vspace{0.8cm}
+       
+       This report is submitted as part requirement for the degree of Computer Science and Artificial Intelligence (BSc) at the University of Sussex. It is the product of my own labour except where indicated in the text. The report may be freely copied and distributed provided the source is acknowledged. I hereby give permission for a copy of this report to be loaned out to students in future years
+       \vspace{2cm}
+       \\Signed:\\
+       \vspace{0.8cm}
+       \includegraphics[width=0.5\textwidth]{sig.PNG}
+
+       Dexter R Shepherd
+       
+\vspace*{1cm}
+        % Set space from top
+       \textbf{\LARGE Acknowledgements}
+       \vspace{0.8cm}
+       \\
+        TODO
+ 
+         \\
+\vspace*{1cm}
+        % Set space from top
+       \textbf{\LARGE Summary}
+       \vspace{0.8cm}
+       \\
+       TODO
+       
+       \\
+\newpage 
 \tableofcontents
 \newpage
 
 \section{Introduction}
-
-In this project, I am going to investigate autonomous robotic navigation through localized decisions based on previous experience. Nearly all organisms are limited at some point when it comes to movement. For example, an octopus can fit through an aperture that is bigger than its beak \cite{octopus} and a person can climb over rocks, but only if they have grip points for hands and feet. These environmental barriers define constraints to an organism’s ability to traverse across it. When a path looks too arduous, we will often choose a more accessible route if possible. 
+In this project, I have investigated autonomous robotic navigation through localized decisions based on previous experience. Nearly all organisms are limited at some point when it comes to movement. For example, an octopus can fit through an aperture that is bigger than its beak \cite{octopus} and a person can climb over rocks, but only if they have grip points for hands and feet. These environmental barriers define constraints to an organism’s ability to traverse across it. When a path looks too arduous, we will often choose a more accessible route if possible. 
 
 These constraints also apply to robots. Consider a Mars Rover over 395 million km away from the person controlling it. If the Rover were to get stuck, there would be no one to recover it and -- as it takes 181 seconds for a signal to get from Earth to Mars -- real-time control is impossible. Therefore, a robot, like a biological organism, needs a sense of self-preservation so needs to know its limitations and not attempt tasks of movement outside these physical constraints.
 \cite{reinforcementLearning} 
 
-Our agent will be set a target location and will need to reach it while avoiding hazardous/overly complex terrain within the environment. Success will be defined as whether the agent got there safely, and how much extra energy was consumed.
+Our agent was set a target location and had to reach it while avoiding hazardous/overly complex terrain within the environment. Success was defined as whether the agent got there safely, and how much extra energy was consumed.
 When deciding on routes, there may be the scenario that all paths are within the constraints but some are simpler to navigate than others. In this situation, the agent will need to pick the option which requires the “least” effort. The best-case scenario for the agent I am developing is governed by the level of complexity of movement necessary to overcome the obstacle. If the agent gets stuck it will get no reward, if the agent makes unnecessary movement while moving over simple terrain, it will get little reward.
 
-I will initially explore this problem using simulation before moving to a robot platform with a back actuator, stabilizer and neck actuator. The robot will need to learn to use these features to help it navigate over the landscape. This robot will perform this task by using computer vision techniques, which forms a prediction on the best route to take via a movement instructions generated at each move.
+I initially explored this problem using simulation before moving to a robot platform with a back actuator, stabilizer and neck actuator. The robot needed to learn to use these features to help it navigate over the landscape. This robot performed this task by using computer vision techniques, which forms a prediction on the best route to take via a movement instructions generated at each move.
 
 \section{Professional and Ethical considerations}
 
@@ -105,7 +139,7 @@ Because we will train our robot on images of real world environments, we will ha
 
 Another ethical consideration is the safety involved in testing as the robot could be a trip hazard. Therefore, we will test the robot in an environment that it cannot hit people. This will be the safety netted area of the Future Technologies Lab. 
 
-
+%BODY OF REPORT
 \section{Background Literature}
 \subsection{Robot Locomotion}
 
@@ -240,26 +274,272 @@ Depth perception via stereo imaging is another method that requires less trainin
 Self preserving robotics are important for remote locations such as planetary exploration, or hazardous locations on earth like nuclear reactors. The preserving of autonomous robotics will save money as well as prolong the lifespan of the agent~\cite{selfpres}. Our approach will be using computer vision techniques to evaluate terrain and make safer and easier path decisions. Our design will also be implemented on a cheaper design chassis, aiming to bring down the overall cost of robot development.
 
 
+
 \section{Requirement analysis}
-Existing  robotic solutions have not combined bio-inspired chassis design with reinforcement learning. This project will use a physical robot platform and a simulation of this platform for the gathering of data.
+Existing robotic solutions have not combined bio-inspired chassis design with evolved learning. This project will use a physical robot platform and a simulation of this platform for the gathering of data. Simulation provides a proof of concept by trialing navigation much quicker than a physical robot. 
 
 \subsection{User Needs and ideal features}
 The agent will need to learn how to recognize the differences between rough and smooth terrain based on visual information and furthermore learn how to traverse it. Ideally, the physical robot will use its back actuator to improve its ability to climb over terrain. 
 
-The agent will need to understand its limitations and not attempt routes that it will get stuck on. Ideally this will be demonstrated on a physical robot but, if time pressure prevents this, it is still essential the algorithm works in simulation. 
+The agent will need to understand its limitations and not attempt routes that it will get stuck on. Ideally this will be demonstrated on a physical robot but, if real world noise prevents this, it is still essential the algorithm works in simulation as proof of concept. 
 
 \subsection{Limitations}
 This project does not intend to create a robot that can climb any terrain. While the Wheg design will improve the robot's climbing ability, it will not make it impervious to the laws of physics! 
 
-\subsection{System overview}
-\subsubsection{Simulation and application of the Robot}
-The agent will be evaluated in an environment, where we give it a target location and it must avoid rough terrain to get there. These constraints will be applied by calculating energy consumption. Within an environment there can be dangers, which we will simulate using sea and snow (suggesting the ground is too high) -- entering these regions will result in 0 fitness. Using a neural network with a visual representation and vector as an input layer. The output will be a left, right, forward command. When we deploy this on the robot, we will most likely use a depth camera. 
+\subsection{Problem the system is solving}
+The problem this research is solving is to improve autonomous robotic navigation for danger detection without the use of training data as a robot can be deployed within different environments, which makes obstacle recognition harder. 
 
-\subsubsection{Robot platform}
-The robot chassis will incorporate a wheg design. This design will need to be able to climb over terrain while maintaining stability. The Whegs will be 3D printed, so must have a diameter smaller than \SI{200}{\milli\metre} due to the printer capacity. Current designs typically use claw-like hooks on the whegs. This design is limited on specific terrains due to it not being able to reverse. 
+Additionally, from an engineering point of view the robot is trialing Wheg designs which are arguably higher performing than wheels. Most robotic navigation projects use conventional apparatus, however, Whegs remain unrepresented. 
+\section{Methods}
 
-The main chassis of the robot will use the suspension system shown in figure~\ref{fig:suspension} so that a higher incline on one extremity does not tilt the overall robot. This design was inspired by a Tamiya radio controlled car~\cite{tamiya}.
+\subsection{Simulation}
+I set up a Python simulation by generating a 2D map using Perlin noise, seen in figure~\ref{fig:perlin}. Perlin noise is a type of gradient noise commonly used to procedurally generate terrain~\cite{perlin} where the value of the space between two points changes smoothly. A grid of ($n$) dimensions is created. Each index is assigned a random vector, where the dot product is calculated, which allows interpolation to generate noise.
 
+%We present the interpolation between the dot products mathematically using $a$ to represent a grid node, with $0$ and $1$ being the grid node index. 
+
+\begin{figure}[H]
+\centering
+  \includegraphics[width=0.9\linewidth]{Sim2d.png}
+  \caption{2D simulation plot of a 3D terrain. Random generated points are shown to show the position of agents and rewards. }
+  \label{fig:perlin}
+\end{figure}
+The smoothstep function represents a sigmoid-like interpolation. 
+The persistence,  octaves, and lacunarity are all altered via parameters in the world creation function. The octave is generate via a combination of frequency-amplitudes. Each octave adds a layer of detail to the world, where the contribution of each octave is defined by persistence. The lucunarity defines how much detail is added or removed at each layer. This function formed a map held as a two-dimensional array representing terrain heights numerically. 
+
+In such simulations, we can find how far a point is from the start position and the terrain steepness (gradient) at any point. The energy consumed ($E$) by a robot in a given trial is denoted by the number of steps taken ($S$) and the accumulated terrain value of each place ($P$). This terrain value is the step $S$ up, down, or across from the current height. The Manhattan distanced is used as a measure of how far the agent has travelled. This which was picked in place of the euclidean distance due to increased accuracy with high dimensionality~\cite{manhatten}.
+
+\begin{equation}
+E_{nergy} = (\mid x1 - x2 \mid  + \mid  y1 - y2 \mid ) \cdot \sum_{i=1}^{S} (P_{i})
+\end{equation}
+\subsubsection{Previous methods}
+
+Different methods have been proposed to classify the energy consumption of simulated robotics~\cite{chassisTerrain}. A study that held relevance to the task this thesis is exploring used slippage, required torque, and minimum friction coefficient. These metrics create an overall score, plotted throughout each trial. $\mu$ represents the friction coefficient needed for tangential ($R$) and normal ($N$) force with ($r$) given by the radius of the wheel with torque ($T$). 
+\begin{equation}
+\mu _{needed} = \frac{R}{N}=\frac{T\cdot r}{N}
+\end{equation}
+
+Slippage consumes energy without making the robot move forward. Slippage was calculated using the encoders on wheels. Distance is calculated using the following equation which uses encoder values. The wheel encoder ($\Delta _{coder}$) is used and multiplied by the circumference of the wheel ($2 \cdot \pi \cdot r$). This divides over the pulse/turn multiplied by the gear ratio.
+\begin{equation}
+\text{Distance} = \frac{\Delta _{coder}\cdot 2 \cdot \pi \cdot r}{N_{pulse}\cdot R_{gearbox}} 
+\end{equation}
+The slippage is the difference of ground truth and wheel odometry~\cite{chassisTerrain}.
+These factors form a Max and Min G score. Both robot robots could provide enough torque, but that does not mean equal performance. The G score is taken from all the G values, calculated from the torque needed. 
+
+
+\subsubsection{Environment, model and rewards}
+The environmental conditions could be changed by altering the persistence parameter. By increasing the value, the terrain would become more complex with more simulated dangers such as water. 
+\begin{figure}[H]
+\centering
+\subfloat[ ]{%
+  \includegraphics[clip,width=0.5\columnwidth]{what its seeing.png}
+  }
+  \subfloat[ ]{%
+  \includegraphics[clip,width=0.5\columnwidth]{harderTerrain.png}
+  }
+\caption{ Left: Model with low persistence. Right: Model with high persistence.}
+\label{fig:persist}
+\end{figure}
+No real challenges would exist for an agent in Figure~\ref{fig:persist}a due to the smooth terrain with a very small danger of water. An agent within Figure~\ref{fig:persist}b has several pools and large changes in climb that it would need to take into consideration. Persistence was chosen at value 0.7 for the trials. 
+
+Vision was generated as a disparity map of changes within visual perception of the agent. The first person view was generated via taking several vectors off of agent at altered angles of 20 degrees per reading. The red lines within Figure \ref{fig:persist} show the visual perception of 100 degrees. x and y represent the current agent position, and the iteration of $x_{i}$ and $y_{i}$ represents the next coordinates at the next iteration. $\alpha$ represents the start angle that the agent is facing in. 
+
+\begin{equation}
+    x_{i}, y_{i} = x+ROUND(\left|d \cdot cos(\alpha +20i) \right|), y+ROUND(\left|d \cdot sin(\alpha +20i)\right|)
+\end{equation}
+The round function converts the values to integers so that the pixel coordinates can be accessed. The image is generated by going through each pixel coordinate found and comparing it to the current coordinates of the agent ($current_x, current_y$) height value. 
+\begin{equation}
+    Height = world_{current_x,current_y}
+\end{equation}
+\begin{equation}
+    newPixel_{k,l} = world_{x_{i}, y_{i}} - Height + 50
+\end{equation}
+The generated $newPixel$ at the indices of $k,l$ will have the pixel intensity of the current position of the world at the generated line $x_i,y_i$ where $i$ is the iteration through the array. We subtract the element of initial height so that if the next position is higher, then the pixel intensity will be brighter, and if lower then the pixel intensity is lower. We then add 50 to prevent negative values for the display. 
+\begin{figure}[H]
+\centering
+\subfloat[The Agent field of view ]{%
+  \includegraphics[clip,width=0.5\columnwidth]{real2.png}
+  }
+  \subfloat[Agent vision visual map]{%
+  \includegraphics[clip,width=0.5\columnwidth]{real1.png}
+  }
+\caption{How the agent views the world and an aerial view that can be displayed. The agent is looking downwards on the visual map. This is recognisable by the increased climb in the in the bottom-right corner of the map. This corresponds to the hill climb facing the agent.}
+\label{fig:persist}
+\end{figure}
+
+Each trial would generate a random coordinate for the agent to start in, with the condition that this start point was not in water so that the agent would not receive 0 fitness before starting. An end goal point would be generated randomly from an array of coordinated on the circumference of a circle at a set radius. 
+
+The agent was written as its own class, where on initialization the network structure could be determined. Weights an biases are generated when an array of Gaussian noise is entered through the $set\_genes$ method as a parameter. Using a forward function, the network generates output that is converted to a vector choice using the $argmax$ function. There are 8 directions that the agent can take, therefore the network is expected to generate the probabilities of a success of each vector. 
+
+Architecture of the network was decided through several trials of all networks. Using a microbial algorithm with the same network for 10 trials, the results of network performance was quantified. The tests used a population of 15 and 200 generations. 
+
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.9\columnwidth]{NetworkArchMain.png}
+
+\caption{Averaged results of different architectures on the same task using the microbial algorithm}
+\label{fig:architecture}
+\end{figure}
+Notably in Figure~\ref{fig:architecture} the fitness units are very low due to averaging different trials of the same network. The population is regenerated randomly each time which leads to some trials having a low fitness bearing population by default. The best networks tended to have multiple layers. The network chosen for the testing was of two hidden layers of 10 nodes each as it performed well and was the between sizes 5 and 20 who also performed well. The smaller network of two layers of 5 performed equally well to two layers of 10 nodes, but as there is an element of randomness to these results the medium architecture seemed optimal. 
+
+After this, the addition of the Convolutional neural network was applied with the Microbial algorithm. This had a computer vision input which made convolutions within the input layer a potential solution for high results. 
+
+Fitness calculations must take into consideration the importance of energy efficiency as well as ending up on target. It is more important that an agent reaches the target, however, solutions that are more energy efficient are favoured. This gave a weighting of 70\% to the distance traveled (calculated based off of the end distance to the point), and a 30\% weighting to the energy efficiency calculation. As it is only possible to get 100\% energy efficiency by travelling down hill, it is likely that most trials are only able to get a top fitness within the 90s. 
+
+\begin{equation}
+Fitness=((\frac{100-energy}{100})*0.3 + (\frac{10-endDist}{10})*0.7)*100
+\end{equation}
+
+The final step of fitness calculation is to multiply the value by 100 to get it in percentage format. If an agent falls into water (where the position in the world has a value less than or equal to -6) or finishes further away from the end position than where it started, the fitness will be 0.
+
+A genotype is trialed three times on random coordinates, and the fitness is averaged. This is to make sure the gene isn't biased to a specific point which would result in a fluke high fitness. 
+
+
+\subsubsection{Strategies}
+Three genetic algorithm (GA) approaches were taken to solving this task, then an alternative rule based approach was explored to find whether GAs were over-fitting the problem. 
+
+To begin with I wrote some GA functions that would be standard across all algorithms. This would be the mutation, crossover, and fitness evaluation. The population generation was the same random Gaussian distribution generated arrays, but would be applied in the format appropriate to each algorithm.
+
+Mutation occurred by applying another Gaussian distribution over the top of a genotype. The standard deviation and mean would be entered as parameters. I implemented a max and min value at 4 and -4 to prevent values getting too high or too low and having an over-significant biased to the performance of the network. 
+
+Crossover functions have a probability of crossover parameter which will copy a value from the winning genotype over to the losing genotype randomly with the probability parameter.
+
+
+The first GA was a simple microbial algorithm. This generated a population of varied sizes. The optimal was found at between 10-20 genes. Two genes would be selected from the sample, trialed on three different maps with randomly generated coordinates, and then fitnesses calculated. The winner would copy over to the losing gene with a crossover between a mutation of the winning gene and the current gene. 
+
+
+\begin{algorithm}
+\caption{Microbial}\label{euclid}
+\begin{algorithmic}
+\REQUIRE $gene\_population$
+
+\STATE $gene1 \leftarrow randomPopItem(gene\_population)$
+\STATE $gene2 \leftarrow randomPopItem(gene\_population)$
+
+\STATE $fitness1 \leftarrow runTrial(gene1)$
+\STATE $fitness2 \leftarrow runTrial(gene2)$
+\IF{$fitness1>fitness2$}
+\STATE $gene1 \leftarrow crossover(gene2,mutate(gene1))$
+\ENDIF
+\IF{$fitness2>fitness1$}
+\STATE $gene2 \leftarrow crossover(gene1,mutate(gene2))$
+\ENDIF
+\STATE $gene\_population \leftarrow gene\_population.push(gene1)$
+\STATE $gene\_population \leftarrow gene\_population.push(gene2)$
+\RETURN $gene\_population$
+\end{algorithmic}
+\end{algorithm}
+\newpage 
+
+An alternative gene was explored, inspired by groups of genes within a larger population. This was used as research showed that it outperformed microbial algorithms due to having more diversity of genes within winning groups, thus preventing convergence on sub-optimal solutions.~\cite{gaMethod} Fitness was measured by the summation of the fitnesses of all genes within a group.
+
+\begin{equation}
+   GroupFitness = \sum_{i=1}^{n}(fitness(gene_{i}))
+\end{equation}
+
+\begin{algorithm}
+\caption{Group Microbial}\label{euclid}
+\begin{algorithmic}
+\REQUIRE $gene\_population$
+
+\STATE $group1 \leftarrow randomPopItem(gene\_population)$
+\STATE $group2 \leftarrow randomPopItem(gene\_population)$
+\STATE $fitness1 \leftarrow 0$
+\STATE $fitness2 \leftarrow 0$
+\For{$i \gets 0$ to $LENGTH(group1)$}
+   \STATE $fitness1 \leftarrow fitness1 + runTrial(group1[i])$
+\STATE $fitness2 \leftarrow fitness2 + runTrial(group2[i])$
+\EndFor
+\IF{$fitness1>fitness2$}
+\STATE $group1 \leftarrow crossover(group2,mutate(group1))$
+\ENDIF
+\IF{$fitness2>fitness1$}
+\STATE $group2 \leftarrow crossover(group1,mutate(group2))$
+\ENDIF
+\STATE $gene\_population \leftarrow gene\_population.push(group1)$
+\STATE $gene\_population \leftarrow gene\_population.push(group2)$
+\RETURN $gene\_population$
+\end{algorithmic}
+\end{algorithm}
+
+
+The previous strategies had few converging solutions at the end of trials. This inspired the creation of the final GA algorithm, which would perform a microbial normally for x-amount of generations, then repopulate the population with mutations of the top gene. This improved the accuracy of the agents. 
+
+\begin{algorithm}
+\caption{Choose best}\label{euclid}
+\begin{algorithmic}
+\REQUIRE $gene\_population,gene\_fitnesses,x$
+
+\STATE $topGenes \leftarrow [0...LENGTH(gene\_population)]$
+\STATE $marker \leftarrow 0$
+\For{$i \gets 0$ to $LENGTH(gene\_population)$}
+   \STATE $fitness \leftarrow gene\_fitnesses[i]$
+   \STATE $placed \leftarrow False$
+   \STATE $count \leftarrow 0$
+   \WHILE{$count<marker$ and $NOT placed$}
+        \IF{$topGenes[count]<fitness$}
+        \STATE $topGenes.insert(count,gene\_population)$
+        \STATE $placed \leftarrow True$
+        \ENDIF
+    \STATE $count \leftarrow count + 1$
+    \ENDWHILE
+   \IF{$NOT placed$}
+        \STATE $topGenes.insert(marker,gene\_population)$
+    \ENDIF 
+    \STATE $marker \leftarrow marker + 1$
+   
+\EndFor
+\STATE $fitness2 \leftarrow fitness2 + runTrial(group2[i])$
+
+\STATE $gene\_population \leftarrow [0...LENGTH(gene\_population)]$
+
+\For{$i \gets 0$ to $LENGTH(gene\_population)$}
+    \STATE $n \leftarrow RANDOM(0,x)$
+    \STATE $gene\_population[i] \leftarrow mutate(topGenes[n])$
+\EndFor
+\RETURN $gene\_population $
+\end{algorithmic}
+\end{algorithm}
+\newpage 
+
+The last approach used a rule based method. This would take into consideration the vector which takes the robot closest to the target, and avoid terrain that showed significant climb (or water). This was achieved by viewing the vectors possible and looking at each decision and removing any that would cause damage to the robot, such as falling in water. 
+
+Different restrictions were added to the rule based method, and it was found that reducing the significance of the climb distance difference, but making sure that the routes that lead to potential dangers were ignored. 
+
+For initial genotype selection the population had two random indices selected. This allowed tournament selection between both. A later approach would select one index and select a neighbouring genotype to have a slower convergence on sub-optimal solutions. This improved the accuracy of the end genotype. These indicies were selected randomly, and the sample size was given as a parameter. I used 40 as the size of mutated weights.
+
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.8\columnwidth]{resultsNewMut.png}
+
+\caption{The results of the old and new mutation types on the fitness evolution. The old is denoted by the dotted lines.}
+\label{fig:mut}
+\end{figure}
+
+
+\subsection{Robot platform}
+
+\subsubsection{Chassis}
+The prototype version of the chassis used aluminium profiles with a lithium ion battery held in the centre under pressure. Continous rotation servos attached to the sides of the profiles. 
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.4\columnwidth]{whegv1.PNG}
+
+\caption{Wheg robot prototype (version 1)}
+\label{fig:whegv1}
+\end{figure}
+
+This robot would get stuck over obstacles where the weight could not be redistributed. A bendable back actuator was implemented to the chassis to improve this, in addition suspension to absorb shock and prevent tilt of the chassis over rocks, which has become a problem for version 1. 
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.4\columnwidth]{DSC_0298 (2).JPG}
+
+\caption{Wheg robot version 2 introduction of back actuators and suspension.}
+\label{fig:whegv2}
+\end{figure}
+
+The chassis was built using aluminium servo parts, typically used for biped robots and robotic arms. This was used due to easily fitting standard servos, which made it compatible with the continuous rotation servos used for the robot's locomotion. In addition, it made it simpler to fit suspension and the cockroach inspired back. Figure~\ref{fig:whegv2} shows the robot within outdoor trials. 
+
+The robot chassis incorporated a wheg design. This design was able to climb over terrain while maintaining stability under initial tests with an Xbox controller. The main chassis of the robot used the suspension system shown in Figure~\ref{fig:suspension} so that a higher incline on one extremity does not tilt the overall robot. This design was inspired by a Tamiya radio controlled car~\cite{tamiya}. 
 
 \begin{figure}[H]
 \centering
@@ -273,278 +553,198 @@ The main chassis of the robot will use the suspension system shown in figure~\re
 \label{fig:suspension}
 \end{figure}
 
-In terms of back and neck actuation, we will need a pan and tilt style mechanism where the front of the robot chassis will pan left to right, to improve turning left and right within an evironment. The tilt will be up and down on the axis of gravity acting as a back. A bend in the back will redistribute weight -- the exact process applied in the cockroach research~\cite{cockroach}. 
+The Wheg design would get caught while reversing as the claws were only grabbing one way. The robot also struggled to turn left and right on the spot. The addition of a tilting mechanisms for left and right turns was added to solve this. 
 
-\subsection{Programming languages}
-There are numerous programming languages which could be used for the simulation and robot components of this project. Ideally, the language I use will be is suitable for both. 
-
-Languages that are particularly well-suited to working with hardware include C++ and Python.
-
-Arduinos use a version of C++. This can be quickly booted up and execute code sooner due to storing it in binary format. This method is more complicated for computer vision and machine learning tasks than simpler languages such as Python. 
-
-Python is a high-level language that abstracts away from syntactic detail compared to other languages. This design makes it slower at execution but has a wide ecosystem of machine learning tools. These tools are written in C++ as Python is slow, however, Python can combine them without a significant loss of time.
-
-When Python deploys on hardware, there are different methods to undertake. One of which is circuit Python as a Micro-controller, where a small Micro-controller compiles to work as an Arduino but using Python. This is found on the Raspberry Pi Pico, Adafruit feather and Microbit. This approach overcomes speed and complexity issues; however, these boards typically have a low amount of memory. On the higher end is the Jetson, a Nvidia-developed board design for machine learning tasks. These are heavily used within brains on boards projects. 
-
-In this project I will use a Raspberry Pi. These are low-cost computers which have hardware access through GPIO pinouts and that run a Linux-based operating system. Linux is a good platform to do machine learning as there is plenty of library support. These are typically more expensive than Arduinos, but still much cheaper compared to higher specification models such as the Jetson. Though slower at booting than the other micro-controllers listed, it will provide the machine learning tools required for the project.
-
-
-\section{Project Plan}
+When the robot would try climb, it would within some trials need an element of height to get over obstacles. This was achieved by adding a stabiliser servo with a wheel caster on the bottom. When deployed, the wheel caster allowed the robot to carry on moving without getting caught. The heavy battery was placed at the back of the robot as it was discovered that the front needed to be lighter than the back to have improved climb. 
 
 \begin{figure}[H]
 \centering
-  \includegraphics[width=0.8\linewidth]{plan.PNG}
-  \caption{Timetable of development displayed as a Gantt chart }
-  \label{figure :gantt}
+  \includegraphics[clip,width=0.5\columnwidth]{DSC_0336.JPG}
+
+\caption{Wheg robot version 3 with improved weight distribution, stabiliser and better whegs.}
+\label{fig:whegv3}
 \end{figure}
 
-\subsection{Phase one simulation}
+The neck used a pan and tilt mechanism was placed at the front of the robot chassis and panned left to right, to improve turning left and right within an environment. The tilt will be up and down on the axis of gravity acting as a back. A bend in the back will redistribute weight -- the exact process applied in the cockroach research~\cite{cockroach}. 
 
-Phase one will focus on developing the navigation methods and a virtual environment to test within. This phase is critical for the project as simulation can test concepts more quickly and cheaply than physical robot testing. 
-We will use the Python noise generation library to develop a 3D map of the terrain. 
+For control, the chassis used a Raspberry Pi for its low energy consumption yet reasonable processing power. It was also setup with Linux which allowed SSH control of the robot and ease of gathering results from trials. 
 
+The configuration of the Raspberry Pi used a 32GB SD card to give plenty of expansion space. Due to the use of neural networks and computer vision, having a large SD card allowed RAM over-spill into virtual memory, which would be much slower but would prevent the experiment being cut short. On top of the Pi there is an Adafruit servo driver that allows up to 16 servos to be attached. 
 
-
-\subsection{Phase two simulation trials}
-The deployment of the simulation will test the theory of using vision to exploit navigation over rough terrain. The agent will need to pick the most accessible routes which minimize the overall energy consumption. There are multiple ways of testing this concept.
-
-\subsection{Phase three building of physical robot}
-To understand whether or not this concept works in practice, we must try it on a physical robot. The real world has many more variables which affect the performance of algorithms. Lighting, colour, and shade can have significant effects on the way the robot perceives the environment. 
-We will build the robot chassis from lightweight aluminum servo apparatus, and 3D printed Whegs. 
-It is essential that this design can successfully climb over terrain and can travel in both directions. We will test this using a simple remote control. Once we know the physical limitations, it can help us design the testing environment. 
-
-\subsection{Phase four applying simulation on the physical robot}
-
-The working reinforcement learning algorithm will deploy on the physical robot. This will test whether we can cross the ``reality gap'' and determine whether the algorithm functions with the real-life background noise. 
-
-\subsection{Phase five evolving back movement}
-Evolving back movements is not an essential feature of this project but, it will significantly improve the agent's ability to climb. If there is time, this will be trialed using a reinforcement learning approach to help redistribute weight, thus improving the climb. 
-
-\section{Methods and Preliminary Results}
-
-\subsection{Simulation}
-
-We set up a Python simulation by generating a 2D map using Perlin noise, seen in figure ~\ref{fig:perlin}. Perlin noise is a type of gradient noise commonly used to procedurally generate terrain~\cite{perlin} where the value of the space between two points changes smoothly. A grid of ($n$) dimensions is created. Each index is assigned a random vector, where the dot product is calculated, which allows interpolation to generate noise.
-
-%We present the interpolation between the dot products mathematically using $a$ to represent a grid node, with $0$ and $1$ being the grid node index. 
-
-\begin{figure}[H]
-\centering
-  \includegraphics[width=0.9\linewidth]{Sim2d.png}
-  \caption{2D simulation plot of a 3D terrain. Random generated points are shown to show the position of agents and rewards. }
-  \label{fig:perlin}
-\end{figure}
-The smoothstep function represents a sigmoid-like interpolation. 
-The persistence,  octaves, and lacunarity are all altered via parameters in the world creation function. The octave is generate via a combination of frequency-amplitudes. Each octave adds a layer of detail to the world, where the contribution of each octave is defined by persistence. The lucunarity defines how much detail is added or removed at each layer. This function formed a map held as a two-dimensional array representing terrain heights numerically. 
-
-
-
-In such simulations, we can find how far a point is from the start position and the terrain steepness (gradient) at any point. The energy consumed ($E$) by a robot in a given trial is denoted by the number of steps taken ($S$) and the accumulated terrain value of each place ($P$). This terrain value is the step $S$ up, down, or across from the current height. The Manhattan distanced is used as a measure of how far the agent has travelled. This which was picked in place of the euclidean distance due to increased accuracy with high dimensionality~\cite{manhatten}.
-
+The continuous rotation servos used 100ma while active and the back actuation servos 500ma. In a worst case scenario we assume that all current is needed throughout each servo motor. This is denoted by the following calculation:
 \begin{equation}
-E_{nergy} = (\mid x1 - x2 \mid  + \mid  y1 - y2 \mid ) \cdot \sum_{i=1}^{S} (P_{i})
+ (4*100) + (2*500)= 1400 ma
 \end{equation}
+The battery chosen provided this current with the additional current the the Raspberry Pi requires as a minimum. An error found in testing earlier models was where the current draw was too great which made the Pi reboot or would restart the USB drivers. 
+
+On the front of the robot two cameras were mounted for stereo vision. The camera sensors changed throughout the design process but through the use of aluminium profiles components could easily be interchanged. A gyroscope/accelerometer MPU-6050 sensor was mounted on the front to detect unexpected incline.
+
+\subsubsection{Vision}
+To begin with I worked on the stereo vision using two USB Arducam modules and the cv2 disparity function. The initial visual representation was less accurate than needed so I trialed different pre-processing and post-processing techniques. The Arducam modules were chosen over the Pi cameras (which had similar quality) as the Pi only has one camera input through ribbon cables. For multiple Pi cameras additional switch hats are needed, which raised the cost and complexity of the problem. USB allowed simple connection via the cv2 library. 
+
+To begin with the cameras were distanced along an aluminium profile to secure them on the same axis. Both were USB thus could be directly connected to a main computer for testing. At this stage there was no need to use the control board of the Robot as it would be much slower than a PC.
+%disparity map
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=1\columnwidth]{depthNormal.png}
+
+\caption{Disparity map generated using no pre-processing techniques}
+\label{fig:disp}
+\end{figure}
+A disparity map was calculated using the cv2 library. The initial results were disappointing, even with calibration. Calibration was attempted through changing parameters of block size and number of disparities. The larger the block size, the more noticeable features are. Noticeably in Figure~\ref{fig:disp} significant features were located but much of the image goes un-noticed. 
+
+%k means clustering
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=1\columnwidth]{depthKmeans.png}
+
+\caption{K-means clustering as a pre-processing technique on the images}
+\label{fig:kmeans}
+\end{figure}
+As there was a too much noise within the images, I applied K-means clustering to the pixels in order to reduce the noise and change within an environment. 
+
+%Blur
+
+%Remove differences in image
+
+%dilation
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=1\columnwidth]{depthDilate.png}
+
+\caption{Dilation of image after disparity}
+\label{fig:dialation}
+\end{figure}
+After a disparity map is generated, it is seen that only small areas can be valued significantly, however, shape can be seen. This is evident in Figure~\ref{fig:disp} where the wall and arm raises significance. Dilation is a morphological transformer which uses a kernel to increase the true values within a binary image. The cv2 library provides the features for this. It is clear that the use of morphological operators help to show the clearer routes through an image and avoid structure. 
+
+In all three qualitative examples the chair in front of the camera is not visible. This is likely a problem with the vision calibration. 
+
+\subsubsection{Testing environment}
+TODO
 
 
-\subsection{Robotic hardware}
+\subsubsection{Back actuation}
+Back bending is a trait in nature where organisms will bend to increase climb. Research on cockroaches explored the use of cockroach-inspired limbs and movement. ~\cite{cockroach} 
 
-Throughout the initial testing, I developed three Wheg designs and evaluated two of these on a physical robot. In the first Wheg design shown in figure~\ref{fig:wheg_design_1}, each spoke had a single claw which would power more climb. 
+The actuation used a servo motor was introduced with a pan-tilt style movement. The movement of the back was performed on one axis rotation. The other tilt helped the robot turn left and right while travelling around an environment. The back proved successful while controlling the robot via remote control as the chassis would get stuck at points within an environment. The redistribution of weight via back actuation allowed climb. This can be seen in the qualitative example of Figure~\ref{fig:angleMov}.
 
 \begin{figure}[H]
 \centering
-  \includegraphics[width=0.5\linewidth]{wheg.PNG}
-  \caption{Initial claw design with 4 claws for stable rotation. }
-  \label{fig:wheg_design_1}
+  \includegraphics[width=0.3\linewidth]{back.PNG}
+  \caption{This shows the back rotation and turning system in the center of the robot chassis. One for direction and one for the back. These two servos were responsible for rotating more weight per servo than any of the locomotion joints. This meant they were of heavier duty standard thus drew more current. }
+  \label{fig:back}
 \end{figure}
-
-However, this design would struggle to reverse so I, instead, developed the reversible claw design shown in figure~\ref{fig:wheg_design_2}. 
 
 \begin{figure}[H]
 \centering
-  \includegraphics[width=0.5\linewidth]{whegTri.PNG}
-  \caption{Reversible claw design using a tri-claw system for strength. The 4 claw stable rotation was replaced as this design had less gaps thus making it naturally more stable.}
-  \label{fig:wheg_design_2}
+  \includegraphics[width=0.9\linewidth]{angles.PNG}
+  \caption{This figure shows how the angle on the robot changes with back actuation. The first image is where the robot has got stuck going over a barrier. The second image shows the distribution of weight to the centre of the robot, which allowed more torque to be focused on the back wheel rotation rather than holding the weight of the robot. The final image shows the robot having climbed over the obstacle. Outlined in the figure is a drawn axis to help demonstrate the movement undertaken by the robot.}
+  \label{fig:angleMov}
 \end{figure}
 
-The hardware will use light Aluminium servo parts which are typically used in biped robotics and can be purchased cheaply on the internet. The design will allow rotation servos as the back and neck, alongside continuous rotation servos for the Whegs. 
+Figure~\ref{fig:angleMov} was performed manually using the Xbox360 remote and a USB dongle. This allowed training and proof of concept that the robotic back was useful for the task. Autonomous movement requires detection of being stuck. 
+
+Acceleration and tilt within a direction can be measured with the MPU6050 sensor. This sensor additionally offers temperature readout, which will not be used throughout this experiment. Tilt in the axis direction of up, which for the sensor positioning on the robot will be the x-axis. Acceleration is measured and movement can be detected. These two features make the MPU6050 right for this task. The sensor itself is mounted on the front of the robot, as this will be the place that first detects tilt when going over rough terrain. 
+
+A gryo class was created that could be imported into the main Wheg robot code. This is used to trigger when an obstacle is hit, and will get model predictions for how to overcome such obstacles. 
+\begin{figure}[H]
+\centering
+  \includegraphics[width=0.5\linewidth]{modelPred.PNG}
+  \caption{The back bend model is only needed when an obstacle is predicted. We also want to evolve the model. Through initial trials, the algorithm seen is used to evolve over time by taking motor positions and gyroscopic data as input, and motor movement as output. The genetic process for evolution will use similar approaches as the navigation. }
+  \label{fig:angleMov}
+\end{figure}
+
+Initial captivation of the chassis perception used the MPU6050 sensor to find when changes in acceleration would take place. The acceleration produced a lot of noise and therefore could not be trusted for accurate collision detection. This idea was abandoned and replaced with a method that exploited spikes in the current caused by motors being unable to rotate. This is seen in Figure~\ref{fig:current}. 
+
+\begin{figure}[H]
+\centering
+  \includegraphics[width=0.7\linewidth]{Figure_1.png}
+  \caption{Display of the current read from a rotating servo attached to the robotic chassis. At different time steps, different amounts of pressure were applied to the servo.}
+  \label{fig:current}
+\end{figure}
+Between the first time step and time step 110 no signal had been sent to the motors for rotation. This is working at approximately 0.1 Amps. This is expected as the current draw of a servo is 110mA. At time step 125 the robot is lowered onto a surface but some of the weight is maintained off of the motor. The whegs mostly rotate with some disturbance to speed and occasionally gets stuck. At time step 140 the robot is placed fully on the ground with weight preventing it from moving. The current dramatically spikes up to approximately 0.5Amps. Between time step 150 and 160 the robot was picked up, and placed back down. This is why the current draw decreases at this interval. 
+
+\section{Testing, Results and Discussion}
+The tests for simulation gave varied results based on the different algorithms used. Random generations of where the agent was within multiple trials was averaged for each fitness. This prevented fluke results of agents biased to specific routes. The most effective was the group of microbial with re-selection of the best genes. 
+
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.8\columnwidth]{resultsAllGenetic.png}
+
+\caption{Results of the microbial algorithm after 1000 generations. It is clear that the results converge on a solution which is clearly sub-optimal, and eventually cannot improve above this. 
+Using a grouped population there was belief that more internal diversity would provide eloquent solutions and prevent convergent of sub-optimal solutions too early. The results show the fitness of these grouped populations to be considerably lower than the other algorithms. 
+Results of the elitist algorithm that picks the best genes and repopulates at the end of each sub-generation: This converged on the highest fitness quicker out the trialed genetic approaches, though was over taken by the microbial eventually}
+\label{fig:Microbial}
+\end{figure}
+
+The convolutional neural network was outperformed by the feed-forward network, both using the same microbial algorithm. Experimentation with different kernel sizes did not have dramatic improvement to the fitnesses. Though with genetic approaches there is an element of randomness, after quantitative trials the fitnesses still averaged around 50\%. The convolutional layer is likely highlighting areas of the disparity map that are not significant, while the input is already simplified. It is likely that the convolutional network would be more effective with training data, rather than an evolved process. 
+
+From these results there was little evidence to suggest whether the microbial or elite microbial performed more optimally. The Elite microbial works better with smaller numbers of generations, however, takes longer to run the microbial. With a simulation the microbial offers better functionality as we can run as many trials in short periods of time. On a physical robot each generation will take longer, therefore the elite version offers a better short term answer.
 
 
-\section{Supervisor meetings}
-\subsection{13/10/21}
-Discussion on subsections missing from our initial draft, areas of research we should investigate and how to improve the simulation method.
-We need to research more about bio-inspired robots like what we are designing and show more figures in general to the papers we have referenced and reviewed. 
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.6\columnwidth]{ExplicitGen.png}
 
-\subsection{27/10/21}
-We discussed how we will test the agent. Two main methods came up which was finding the highest point and making the most energy efficient path there or being set a vector and moving to it while avoiding obstacles. We looked at a paper on ants and trap avoiding which tied into our bio inspired research. Changes were suggested and made in the report. 
-A discussion on sensors on the physical robot and what will work the best happened. 
-\subsection{10/11/21}
-Discussion over Max G score and how it ties in with the calculation of terrain. Further discussing Perlin noise and how best display my simulation work within the report. 
-We then spoke about the next stage which was to get the simulation agent working.
+\caption{Results of Explicit rule-based agents shows the current agent fitness at each generation, rather than the top of the population. This is because the algorithm and instructions are unchanging, unlike the genetic approach where random mutations affect the outcome of the results. This method converged on much higher fitnesses than the genetic approaches without failure. }
+\label{fig:Explicit}
+\end{figure}
+The approach gave a base and continuous maximum fitness of 90\% (2SF). The was a scatter of individual fitnesses 
+A revised graph for displaying the information of~\ref{fig:Explicit} is using a bar graph. This was generated by rounding all the fitness values to 1 decimal place. Each class was counted and displayed.
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.7\columnwidth]{Explicit.png}
 
-\section{Appendices}
+\caption{Results of Explicit rule-based agents placed into a bar graph to present the amount of high fitness solutions the agent generates. The average of 200 trials had a fitness of 88.9\% which was much higher than the average fitness of the genetic approaches. }
+\label{fig:Explicit}
+\end{figure}
 
+This shows that the rule-based method performs better than the genetic approach for simulation, suggesting a neural network was over-fitting the problem. Quantitative results show us how the algorithm performed overall within different scenarios. Qualitative examples clearly highlight how the best performing evolved. 
 
-\setlength{\voffset}{0cm}
-\setlength{\hoffset}{0cm}
+\begin{figure}[H]
+\centering
+\subfloat[Microbial evolved agent]{%
+  \includegraphics[clip,width=0.5\columnwidth]{attempt to be energy efficient.png}%
+}
+\subfloat[Microial evolved agent]{%
+  \includegraphics[clip,width=0.5\columnwidth]{Trial on rough terrain.png}%
+}
 
-\includepdf[pages=-]{Dissertation_proposal.pdf}
+\\
+\subfloat[Convolutional NN evolved agent]{%
+  \includegraphics[clip,width=0.5\columnwidth]{Conv1D.png}%
+}
+\subfloat[Convolutional NN evolved agent]{%
+  \includegraphics[clip,width=0.5\columnwidth]{CONV.png}%
+}
+\\
+\subfloat[Elite Microbial evolved agent]{%
+  \includegraphics[clip,width=0.5\columnwidth]{EliteGroup.png}%
+}
+\subfloat[Rule-based agent]{%
+  \includegraphics[clip,width=0.5\columnwidth]{avoid problems explicit.png}%
+}
+\\
+\subfloat[Convolutional 2D layer]{%
+  \includegraphics[clip,width=0.5\columnwidth]{crazy2d.png}%
+}
+\subfloat[Convolutional 2D layer]{%
+  \includegraphics[clip,width=0.5\columnwidth]{findingCountours2D.png}%
+}
+\caption{Figure showing qualitative examples of simulated agents with start and end positions. The start position is denoted in a red dot, and the end target is denoted in blue.}
+\label{fig:maps}
+\end{figure}
 
-\setlength{\voffset}{-2.54cm}
-\setlength{\hoffset}{-2.54cm}
+The evolved process with high fitnesses had contour traversing behaviour. Travelling on contours would use less energy than travelling over terrain in the shortest euclidean distance to the end point. These journeys can be seen in Figure~\ref{fig:maps}(a)(b). 
 
-\setlength{\voffset}{0cm}
-\setlength{\hoffset}{0cm}
+The convolutional NN example was chosen as it showed an increased diversity of movement compared to alternative neural network architecture. This lead to confused movement near the end before rediscovering the path and moving towards the outcome. Figure~\ref{fig:maps}(d) shows an example of a high fitness attempt that made use of contours and avoided obstacles.
 
-\begin{lstlisting}[language=Python, caption=Simulation noise generation code]
-#noise generator for simulation plot
-import noise
-import numpy as np
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import axes3d
-import random as rnd
-import copy
-from matplotlib.collections import EllipseCollection
+The rule based approach example shows precise navigation around dangerous obstacles such as water pools. This method achieved a high fitness through local decisions. 
 
-SIZE=50
-def generateWorld():
-    shape = (SIZE,SIZE)
-    scale = 100.0
-    octaves = rnd.randint(2,20)
-    persistence = 0.5
-    lacunarity = 2
-
-    world = np.zeros(shape)
-    for i in range(shape[0]):
-        for j in range(shape[1]):
-            world[i][j] = noise.pnoise2(i/scale, 
-                                        j/scale, 
-                                        octaves=octaves, 
-                                        persistence=persistence, 
-                                        lacunarity=lacunarity, 
-                                        repeatx=1024, 
-                                        repeaty=1024, 
-                                        base=42)
-    world=world*100 #normalize numbers
-    world=world.astype(int)
-    print("Octaves:",octaves)
-    return world,shape
-
-
-
-def pickPosition(terrain,value,deny=[],LBounds=8,UBounds=4):
-    current=-100
-    cords=[0,0]
-    deny.append(cords)
-    while cords in deny:
-        while current<value-LBounds or current>value+UBounds:
-            cords=[rnd.randint(0,SIZE-1),rnd.randint(0,SIZE-1)]
-            current=terrain[cords[0],cords[1]]
-    return cords
-
-
-#canReach will make sure the problem is solvable
-def canReach(terrain,start,goal,endmarked=[[False for i in range(SIZE)] for j in range(SIZE)]):
-    #check whether the bot can reach the other
-    #expand out from end and make paths
-    y,x=start[0],start[1]
-    val=False
-    if terrain[x][y]!=-1 and not endmarked[x][y]:
-        endmarked[x][y]=True
-        if x-1>=0:
-            val=canReach(terrain,[x-1,y],goal,endmarked=endmarked)
-        if x+1<SIZE:
-            val=canReach(terrain,[x+1,y],goal,endmarked=endmarked)
-        if y-1>0:
-            val=canReach(terrain,[x,y-1],goal,endmarked=endmarked)
-        if y+1<SIZE:
-            val=canReach(terrain,[x,y+1],goal,endmarked=endmarked)
-    if x==goal[1] and y==goal[0]:
-        val=True
-    return val
-    
-    
-
-#getBestRoute will be used to measure how fit an evolved route is
-def getBestRoute(terrain,start,end):
-    #find the least cost route from A to B
-    #return metrics
-    
-    return []
-def expand(terrain,Map,start):
-    for i in range(len(terrain)):
-        for j in range(len(terrain[i])):
-            if terrain[i][j]<-5:
-                Map[i][j]=-1
-            elif [j,i]==start:
-                Map[i][j]=0
-            else:
-                Map[i][j]=terrain[i][j]+getDist([j,i],start)
-    return Map
-
-def getDist(start,end):
-    d1=((start[0]-end[0])**2 + (start[1]-end[1])**2)**0.5
-    return int(d1)
-
-def readIm(r=5):
-    #read the ground around the agent at a radius of i
-    pass
-
-
-
-while True:
-    #generate the world terrain
-    world,shape=generateWorld() 
-    #randomly pick a start position
-    startPos=pickPosition(world,4,LBounds=6)
-    vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
-    
-    #print(canReach(Rmap,startPos,endPos))
-    im = plt.imshow(world,cmap='terrain')
-    cb = plt.colorbar(im)
-    plt.setp(cb.ax.get_yticklabels([-1,0,1]), visible=False)
-    
-    plt.show()
-    """
-    lin_x = np.linspace(0,1,shape[0],endpoint=False)
-    lin_y = np.linspace(0,1,shape[1],endpoint=False)
-    x,y = np.meshgrid(lin_x,lin_y)
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection="3d")
-    ax.plot_surface(x,y,world,cmap='terrain')
-
-
-    plt.show()
-    #"""
-
-"""
-    maxPath=30
-    pathx=[]
-    pathy=[]
-    current=startPos.copy()
-    energy=0
-    last=startPos.copy()
-    for i in range(maxPath):
-        v=rnd.choice(vectors)
-        pathx.append(current[0]+v[0])
-        pathy.append(current[1]+v[1])
-        last=current.copy()
-        current[0]+=v[0]
-        current[1]+=v[1]
-        if current[0]>=0 and current[0]<len(world) and current[1]>=0 and current[1]<len(world[0]):
-            if world[current[0]][current[1]]<=-6:
-                print("water")
-            else:
-                climb=max(0,world[current[0]][current[1]]-world[last[0]][last[1]]) #non 0 value of total climb
-                energy+=1+climb
-                
-    print("total energy consumed",energy)
-    plt.plot(pathy,pathx)
-    #"""
-
-
-\end{lstlisting}
-
+\section{Conclusions}
+TODO
 \bibliographystyle{unsrt}
 \bibliography{sample}
 
+\section{Appendices}
 \end{document}

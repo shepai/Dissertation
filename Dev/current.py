@@ -3,7 +3,8 @@
 import time
 import board
 from adafruit_ina219 import ADCResolution, BusVoltageRange, INA219
-
+import matplotlib.pyplot as plt
+import numpy as np
 
 i2c_bus = board.I2C()
 
@@ -25,6 +26,8 @@ ina3.bus_adc_resolution = ADCResolution.ADCRES_12BIT_32S
 ina3.shunt_adc_resolution = ADCResolution.ADCRES_12BIT_32S
 ina3.bus_voltage_range = BusVoltageRange.RANGE_16V
 
+a=[0 for i in range(100)]
+count=0
 
 # measure and display loop
 while True:
@@ -46,9 +49,25 @@ while True:
 
     
     # INA219 measure bus voltage on the load side. So PSU voltage = bus_voltage + shunt_voltage
-    print("PSU Voltage:{:6.3f}V    Shunt Voltage:{:9.6f}V    Load Voltage:{:6.3f}V    Power:{:9.6f}W    Current:{:9.6f}A".format((bus_voltage1 + shunt_voltage1),(shunt_voltage1),(bus_voltage1),(power1),(current1/1000)))
-    print("PSU Voltage:{:6.3f}V    Shunt Voltage:{:9.6f}V    Load Voltage:{:6.3f}V    Power:{:9.6f}W    Current:{:9.6f}A".format((bus_voltage2 + shunt_voltage2),(shunt_voltage2),(bus_voltage2),(power2),(current2/1000)))
-    print("PSU Voltage:{:6.3f}V    Shunt Voltage:{:9.6f}V    Load Voltage:{:6.3f}V    Power:{:9.6f}W    Current:{:9.6f}A".format((bus_voltage3 + shunt_voltage3),(shunt_voltage3),(bus_voltage3),(power3),(current3/1000)))
-    print("")
-    print("")
-    time.sleep(1)
+    #print("PSU Voltage:{:6.3f}V    Shunt Voltage:{:9.6f}V    Load Voltage:{:6.3f}V    Power:{:9.6f}W    Current:{:9.6f}A".format((bus_voltage1 + shunt_voltage1),(shunt_voltage1),(bus_voltage1),(power1),(current1/1000)))
+    #print("PSU Voltage:{:6.3f}V    Shunt Voltage:{:9.6f}V    Load Voltage:{:6.3f}V    Power:{:9.6f}W    Current:{:9.6f}A".format((bus_voltage2 + shunt_voltage2),(shunt_voltage2),(bus_voltage2),(power2),(current2/1000)))
+    #print("PSU Voltage:{:6.3f}V    Shunt Voltage:{:9.6f}V    Load Voltage:{:6.3f}V    Power:{:9.6f}W    Current:{:9.6f}A".format((bus_voltage3 + shunt_voltage3),(shunt_voltage3),(bus_voltage3),(power3),(current3/1000)))
+    #print("")
+    #print("")
+    a.append(current3/1000)
+    a.pop(0)
+    b=a.copy()
+    b.reverse()
+    #print(b)
+    plt.cla()
+    #print(type(b[0]),type(count))
+    plt.plot([i+count for i in range(100)],b)
+    plt.ylim([-4,4])
+    plt.title("Current in channel 1")
+    plt.xlabel("Time step")
+    plt.ylabel("Current (A)")
+    plt.pause(0.1)
+    plt.show(block=False)
+    count+=1
+    time.sleep(0.1)
+

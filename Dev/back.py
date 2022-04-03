@@ -1,7 +1,30 @@
 from agent import Agent_defineLayers as robot
+from inputs import get_gamepad
+import board
+from adafruit_ina219 import ADCResolution, BusVoltageRange, INA219
 import numpy as np
 import copy
 from wheg import *
+
+i2c_bus = board.I2C()
+
+ina1 = INA219(i2c_bus,addr=0x40)
+ina2 = INA219(i2c_bus,addr=0x41)
+ina3 = INA219(i2c_bus,addr=0x42)
+
+print("ina219 test")
+
+ina1.bus_adc_resolution = ADCResolution.ADCRES_12BIT_32S
+ina1.shunt_adc_resolution = ADCResolution.ADCRES_12BIT_32S
+ina1.bus_voltage_range = BusVoltageRange.RANGE_16V
+
+ina2.bus_adc_resolution = ADCResolution.ADCRES_12BIT_32S
+ina2.shunt_adc_resolution = ADCResolution.ADCRES_12BIT_32S
+ina2.bus_voltage_range = BusVoltageRange.RANGE_16V
+
+ina3.bus_adc_resolution = ADCResolution.ADCRES_12BIT_32S
+ina3.shunt_adc_resolution = ADCResolution.ADCRES_12BIT_32S
+ina3.bus_voltage_range = BusVoltageRange.RANGE_16V
 
 class genetic:
     def __init__(self,agent,pop_size):
@@ -69,5 +92,87 @@ class genetic:
             L=copy.deepcopy(self.mutate(W,size=9))  #mutate winner and place back
             self.place_genes(id1,id2,W,L) #palce back into the pop
 
+
 agent = robot(2,[3,3],3) #define output layer 
-alg = genetic(agent,10)
+alg = genetic(agent,10) #get GA properties
+chassis=whegbot() #get chassis control
+
+a=[0 for i in range(10)] #define the current copying
+stuck=False
+while 1:
+    bus_voltage1 = ina1.bus_voltage        # voltage on V- (load side)
+    shunt_voltage1 = ina1.shunt_voltage    # voltage between V+ and V- across the shunt
+    power1 = ina1.power
+    current1 = ina1.current                # current in mA
+
+    bus_voltage2 = ina2.bus_voltage        # voltage on V- (load side)
+    shunt_voltage2 = ina2.shunt_voltage    # voltage between V+ and V- across the shunt
+    power2 = ina2.power
+    current2 = ina2.current                # current in mA
+    
+    bus_voltage3 = ina3.bus_voltage        # voltage on V- (load side)
+    shunt_voltage3 = ina3.shunt_voltage    # voltage between V+ and V- across the shunt
+    power3 = ina3.power
+    current3 = ina3.current                # current in mA
+    a.append(current3/1000) #add current current
+    a.pop(0) #remove previous
+    b=np.array(a.copy())
+    c=np.argmax(a>=0.5)
+    if c>=3: #has been stuck for multiple runs
+        stuck=True
+    else:
+        stuck=False
+    try:
+        events = get_gamepad()
+    except:
+        chassis.stop()
+        raise OSError("...")
+
+    for event in events:
+         #left stick
+         #print(event.code)
+         if event.code=="BTN_TRIGGER_HAPPY1":
+             if moving:
+                 moving=False
+                 chassis.stop()
+             else:
+                moving=True
+                chassis.rightTurn()
+         elif event.code=="BTN_TRIGGER_HAPPY2":
+             if moving:
+                 moving=False
+                 chassis.stop()
+             else:
+                moving=True
+                chassis.leftTurn() 
+         elif event.code=="ABS_RZ":
+             if event.state==0:
+                 chassis.stop() 
+                 movingForward=False
+             else:
+                 chassis.forward()
+                 movingForward=True
+         elif event.code=="ABS_Z":
+             if event.state==0:
+                 chassis.stop()
+                 movingBackward=False
+             else:
+                 chassis.backward()
+                 movingBackward=True
+         elif event.code=="BTN_TRIGGER_HAPPY3":
+             chassis.rotateDown()
+         elif event.code=="BTN_TRIGGER_HAPPY4":
+             chassis.rotateUp()
+         #right stick
+         elif event.code == "ABS_RX":
+             print("right stick forward/backward", event.state)
+         elif event.code == "ABS_RY":
+             print("right stick turn", event.state)
+         elif event.code!="ABS_X" and event.code!="ABS_RZ" and event.code!="ABS_Z":
+             pass
+    if movingForward:
+        chassis.forward()
+    elif movingBackward:
+        chassis.backward()
+        
+chassis.stop()

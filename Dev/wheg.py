@@ -1,55 +1,62 @@
-from inputs import get_gamepad
 from adafruit_servokit import ServoKit
 import cv2
 import numpy as np
 
+
 kit=ServoKit(channels=16)
+class whegbot:
+    def __init__(self):
+        self.movingForward=False
+        self.movingBackward=False
 
-movingForward=False
-movingBackward=False
+    def leftTurn(self):
+        #kit.continuous_servo[0].throttle = 1
+        #kit.continuous_servo[1].throttle = 1
+        #kit.continuous_servo[2].throttle = 1
+        #kit.continuous_servo[3].throttle = 1
+        if kit.servo[5].angle+10<=180:
+            kit.servo[5].angle+=10
+        
+    def rightTurn(self):
+        #kit.continuous_servo[0].throttle = -1
+        #kit.continuous_servo[1].throttle = -1
+        #kit.continuous_servo[2].throttle = -1
+        #kit.continuous_servo[3].throttle = -1
+        if kit.servo[5].angle-10<=180:
+            kit.servo[5].angle-=10
 
-def leftTurn():
-    #kit.continuous_servo[0].throttle = 1
-    #kit.continuous_servo[1].throttle = 1
-    #kit.continuous_servo[2].throttle = 1
-    #kit.continuous_servo[3].throttle = 1
-    if kit.servo[5].angle+10<=180:
-        kit.servo[5].angle+=10
-    
-def rightTurn():
-    #kit.continuous_servo[0].throttle = -1
-    #kit.continuous_servo[1].throttle = -1
-    #kit.continuous_servo[2].throttle = -1
-    #kit.continuous_servo[3].throttle = -1
-    if kit.servo[5].angle-10<=180:
-        kit.servo[5].angle-=10
+    def forward(self):
+        self.movingForward=True
+        self.movingBackward=False
+        kit.continuous_servo[0].throttle = 1
+        kit.continuous_servo[1].throttle = -1
+        kit.continuous_servo[2].throttle = 1
+        kit.continuous_servo[3].throttle = -1
 
-def forward():
-    kit.continuous_servo[0].throttle = 1
-    kit.continuous_servo[1].throttle = -1
-    kit.continuous_servo[2].throttle = 1
-    kit.continuous_servo[3].throttle = -1
+    def backward(self):
+        self.movingForward=False
+        self.movingBackward=True
+        kit.continuous_servo[0].throttle = -1
+        kit.continuous_servo[1].throttle = 1
+        kit.continuous_servo[2].throttle = -1
+        kit.continuous_servo[3].throttle = 1
 
-def backward():
-    kit.continuous_servo[0].throttle = -1
-    kit.continuous_servo[1].throttle = 1
-    kit.continuous_servo[2].throttle = -1
-    kit.continuous_servo[3].throttle = 1
+    def stop(self):
+        print("Stop")
+        self.movingForward=False
+        self.movingBackward=False
+        kit.continuous_servo[0].throttle = 0
+        kit.continuous_servo[1].throttle = 0
+        kit.continuous_servo[2].throttle = 0
+        kit.continuous_servo[3].throttle = 0
 
-def stop():
-    print("Stop")
-    kit.continuous_servo[0].throttle = 0
-    kit.continuous_servo[1].throttle = 0
-    kit.continuous_servo[2].throttle = 0
-    kit.continuous_servo[3].throttle = 0
-
-def rotateUp():
-    if kit.servo[4].angle+10<=180:
-        kit.servo[4].angle+=10
-def rotateDown():
-    if kit.servo[4].angle-10>=0:
-        kit.servo[4].angle-=10
-
+    def rotateUp(self):
+        if kit.servo[4].angle+10<=180:
+            kit.servo[4].angle+=10
+    def rotateDown(self):
+        if kit.servo[4].angle-10>=0:
+            kit.servo[4].angle-=10
+"""
 import time
 moving=False
 
@@ -98,6 +105,7 @@ out = cv2.VideoWriter(filename, get_video_type(filename), 25, get_dims(cap, res)
 
 
 kit.servo[4].angle=90
+"""
 """
 while 1:
      try:

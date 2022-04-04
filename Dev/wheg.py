@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 
 
-kit=ServoKit(channels=16)
+kit=ServoKit(channels=16,address=0x44)
 class whegbot:
     def __init__(self):
         self.movingForward=False

@@ -1,5 +1,5 @@
 from adafruit_servokit import ServoKit
-import cv2
+#import cv2
 import numpy as np
 
 
@@ -9,7 +9,7 @@ class whegbot:
         self.movingForward=False
         self.movingBackward=False
 
-    def leftTurn(self):
+    def rightTurn(self):
         #kit.continuous_servo[0].throttle = 1
         #kit.continuous_servo[1].throttle = 1
         #kit.continuous_servo[2].throttle = 1
@@ -17,12 +17,13 @@ class whegbot:
         if kit.servo[5].angle+10<=180:
             kit.servo[5].angle+=10
         
-    def rightTurn(self):
+    def leftTurn(self):
         #kit.continuous_servo[0].throttle = -1
         #kit.continuous_servo[1].throttle = -1
         #kit.continuous_servo[2].throttle = -1
         #kit.continuous_servo[3].throttle = -1
-        if kit.servo[5].angle-10<=180:
+        print(kit.servo[5].angle)
+        if kit.servo[5].angle-10>=0:
             kit.servo[5].angle-=10
 
     def forward(self):

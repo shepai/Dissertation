@@ -1,4 +1,4 @@
-from agent import Agent_defineLayers as robot
+#from agent import Agent_defineLayers as robot
 from inputs import get_gamepad
 import board
 from adafruit_ina219 import ADCResolution, BusVoltageRange, INA219
@@ -93,12 +93,15 @@ class genetic:
             self.place_genes(id1,id2,W,L) #palce back into the pop
 
 
-agent = robot(2,[3,3],3) #define output layer 
-alg = genetic(agent,10) #get GA properties
+#agent = robot(2,[3,3],3) #define output layer 
+#alg = genetic(agent,10) #get GA properties
 chassis=whegbot() #get chassis control
 
 a=[0 for i in range(10)] #define the current copying
 stuck=False
+movingForward=False
+movingBackward=False
+moving=False
 while 1:
     bus_voltage1 = ina1.bus_voltage        # voltage on V- (load side)
     shunt_voltage1 = ina1.shunt_voltage    # voltage between V+ and V- across the shunt
@@ -114,12 +117,14 @@ while 1:
     shunt_voltage3 = ina3.shunt_voltage    # voltage between V+ and V- across the shunt
     power3 = ina3.power
     current3 = ina3.current                # current in mA
-    a.append(current3/1000) #add current current
+    a.append(current2/1000) #add current current
     a.pop(0) #remove previous
     b=np.array(a.copy())
-    c=np.argmax(a>=0.5)
+    c=np.argmax(b>=0.4)
+    #print(a,c)
     if c>=3: #has been stuck for multiple runs
         stuck=True
+        print("stuck")
     else:
         stuck=False
     try:

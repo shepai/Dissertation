@@ -6,7 +6,7 @@ import numpy as np
 import copy
 from wheg import *
 from agent import *
-
+import time
 i2c_bus = board.I2C()
 
 ina1 = INA219(i2c_bus,addr=0x40)
@@ -61,7 +61,14 @@ class genetic:
             self.agent.set_genes(gene)
             act=self.agent.get_action(data)
             arr.append(act)
-
+        for act in arr:
+            if act==0: #up
+                chassis.rotateUp()
+            elif act==1: #stay
+                pass
+            elif act==2: #down
+                chassis.rotateDown()
+            time.sleep(1)
         end=0
         return self.fitness_func(start,end,np.array(arr))
     def mutation(self,gene, mean=0, std=0.5,size=100): #mutate a specific part 

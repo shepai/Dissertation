@@ -14,8 +14,11 @@ class whegbot:
         #kit.continuous_servo[1].throttle = 1
         #kit.continuous_servo[2].throttle = 1
         #kit.continuous_servo[3].throttle = 1
-        if kit.servo[5].angle+10<=180:
-            kit.servo[5].angle+=10
+        try:
+            if kit.servo[5].angle+10<=180:
+                kit.servo[5].angle+=10
+        except:
+            pass
         
     def leftTurn(self):
         #kit.continuous_servo[0].throttle = -1
@@ -23,8 +26,11 @@ class whegbot:
         #kit.continuous_servo[2].throttle = -1
         #kit.continuous_servo[3].throttle = -1
         print(kit.servo[5].angle)
-        if kit.servo[5].angle-10>=0:
-            kit.servo[5].angle-=10
+        try:
+            if kit.servo[5].angle-10>=0:
+                kit.servo[5].angle-=10
+        except:
+            pass
 
     def forward(self):
         self.movingForward=True

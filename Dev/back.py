@@ -5,6 +5,7 @@ from adafruit_ina219 import ADCResolution, BusVoltageRange, INA219
 import numpy as np
 import copy
 from wheg import *
+from agent import *
 
 i2c_bus = board.I2C()
 
@@ -70,6 +71,8 @@ class genetic:
     def run_microbial(self,gen=50):
         assert type(gen)==type(50),"Generations must be an integer"
         for epoch in len(gen):
+            self.single()
+    def single(self):
             gene1,gene2,id1,id2=self.select_genes()
             #gather sensor data
             #gather prediction
@@ -88,13 +91,12 @@ class genetic:
             else:
                 L=gene1
                 W=gene2
-
             L=copy.deepcopy(self.mutate(W,size=9))  #mutate winner and place back
             self.place_genes(id1,id2,W,L) #palce back into the pop
 
 
-#agent = robot(2,[3,3],3) #define output layer 
-#alg = genetic(agent,10) #get GA properties
+agent = Agent_defineLayers(2,[3,3],3) #define output layer 
+alg = genetic(agent,10) #get GA properties
 chassis=whegbot() #get chassis control
 
 a=[0 for i in range(10)] #define the current copying
@@ -103,30 +105,34 @@ movingForward=False
 movingBackward=False
 moving=False
 while 1:
-    bus_voltage1 = ina1.bus_voltage        # voltage on V- (load side)
-    shunt_voltage1 = ina1.shunt_voltage    # voltage between V+ and V- across the shunt
-    power1 = ina1.power
-    current1 = ina1.current                # current in mA
+    stuck=True
+    while stuck: #unstick itself
+        bus_voltage1 = ina1.bus_voltage        # voltage on V- (load side)
+        shunt_voltage1 = ina1.shunt_voltage    # voltage between V+ and V- across the shunt
+        power1 = ina1.power
+        current1 = ina1.current                # current in mA
 
-    bus_voltage2 = ina2.bus_voltage        # voltage on V- (load side)
-    shunt_voltage2 = ina2.shunt_voltage    # voltage between V+ and V- across the shunt
-    power2 = ina2.power
-    current2 = ina2.current                # current in mA
-    
-    bus_voltage3 = ina3.bus_voltage        # voltage on V- (load side)
-    shunt_voltage3 = ina3.shunt_voltage    # voltage between V+ and V- across the shunt
-    power3 = ina3.power
-    current3 = ina3.current                # current in mA
-    a.append(current2/1000) #add current current
-    a.pop(0) #remove previous
-    b=np.array(a.copy())
-    c=np.argmax(b>=0.4)
-    #print(a,c)
-    if c>=3: #has been stuck for multiple runs
-        stuck=True
-        print("stuck")
-    else:
-        stuck=False
+        bus_voltage2 = ina2.bus_voltage        # voltage on V- (load side)
+        shunt_voltage2 = ina2.shunt_voltage    # voltage between V+ and V- across the shunt
+        power2 = ina2.power
+        current2 = ina2.current                # current in mA
+        
+        bus_voltage3 = ina3.bus_voltage        # voltage on V- (load side)
+        shunt_voltage3 = ina3.shunt_voltage    # voltage between V+ and V- across the shunt
+        power3 = ina3.power
+        current3 = ina3.current                # current in mA
+        a.append(current2/1000) #add current current
+        a.pop(0) #remove previous
+        b=np.array(a.copy())
+        c=np.argmax(b>=0.4)
+        #print(a,c)
+        if c>=3: #has been stuck for multiple runs
+            stuck=True
+            #print("stuck")
+            #evolve out of stuck position
+            alg.single()
+        else:
+            stuck=False
     try:
         events = get_gamepad()
     except:

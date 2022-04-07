@@ -58,11 +58,17 @@ class whegbot:
         kit.continuous_servo[3].throttle = 0
 
     def rotateUp(self):
-        if kit.servo[4].angle+10<=180:
-            kit.servo[4].angle+=10
+        try:
+            if kit.servo[4].angle+10<=180:
+                kit.servo[4].angle+=10
+        except:
+            pass
     def rotateDown(self):
-        if kit.servo[4].angle-10>=0:
-            kit.servo[4].angle-=10
+        try:
+            if kit.servo[4].angle-10>=0:
+                kit.servo[4].angle-=10
+        except:
+            pass
 """
 import time
 moving=False

@@ -34,12 +34,17 @@ class genetic:
         for i in range(pop_size): #vary from 10 to 20 depending on purpose of robot
             gene=np.random.normal(0, 0.5, (agent.num_genes))
             self.gene_pop.append(copy.deepcopy(gene))#create
+        self.fitneses=[0 for i in range(pop_size)]
     def fitness_func(self,startDist,endDist,movement):
+        if getStuck(): #boolean solved or didn't solve
+            return 0
+        return 1
+        """
         std=(np.std(movement) + 0.1) * 0.1 # gather standard deviation. The lower the better. 10% weighting. not allowed to be 0
         moved = startDist - endDist
         if moved<=20:
             return 0
-        return max(100-(std*moved),0)
+        return max(100-(std*moved),0)"""
     def select_genes(self,k=1):
         #use k to evolve neighbours
         index=np.random.randint(0,len(self.gene_pop)-1)
@@ -48,7 +53,7 @@ class genetic:
     def place_genes(self,index1,index2,gene1,gene2):
         self.gene_pop[index1]=copy.deepcopy(gene1)
         self.gene_pop[index2]=copy.deepcopy(gene2)
-    def run(self,gene,trials): #run with given gene
+    def run(self,gene,trials,chassis): #run with given gene
         start=0
         arr=[]
         for i in range(trials): #run for set amount of trial times
@@ -68,38 +73,43 @@ class genetic:
         gene[gene >4] = 4
         gene[gene < -4] = -4
         return gene
-    def run_microbial(self,gen=50):
-        assert type(gen)==type(50),"Generations must be an integer"
-        for epoch in len(gen):
-            self.single()
-    def single(self):
-            gene1,gene2,id1,id2=self.select_genes()
-            #gather sensor data
-            #gather prediction
+    def run_hillclimber(self,chassis): #hillclimber algorithm
+        gene1,__,id1,__=self.select_genes()
+        fit=self.run(gene1,3,chassis)
+        if fit>self.fitneses[id1]:
+            self.gene_pop[id1]=copy.deepcopy(gene1)
+            self.fitneses[id1]=fit
+        else: #mutate if not fixed
+            self.gene_pop[id1]=copy.deepcopy(self.mutation(gene1))
 
-            input("Press ENTER to start trial")
-            fitness1=self.run(gene1)
 
-            input("Press ENTER to start trial")
-            fitness2=self.run(gene2)
+a=[0 for i in range(10)] #define the current copying
+def getStuck():
+    global a
+    bus_voltage1 = ina1.bus_voltage        # voltage on V- (load side)
+    shunt_voltage1 = ina1.shunt_voltage    # voltage between V+ and V- across the shunt
+    power1 = ina1.power
+    current1 = ina1.current                # current in mA
 
-            #assign selection
-            W,L=None,None
-            if fitness1>fitness2: 
-                W=gene1
-                L=gene2
-            else:
-                L=gene1
-                W=gene2
-            L=copy.deepcopy(self.mutate(W,size=9))  #mutate winner and place back
-            self.place_genes(id1,id2,W,L) #palce back into the pop
-
+    bus_voltage2 = ina2.bus_voltage        # voltage on V- (load side)
+    shunt_voltage2 = ina2.shunt_voltage    # voltage between V+ and V- across the shunt
+    power2 = ina2.power
+    current2 = ina2.current                # current in mA
+       
+    bus_voltage3 = ina3.bus_voltage        # voltage on V- (load side)
+    shunt_voltage3 = ina3.shunt_voltage    # voltage between V+ and V- across the shunt
+    power3 = ina3.power
+    current3 = ina3.current                # current in mA
+    a.append(current2/1000) #add current current
+    a.pop(0) #remove previous
+    b=np.array(a.copy())
+    c=np.argmax(b>=0.4)
+    return True if c>3 else False
 
 agent = Agent_defineLayers(2,[3,3],3) #define output layer 
 alg = genetic(agent,10) #get GA properties
 chassis=whegbot() #get chassis control
 
-a=[0 for i in range(10)] #define the current copying
 stuck=False
 movingForward=False
 movingBackward=False
@@ -107,32 +117,10 @@ moving=False
 while 1:
     stuck=True
     while stuck: #unstick itself
-        bus_voltage1 = ina1.bus_voltage        # voltage on V- (load side)
-        shunt_voltage1 = ina1.shunt_voltage    # voltage between V+ and V- across the shunt
-        power1 = ina1.power
-        current1 = ina1.current                # current in mA
-
-        bus_voltage2 = ina2.bus_voltage        # voltage on V- (load side)
-        shunt_voltage2 = ina2.shunt_voltage    # voltage between V+ and V- across the shunt
-        power2 = ina2.power
-        current2 = ina2.current                # current in mA
-        
-        bus_voltage3 = ina3.bus_voltage        # voltage on V- (load side)
-        shunt_voltage3 = ina3.shunt_voltage    # voltage between V+ and V- across the shunt
-        power3 = ina3.power
-        current3 = ina3.current                # current in mA
-        a.append(current2/1000) #add current current
-        a.pop(0) #remove previous
-        b=np.array(a.copy())
-        c=np.argmax(b>=0.4)
+        stuck=getStuck()
         #print(a,c)
-        if c>=3: #has been stuck for multiple runs
-            stuck=True
-            #print("stuck")
-            #evolve out of stuck position
-            alg.single()
-        else:
-            stuck=False
+        if stuck: #evolve back
+            actions=alg.run_hillclimber(chassis)
     try:
         events = get_gamepad()
     except:

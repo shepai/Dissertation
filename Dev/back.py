@@ -92,13 +92,16 @@ class genetic:
     def run(self,gene,trials,chassis): #run with given gene
         start=0
         arr=[]
+        servoAng=chassis.getBack()
         for i in range(trials): #run for set amount of trial times
-            servoAng=chassis.getBack()
             x=tilt.getGyro()[0]
             data=np.array([servoAng,x])
             self.agent.set_genes(gene)
             act=self.agent.get_action(data)
+            if act==0: servoAng+=10
+            elif act==2: servoAng-=10
             arr.append(act)
+        chassis.foward() #start moving forward
         for act in arr:
             if act==0: #up
                 chassis.rotateUp()
@@ -106,7 +109,8 @@ class genetic:
                 pass
             elif act==2: #down
                 chassis.rotateDown()
-            time.sleep(1)
+            time.sleep(0.5)
+        chassis.stop() #stop
         end=0
         return self.fitness_func(start,end,np.array(arr))
     def mutation(self,gene, mean=0, std=0.5,size=100): #mutate a specific part 

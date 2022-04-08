@@ -6,7 +6,43 @@ import numpy as np
 import copy
 from wheg import *
 from agent import *
+import board
+import adafruit_mpu6050
 import time
+
+i2c = board.I2C()  # uses board.SCL and board.SDA
+mpu = adafruit_mpu6050.MPU6050(i2c)
+
+class Gyro:
+    def __init__(self,mpu=mpu):
+        self.mpu=mpu
+        self.a=0
+        self.getZero()
+    def getAcc(self):
+        return self.mpu.acceleration
+    def getGyro(self):
+        return self.mpu.gyro
+    def getTemp(self):
+        return self.mpu.temperature
+        
+    def getZero(self): #create a zerod value to detect change
+        self.a=0
+        for i in range(200):
+            self.a+=int(self.getGyro()[2]*10)
+        self.a=int(self.a/200)
+    def movementDetected(self,sensitivity=150):
+        val=abs(int(self.getGyro()[2]*10)-self.a) #get thresholded value
+        data=""
+        if val>sensitivity: #chec significance
+            data = "movement"
+        self.getZero() #reevaluate movement threshold
+        print(str(val)+data)
+        return data
+
+
+tilt=Gyro()
+print("current tilt",tilt.getGyro())
+
 i2c_bus = board.I2C()
 
 ina1 = INA219(i2c_bus,addr=0x40)
@@ -57,7 +93,9 @@ class genetic:
         start=0
         arr=[]
         for i in range(trials): #run for set amount of trial times
-            data=np.array([0,0])
+            servoAng=chassis.getBack()
+            x=tilt.getGyro()[0]
+            data=np.array([servoAng,x])
             self.agent.set_genes(gene)
             act=self.agent.get_action(data)
             arr.append(act)
@@ -93,20 +131,11 @@ class genetic:
 a=[0 for i in range(10)] #define the current copying
 def getStuck():
     global a
-    bus_voltage1 = ina1.bus_voltage        # voltage on V- (load side)
-    shunt_voltage1 = ina1.shunt_voltage    # voltage between V+ and V- across the shunt
-    power1 = ina1.power
-    current1 = ina1.current                # current in mA
 
-    bus_voltage2 = ina2.bus_voltage        # voltage on V- (load side)
-    shunt_voltage2 = ina2.shunt_voltage    # voltage between V+ and V- across the shunt
-    power2 = ina2.power
+    current1 = ina1.current                # current in mA
     current2 = ina2.current                # current in mA
-       
-    bus_voltage3 = ina3.bus_voltage        # voltage on V- (load side)
-    shunt_voltage3 = ina3.shunt_voltage    # voltage between V+ and V- across the shunt
-    power3 = ina3.power
     current3 = ina3.current                # current in mA
+
     a.append(current2/1000) #add current current
     a.pop(0) #remove previous
     b=np.array(a.copy())

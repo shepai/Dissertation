@@ -8,7 +8,8 @@ class whegbot:
     def __init__(self):
         self.movingForward=False
         self.movingBackward=False
-
+    def getBack(self):
+        return kit.servo[5].angle
     def rightTurn(self):
         #kit.continuous_servo[0].throttle = 1
         #kit.continuous_servo[1].throttle = 1

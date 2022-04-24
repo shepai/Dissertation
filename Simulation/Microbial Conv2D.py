@@ -241,76 +241,88 @@ vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 #   10
 #output
 #   vectors possible (8)
-whegBot=Agent_Conv2D(testIm.shape[0]*testIm.shape[1]+2,[10,10],len(vectors)) #define the agent
+archs=[[10,10],[20,20],[30,30],[40,40],[50,50],[60,60]]
+sto=[]
+for architecture in range(len(archs)):
+    whegBot=Agent_Conv2D(testIm.shape[0]*testIm.shape[1]+2,archs[architecture],len(vectors)) #define the agent
 
-pop_size=15
-gene_pop=[]
-for i in range(pop_size): #vary from 10 to 20 depending on purpose of robot
-    gene=np.random.normal(0, 0.5, (whegBot.num_genes))
-    gene_pop.append(copy.deepcopy(gene))#create
+    pop_size=15
+    gene_pop=[]
+    for i in range(pop_size): #vary from 10 to 20 depending on purpose of robot
+        gene=np.random.normal(0, 0.5, (whegBot.num_genes))
+        gene_pop.append(copy.deepcopy(gene))#create
 
-fitnesses=[]
-for gen in range(Generations):
-    print("Gen",gen+1)
-    #generate the world terrain
-    world,shape=generateWorld()
-    world=np.pad(np.array(world), (2,2), 'constant',constant_values=(-6,-6))
-    world=np.pad(np.array(world), (3,3), 'constant',constant_values=(-7,-7))
-    world=np.pad(np.array(world), (1,1), 'constant',constant_values=(-8,-8))
-    #randomly pick a start position
-    
-    #genes have been selected
-    gene_pop,fit=microbial(gene_pop,world,startPos)
-    fitnesses.append(max([fit]+fitnesses))
-bestGene=[]
-bestFit=0
-for gene in gene_pop:
-    startPos=pickPosition(world,4,LBounds=6)
-    p1x,p1y,fit,endCord1=run_trial(gene)
-    if fit>60:
-        plt.plot(p1x,p1y) #show best path
-        plt.title("Gene "+str(fit)+"% after generations")
-        plt.scatter(endCord1[0],endCord1[1])
-        plt.scatter(p1x[0],p1y[0],c="r")
-        #print(canReach(Rmap,startPos,endPos))
-        plt.imshow((BEST[2]),cmap='terrain') #show best show
-        plt.show()
-        if fit>bestFit:
-            bestFit=fit
-            bestGene=copy.deepcopy(gene)
-"""
-if bestGene!=[]:
-    print("How best performs",bestGene)
-    for i in range(5):
+    fitnesses=[]
+    for gen in range(Generations):
+        print("Gen",gen+1)
+        #generate the world terrain
+        world,shape=generateWorld()
+        world=np.pad(np.array(world), (2,2), 'constant',constant_values=(-6,-6))
+        world=np.pad(np.array(world), (3,3), 'constant',constant_values=(-7,-7))
+        world=np.pad(np.array(world), (1,1), 'constant',constant_values=(-8,-8))
+        #randomly pick a start position
+        
+        #genes have been selected
+        gene_pop,fit=microbial(gene_pop,world,startPos)
+        fitnesses.append(max([fit]+fitnesses))
+
+    """
+    bestGene=[]
+    bestFit=0
+    for gene in gene_pop:
         startPos=pickPosition(world,4,LBounds=6)
-        p1x,p1y,fit,endCord1=run_trial(bestGene)
-        plt.plot(p1x,p1y) #show best path
-        plt.title("The best trials "+str(fit)+"% after generations")
-        plt.scatter(endCord1[0],endCord1[1])
-        plt.scatter(p1x[0],p1y[0],c="r")
-        #print(canReach(Rmap,startPos,endPos))
-        plt.imshow(BEST[2],cmap='terrain') #show best show
-        plt.show()
-"""
+        p1x,p1y,fit,endCord1=run_trial(gene)
+        if fit>60:
+            plt.plot(p1x,p1y) #show best path
+            plt.title("Gene "+str(fit)+"% after generations")
+            plt.scatter(endCord1[0],endCord1[1])
+            plt.scatter(p1x[0],p1y[0],c="r")
+            #print(canReach(Rmap,startPos,endPos))
+            plt.imshow((BEST[2]),cmap='terrain') #show best show
+            plt.show()
+            if fit>bestFit:
+                bestFit=fit
+                bestGene=copy.deepcopy(gene)
+    
+    if bestGene!=[]:
+        print("How best performs",bestGene)
+        for i in range(5):
+            startPos=pickPosition(world,4,LBounds=6)
+            p1x,p1y,fit,endCord1=run_trial(bestGene)
+            plt.plot(p1x,p1y) #show best path
+            plt.title("The best trials "+str(fit)+"% after generations")
+            plt.scatter(endCord1[0],endCord1[1])
+            plt.scatter(p1x[0],p1y[0],c="r")
+            #print(canReach(Rmap,startPos,endPos))
+            plt.imshow(BEST[2],cmap='terrain') #show best show
+            plt.show()
+    """
+    sto.append(fitnesses)
+    #np.save("D:/Documents/Computer Science/Year 3/Dissertation/microbialConv2D.npy", fitnesses)
+    """
+    plt.plot(BEST[0],BEST[1]) #show best path
+    plt.title("Results of best fitness at "+str(BESTFIT)+"% after generations")
+    plt.scatter(BEST[3][0],BEST[3][1])
+    plt.scatter(BEST[0][0],BEST[1][0],c="r")
+    #print(canReach(Rmap,startPos,endPos))
+    plt.imshow(BEST[2],cmap='terrain') #show best show
+    plt.show()
 
-np.save("D:/Documents/Computer Science/Year 3/Dissertation/microbialConv2D.npy", fitnesses)
+    plt.cla()
+    plt.plot([i for i in range(Generations)],fitnesses) #show fintesses over generations
+    plt.title("Results of population fitness over "+str(Generations)+" generations")
+    plt.ylabel("Fitness Units")
+    plt.xlabel("Generation")
+    plt.show()
+    """
+for i in range(len(sto)):
+    plt.plot([i for i in range(Generations)],sto[i],label=str(archs[i][0])+" "+str(str(archs[i][1]))+" hidden layer") #show best path
 
-plt.plot(BEST[0],BEST[1]) #show best path
-plt.title("Results of best fitness at "+str(BESTFIT)+"% after generations")
-plt.scatter(BEST[3][0],BEST[3][1])
-plt.scatter(BEST[0][0],BEST[1][0],c="r")
-#print(canReach(Rmap,startPos,endPos))
-plt.imshow(BEST[2],cmap='terrain') #show best show
-plt.show()
-
-plt.cla()
-plt.plot([i for i in range(Generations)],fitnesses) #show fintesses over generations
 plt.title("Results of population fitness over "+str(Generations)+" generations")
 plt.ylabel("Fitness Units")
 plt.xlabel("Generation")
+plt.legend(loc="lower right")
 plt.show()
-
-
 """
 if fitness(broke,energy,endDist)>0:
         plt.plot(pathx,pathy) #show best path

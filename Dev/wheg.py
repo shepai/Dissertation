@@ -8,6 +8,8 @@ class whegbot:
     def __init__(self):
         self.movingForward=False
         self.movingBackward=False
+        kit.servo[15].angle=100
+        kit.servo[14].angle=100
     def getBack(self):
         return kit.servo[14].angle
     def rightTurn(self):

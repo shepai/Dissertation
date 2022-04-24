@@ -71,10 +71,11 @@ class genetic:
             gene=np.random.normal(0, 0.5, (agent.num_genes))
             self.gene_pop.append(copy.deepcopy(gene))#create
         self.fitneses=[0 for i in range(pop_size)]
+        self.history=[]
     def fitness_func(self,startDist,endDist,movement):
-        if getStuck(): #boolean solved or didn't solve
-            return 0
-        return 1
+        current2 = ina2.current/1000                # current in mA
+        
+        return 0.4-current2
         """
         std=(np.std(movement) + 0.1) * 0.1 # gather standard deviation. The lower the better. 10% weighting. not allowed to be 0
         moved = startDist - endDist
@@ -101,7 +102,7 @@ class genetic:
             if act==0: servoAng+=10
             elif act==2: servoAng-=10
             arr.append(act)
-        chassis.foward() #start moving forward
+        chassis.forward() #start moving forward
         for act in arr:
             if act==0: #up
                 chassis.rotateUp()
@@ -113,11 +114,11 @@ class genetic:
         chassis.stop() #stop
         end=0
         return self.fitness_func(start,end,np.array(arr))
-    def mutation(self,gene, mean=0, std=0.5,size=100): #mutate a specific part 
+    def mutation(self,gene, mean=0, std=0.5,size=10): #mutate a specific part 
         assert size<len(gene)
         n=np.random.randint(0,len(gene)-size-1)
         array=np.random.normal(mean,std,size=size)
-        gene = gene[n:n+size] + array #mutate the gene via normal 
+        gene[n:n+size] += array #mutate the gene via normal 
         # constraint
         gene[gene >4] = 4
         gene[gene < -4] = -4
@@ -130,6 +131,10 @@ class genetic:
             self.fitneses[id1]=fit
         else: #mutate if not fixed
             self.gene_pop[id1]=copy.deepcopy(self.mutation(gene1))
+        self.history.append(fit)
+        file=open("histroy.txt","w") #save data
+        file.write(str(self.history))
+        file.close()
 
 
 a=[0 for i in range(10)] #define the current copying

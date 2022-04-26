@@ -24,15 +24,19 @@ def point_obs(im,interval=200):
 im=cv.imread("D:/Documents/Computer Science/Year 3/Dissertation/Results/Vision/Stereo2_alone.png")
 
 #open up video capture
-cap = cv.VideoCapture('C:/Users/Dexter Shepherd/Videos/2022-04-22-17-47-42.mp4')
-if (cap.isOpened()== False):
-  print("Error opening video stream or file")
-  exit()
-ret, im = cap.read()
+#cap = cv.VideoCapture('C:/Users/Dexter Shepherd/Videos/2022-04-22-17-47-42.mp4')
+#if (cap.isOpened()== False):
+#  print("Error opening video stream or file")
+#  exit()
+#ret, im = cap.read()
 im=np.dot(im, [0.2989, 0.5870, 0.1140]) #convert to greyscale
 im=im[200:600] #limit to view
+im=im[:,200:800]
 new,dat=point_obs(np.copy(im)) #get prediction
+plt.imshow(im)
+plt.show()
 
+"""
 #get example
 #plt.subplot(2,1,1)
 #plt.title("Plot to show the view and predicted direction")
@@ -91,3 +95,5 @@ plt.ylabel("Sum of pixels averaged")
 plt.xlabel("Frame in video")
 plt.legend(loc="upper right")
 plt.show()
+
+"""

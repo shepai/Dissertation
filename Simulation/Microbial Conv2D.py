@@ -241,7 +241,9 @@ vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 #   10
 #output
 #   vectors possible (8)
-archs=[[10,10],[20,20],[30,30],[40,40],[50,50],[60,60]]
+#archs=[[10,10],[20,20],[30,30],[40,40],[50,50],[60,60]]
+archs=[[40,40]]
+
 sto=[]
 for architecture in range(len(archs)):
     whegBot=Agent_Conv2D(testIm.shape[0]*testIm.shape[1]+2,archs[architecture],len(vectors)) #define the agent
@@ -266,7 +268,7 @@ for architecture in range(len(archs)):
         gene_pop,fit=microbial(gene_pop,world,startPos)
         fitnesses.append(max([fit]+fitnesses))
 
-    """
+    
     bestGene=[]
     bestFit=0
     for gene in gene_pop:
@@ -283,7 +285,10 @@ for architecture in range(len(archs)):
             if fit>bestFit:
                 bestFit=fit
                 bestGene=copy.deepcopy(gene)
-    
+    whegBot.set_genes(bestGene)
+    np.save("D:/Documents/Computer Science/Year 3/Dissertation/best.npy",bestGene)
+    #torch.save(whegBot.state_dict(), "D:/Documents/Computer Science/Year 3/Dissertation/")
+    """
     if bestGene!=[]:
         print("How best performs",bestGene)
         for i in range(5):

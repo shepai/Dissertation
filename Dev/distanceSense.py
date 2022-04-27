@@ -32,7 +32,8 @@ im=cv.imread("D:/Documents/Computer Science/Year 3/Dissertation/Results/Vision/S
 im=np.dot(im, [0.2989, 0.5870, 0.1140]) #convert to greyscale
 im=im[200:600] #limit to view
 im=im[:,200:800]
-new,dat=point_obs(np.copy(im)) #get prediction
+im=cv.resize(im,(5,5))
+#new,dat=point_obs(np.copy(im)) #get prediction
 plt.imshow(im)
 plt.show()
 

@@ -74,7 +74,7 @@
        \includegraphics[width=0.2\textwidth]{University_of_Sussex_Logo.png}
        
          % Display establishment information
-       Department of Informatics\\
+       School of Engineering and Informatics\\
        University of Sussex \\
        
        2021
@@ -209,7 +209,7 @@ Reinforcement learning is often described in terms of an agent, environment, sta
 
 This approach can include a neural network that trains under a series of trials. 
 
-\subsubsection{Markov decision process}
+\subsection{Markov decision process}
 The Markov decision process formulates reinforcement learning mathematically.
 The model states that the future is independent of the past given the present. This is denoted mathematically by using P[t] to represent the current state of the agent, therefore P[t+1] represents the next state \cite{RFL}. 
 \begin{equation}
@@ -290,9 +290,10 @@ This project does not intend to create a robot that can climb any terrain. While
 The problem this research is solving is to improve autonomous robotic navigation for danger detection without the use of training data as a robot can be deployed within different environments, which makes obstacle recognition harder. 
 
 Additionally, from an engineering point of view the robot is trialing Wheg designs which are arguably higher performing than wheels. Most robotic navigation projects use conventional apparatus, however, Whegs remain unrepresented. 
-\section{Methods}
 
-\subsection{Simulation}
+\section{Navigation}
+
+\subsection{Simulated world}
 I set up a Python simulation by generating a 2D map using Perlin noise, seen in figure~\ref{fig:perlin}. Perlin noise is a type of gradient noise commonly used to procedurally generate terrain~\cite{perlin} where the value of the space between two points changes smoothly. A grid of ($n$) dimensions is created. Each index is assigned a random vector, where the dot product is calculated, which allows interpolation to generate noise.
 
 %We present the interpolation between the dot products mathematically using $a$ to represent a grid node, with $0$ and $1$ being the grid node index. 
@@ -311,7 +312,7 @@ In such simulations, we can find how far a point is from the start position and 
 \begin{equation}
 E_{nergy} = (\mid x1 - x2 \mid  + \mid  y1 - y2 \mid ) \cdot \sum_{i=1}^{S} (P_{i})
 \end{equation}
-\subsubsection{Previous methods}
+\subsection{Previous methods}
 
 Different methods have been proposed to classify the energy consumption of simulated robotics~\cite{chassisTerrain}. A study that held relevance to the task this thesis is exploring used slippage, required torque, and minimum friction coefficient. These metrics create an overall score, plotted throughout each trial. $\mu$ represents the friction coefficient needed for tangential ($R$) and normal ($N$) force with ($r$) given by the radius of the wheel with torque ($T$). 
 \begin{equation}
@@ -326,7 +327,7 @@ The slippage is the difference of ground truth and wheel odometry~\cite{chassisT
 These factors form a Max and Min G score. Both robot robots could provide enough torque, but that does not mean equal performance. The G score is taken from all the G values, calculated from the torque needed. 
 
 
-\subsubsection{Environment, model and rewards}
+\subsection{Environment, model and rewards}
 The environmental conditions could be changed by altering the persistence parameter. By increasing the value, the terrain would become more complex with more simulated dangers such as water. 
 \begin{figure}[H]
 \centering
@@ -369,32 +370,47 @@ The generated $newPixel$ at the indices of $k,l$ will have the pixel intensity o
 Each trial would generate a random coordinate for the agent to start in, with the condition that this start point was not in water so that the agent would not receive 0 fitness before starting. An end goal point would be generated randomly from an array of coordinated on the circumference of a circle at a set radius. 
 
 The agent was written as its own class, where on initialization the network structure could be determined. Weights an biases are generated when an array of Gaussian noise is entered through the $set\_genes$ method as a parameter. Using a forward function, the network generates output that is converted to a vector choice using the $argmax$ function. There are 8 directions that the agent can take, therefore the network is expected to generate the probabilities of a success of each vector. 
+\begin{figure}[H]
+\centering
+  \includegraphics[width=0.6\linewidth]{normal.PNG}
+  \caption{Architecture for the first neural network model where one input layer, one output layer and two hidden layers are implemented.  }
+  \label{fig:linArch}
+\end{figure}
 
-Architecture of the network was decided through several trials of all networks. Using a microbial algorithm with the same network for 10 trials, the results of network performance was quantified. The tests used a population of 15 and 200 generations. 
+The first model was a simple feed-forward neural network (FNN) where an input of a flattened 5x5 image is taken as input. The output is a list of all vectors on where to move within the environment. 
 
 \begin{figure}[H]
 \centering
-  \includegraphics[clip,width=0.9\columnwidth]{NetworkArchMain.png}
-
-\caption{Averaged results of different architectures on the same task using the microbial algorithm}
-\label{fig:architecture}
+  \includegraphics[width=0.9\linewidth]{CONV2D.PNG}
+  \caption{Architecture for the convolutional neural network where one Convolutional layer is applied with a predefined kernel filter.  }
+  \label{fig:convArch}
 \end{figure}
-Notably in Figure~\ref{fig:architecture} the fitness units are very low due to averaging different trials of the same network. The population is regenerated randomly each time which leads to some trials having a low fitness bearing population by default. The best networks tended to have multiple layers. The network chosen for the testing was of two hidden layers of 10 nodes each as it performed well and was the between sizes 5 and 20 who also performed well. The smaller network of two layers of 5 performed equally well to two layers of 10 nodes, but as there is an element of randomness to these results the medium architecture seemed optimal. 
+Figure~\ref{fig:convArch} Could have the sizing of the hidden layer width changed on initialisation where they were entered as a parameter. The output layer and first linear layer would be preset sizes to take in the convoled image and output one of the vectors. 
 
-After this, the addition of the Convolutional neural network was applied with the Microbial algorithm. This had a computer vision input which made convolutions within the input layer a potential solution for high results. 
+After this, the addition of the Convolutional neural network (CNN) was applied with the Microbial algorithm. This had a computer vision input which made convolutions within the input layer a potential solution for high results. 
+
+The CNN uses a convolutional layer where the input image is convolved using a 2D filter. The result is flattened and fed into two linear layers and an output layer. The weights and biases connecting these layers are randomly generated off of a Gaussian distribution and evolved through a genetic algorithm. The architecture hidden layer width was experimented with to find an optimal size. 
+
+All neural networks had eight output nodes, which represented the vectors of movement within a two-dimensional space. The vector would be added to the current position in order to move within that direction. The network uses argmax to decide which node to pick. The node is stated in Figure~\ref{fig:nodeAr}.
+\begin{figure}[H]
+\centering
+  \includegraphics[width=0.5\linewidth]{vectors.PNG}
+  \caption{Output nodes labelled for direction in 2D space.}
+  \label{fig:nodeAr}
+\end{figure}
 
 Fitness calculations must take into consideration the importance of energy efficiency as well as ending up on target. It is more important that an agent reaches the target, however, solutions that are more energy efficient are favoured. This gave a weighting of 70\% to the distance traveled (calculated based off of the end distance to the point), and a 30\% weighting to the energy efficiency calculation. As it is only possible to get 100\% energy efficiency by travelling down hill, it is likely that most trials are only able to get a top fitness within the 90s. 
 
-\begin{equation}
-Fitness=((\frac{100-energy}{100})*0.3 + (\frac{10-endDist}{10})*0.7)*100
-\end{equation}
+\begin{equation*}
+\text{Fitness}=\left(\left(\frac{100-energy}{100}\right)\times0.3 + \left(\frac{10-endDist}{10})\times0.7\right)\times100
+\end{equation*}
 
 The final step of fitness calculation is to multiply the value by 100 to get it in percentage format. If an agent falls into water (where the position in the world has a value less than or equal to -6) or finishes further away from the end position than where it started, the fitness will be 0.
 
 A genotype is trialed three times on random coordinates, and the fitness is averaged. This is to make sure the gene isn't biased to a specific point which would result in a fluke high fitness. 
 
 
-\subsubsection{Strategies}
+\subsection{Strategies}
 Three genetic algorithm (GA) approaches were taken to solving this task, then an alternative rule based approach was explored to find whether GAs were over-fitting the problem. 
 
 To begin with I wrote some GA functions that would be standard across all algorithms. This would be the mutation, crossover, and fitness evaluation. The population generation was the same random Gaussian distribution generated arrays, but would be applied in the format appropriate to each algorithm.
@@ -432,9 +448,9 @@ The first GA was a simple microbial algorithm. This generated a population of va
 
 An alternative gene was explored, inspired by groups of genes within a larger population. This was used as research showed that it outperformed microbial algorithms due to having more diversity of genes within winning groups, thus preventing convergence on sub-optimal solutions.~\cite{gaMethod} Fitness was measured by the summation of the fitnesses of all genes within a group.
 
-\begin{equation}
-   GroupFitness = \sum_{i=1}^{n}(fitness(gene_{i}))
-\end{equation}
+\begin{equation*}
+   \text{GroupFitness} = \sum_{i=1}^{n}(\text{fitness}(gene_{i}))
+\end{equation*}
 
 \begin{algorithm}
 \caption{Group Microbial}\label{euclid}
@@ -507,6 +523,102 @@ Different restrictions were added to the rule based method, and it was found tha
 
 For initial genotype selection the population had two random indices selected. This allowed tournament selection between both. A later approach would select one index and select a neighbouring genotype to have a slower convergence on sub-optimal solutions. This improved the accuracy of the end genotype. These indicies were selected randomly, and the sample size was given as a parameter. I used 40 as the size of mutated weights.
 
+
+
+\subsection{Results}
+%-----------------------------------------------------------------------------------
+The tests for simulation gave varied results based on the different algorithms used. Random generations of where the agent was within multiple trials was averaged for each fitness. This prevented fluke results of agents biased to specific routes. The most effective was the group of microbial with re-selection of the best genes. 
+
+Architecture of the network was decided through several trials of all networks. Using a microbial algorithm with the same network for 10 trials, the results of network performance was quantified. The tests used a population of 15 and 200 generations.
+
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.9\columnwidth]{NetworkArchMain.png}
+
+\caption{Averaged results of different architectures on the same task using the microbial algorithm}
+\label{fig:architecture}
+\end{figure}
+Notably in Figure~\ref{fig:architecture} the fitness units are very low due to averaging different trials of the same network. The population is regenerated randomly each time which leads to some trials having a low fitness bearing population by default. The best networks tended to have multiple layers. The network chosen for the testing was of two hidden layers of 10 nodes each as it performed well and was the between sizes 5 and 20 who also performed well. The smaller network of two layers of 5 performed equally well to two layers of 10 nodes, but as there is an element of randomness to these results the medium architecture seemed optimal. 
+
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.8\columnwidth]{resultsAllGenetic.png}
+
+\caption{Results of the microbial algorithm after 1000 generations.  }
+\label{fig:Microbial}
+\end{figure}
+It is clear that the results converge on a solution which is sub-optimal, and eventually cannot improve above this.
+
+Using a grouped population there was belief that more internal diversity would provide eloquent solutions and prevent convergent of sub-optimal solutions too early. The results show the fitness of these grouped populations to be considerably lower than the other algorithms. 
+Results of the elitist algorithm that picks the best genes and repopulates at the end of each sub-generation: This converged on the highest fitness quicker out the trialed genetic approaches, though was over taken by the microbial eventually
+
+The convolutional neural network was outperformed by the feed-forward network, both using the same microbial algorithm. Experimentation with different kernel sizes did not have dramatic improvement to the fitnesses. Though with genetic approaches there is an element of randomness, after quantitative trials the fitnesses still averaged around 50\%. The convolutional layer is likely highlighting areas of the disparity map that are not significant, while the input is already simplified. It is likely that the convolutional network would be more effective with training data, rather than an evolved process. 
+
+From these results there was little evidence to suggest whether the microbial or elite microbial performed more optimally. The Elite microbial works better with smaller numbers of generations, however, takes longer to run the microbial. With a simulation the microbial offers better functionality as we can run as many trials in short periods of time. On a physical robot each generation will take longer, therefore the elite version offers a better short term answer.
+
+
+
+
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.7\columnwidth]{Explicit.png}
+
+\caption{Results of Explicit rule-based agents placed into a bar graph to present the amount of high fitness solutions the agent generates. The average of 200 trials had a fitness of 88.9\% which was much higher than the average fitness of the genetic approaches. }
+\label{fig:Explicit}
+\end{figure}
+
+The algorithm and instructions are unchanging, unlike the genetic approach where random mutations affect the outcome of the results. This method converged on much higher fitnesses than the genetic approaches without failure.
+
+A revised graph for displaying the information of~\ref{fig:Explicit} is using a bar graph, rather than plotting a straight line with the GAs. This was generated by rounding all the fitness values to 1 decimal place. Each class was counted and displayed.
+
+This shows that the rule-based method performs better than the genetic approach for simulation, suggesting a neural network was over-fitting the problem. Quantitative results show us how the algorithm performed overall within different scenarios. Qualitative examples clearly highlight how the best performing evolved. 
+
+\begin{figure}[H]
+\centering
+\subfloat[Microbial evolved agent]{%
+  \includegraphics[clip,width=0.5\columnwidth]{attempt to be energy efficient.png}%
+}
+\subfloat[Microial evolved agent]{%
+  \includegraphics[clip,width=0.5\columnwidth]{Trial on rough terrain.png}%
+}
+
+\\
+\subfloat[Convolutional NN evolved agent]{%
+  \includegraphics[clip,width=0.5\columnwidth]{Conv1D.png}%
+}
+\subfloat[Convolutional NN evolved agent]{%
+  \includegraphics[clip,width=0.5\columnwidth]{CONV.png}%
+}
+\caption{Figure showing qualitative examples of simulated agents with start and end positions. The start position is denoted in a red dot, and the end target is denoted in blue.}
+\label{fig:maps1}
+\end{figure}
+\begin{figure}[H]
+\centering
+
+\subfloat[Elite Microbial evolved agent]{%
+  \includegraphics[clip,width=0.5\columnwidth]{EliteGroup.png}%
+}
+\subfloat[Rule-based agent]{%
+  \includegraphics[clip,width=0.5\columnwidth]{avoid problems explicit.png}%
+}
+\\
+\subfloat[Convolutional 2D layer]{%
+  \includegraphics[clip,width=0.5\columnwidth]{crazy2d.png}%
+}
+\subfloat[Convolutional 2D layer]{%
+  \includegraphics[clip,width=0.5\columnwidth]{findingCountours2D.png}%
+}
+
+\caption{Figure showing qualitative examples of simulated agents with start and end positions. The start position is denoted in a red dot, and the end target is denoted in blue.}
+\label{fig:maps2}
+\end{figure}
+
+The evolved process with high fitness had contour traversing behaviour. Travelling on contours would use less energy than travelling over terrain in the shortest euclidean distance to the end point. These journeys can be seen in Figure~\ref{fig:maps1}(a)(b). 
+
+The convolutional NN example was chosen as it showed an increased diversity of movement compared to alternative neural network architecture. This lead to confused movement near the end before rediscovering the path and moving towards the outcome. Figure~\ref{fig:maps1}(d) shows an example of a high fitness attempt that made use of contours and avoided obstacles.
+
+The rule based approach example shows precise navigation around dangerous obstacles such as water pools. This method achieved a high fitness through local decisions. 
+
 \begin{figure}[H]
 \centering
   \includegraphics[clip,width=0.8\columnwidth]{resultsNewMut.png}
@@ -515,11 +627,157 @@ For initial genotype selection the population had two random indices selected. T
 \label{fig:mut}
 \end{figure}
 
+Using a mutation rate that selected neighbouring genotypes rather than random indices within the population had a positive affect on the algorithms. Figure~\ref{fig:mut} shows that this method always had a higher fitness. This mutation rate was used within the end model. 
 
-\subsection{Robot platform}
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.8\columnwidth]{archConv.png}
 
-\subsubsection{Chassis}
-The prototype version of the chassis used aluminium profiles with a lithium ion battery held in the centre under pressure. Continous rotation servos attached to the sides of the profiles. 
+\caption{Architecture experimentation for the conv2D network.}
+\label{fig:archConv}
+\end{figure}
+
+A simulation was set up to test different network architectures using the 2d CNN network. A series of architecture hidden layer sizes were tested. For simplicity these layers would be the same size. It was found that larger widths performed better than smaller widths. Figure~\ref{fig:archConv} shows that hidden layers of size 40 were the best for this task. 
+%-----------------------------------------------------------------------------------
+
+\section{Vision}
+\subsection{Camera systems}
+To begin with I worked on the stereo vision using two USB Arducam modules and the cv2 disparity function. The initial visual representation was less accurate than needed so I trialed different pre-processing and post-processing techniques. The Arducam modules were chosen over the Pi cameras (which had similar quality) as the Pi only has one camera input through ribbon cables. For multiple Pi cameras additional switch hats are needed, which raised the cost and complexity of the problem. USB allowed simple connection via the cv2 library. 
+
+To begin with the cameras were distanced along an aluminium profile to secure them on the same axis. Both were USB thus could be directly connected to a main computer for testing. At this stage there was no need to use the control board of the Robot as it would be much slower than a PC.
+%disparity map
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=1\columnwidth]{depthNormal (2).png}
+
+\caption{Disparity map generated using no pre-processing techniques}
+\label{fig:disp}
+\end{figure}
+A disparity map was calculated using the cv2 library. The initial results were disappointing, even with calibration. Calibration was attempted through changing parameters of block size and number of disparities. The larger the block size, the more noticeable features are. Noticeably in Figure~\ref{fig:disp} significant features were located but much of the image goes un-noticed. 
+
+Many of the issues came from problems within the camera position, where the cameras were never completely aligned. An off-the-shelf approach was taken using an X-box Kinect sensor which had all this calibration completed already. 
+
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.7\columnwidth]{stereo1.png}
+
+\caption{Depth images from the Xbox sensor, left normal image, right depth image.}
+\label{fig:xbox}
+\end{figure}
+
+Figure~\ref{fig:xbox} presents how obstacles look in front of the image sensor. This is better calibrated than the previous camera system (USBs), though much larger in physical size. To mount this sensor on the robot would require a more powerfull battery and a larger chassis. This camera will be used as a proof of concept for using depth navigation in a real world environment. 
+
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.7\columnwidth]{Stereo2.PNG}
+
+\caption{Xbox Kinect with measured distances of objects.}
+\label{fig:betterSter}
+\end{figure}
+ Three objects were placed in front of the camera, of 26cm, 60cm and 90cm away. It is visible that these three objects are visible at different distances based on the darker the colour, the closer it is. One hazard found with this is all the nearby ground is close, but appears as a large black box at the bottom of the image. The robot would need to be able to distinguish between ground going into the distance and a real obstacle. 
+ 
+ By cropping the image and only looking at the centre the agent is able to view the environment with the confusing detail removed. Using a rule based system obstacles can be detected. The image is broken down into separate columns of intervals of 200 pixels, and the sum of all those pixels are calculated. The interval with the maximum sum is picked as the direction. This is because an obstacle will have a pixel value of 0, whereas the background will have a pixel value of up to 255. 
+ 
+ \begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.7\columnwidth]{predicted idrection.png}
+
+\caption{Xbox Kinect with measured distances of objects an rule based prediction system.}
+\label{fig:predictDir}
+\end{figure}
+The predicted direction is denoted in the lower image by the large yellow rectangle. The rule based system was a computationally inexpensive solution compared to the training and use of a neural network. 
+Problems that the rule based solution may incur is that it there may not always be a direction to move in. A threshold of the sum of pixels within a direction was found and introduced as the terrain would be too hazardous. 
+
+Within simulation models had been trained to avoid hazardous terrain. Applying the depth imaging to these models allows testing the robustness of these models at crossing the reality gap. 
+
+The input image is cropped to a rectangle within the middle of size 200 by 400. The resultant image is resized using the cv2 function to an image of 5 by 5. This is a conversion by aspect ratio, which was chosen because it keeps detail and significant terrain. 
+
+ \begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.6\columnwidth]{conversion.png}
+
+\caption{Reduced scale image for the model. The image used is the same in Figure~\ref{fig:predictDir}.}
+\label{fig:reduction}
+\end{figure}
+
+Figure~\ref{fig:reduction} shows that the terrain is taken into consideration. The immediate threat is highlighted clearly, while the background contours away. 
+
+Different interpolation methods for the resizing of the image were explored to choose one which best smooths terrain and avoids noise. Throughout testing there was small amounts of noise where the sensor had picked a background object as closer to the lens than it was. 
+
+ \begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.5\columnwidth]{areaBetter.png}
+
+\caption{Qualitative example of noise creating problems within the generated image. }
+\label{fig:interpolation}
+\end{figure}
+
+Linear interpolation would highlight these noise significantly which would presents potential for deployment of the model to move in directions which was not representative of the environment. Area interpolation was chosen. Within Figure~\ref{fig:interpolation} the area method has picked up the long distanced wall, and direct threats in front of the sensor. There were more rocks on the right hand side of the sensor, which is found in the darkening of the right hand side of the vision. 
+
+Area interpolation works using the reaggregation of data as sets of polygons mapped to the next polygons. This keeps more general detail about an area compared to other approaches such as linear interpolation which maps values to other values within a linear space. 
+
+%TODO talk about calibration methods (mechanno to screw the images in
+%maybe make the images naturally connect to one another
+\subsection{Results}
+Different pre-processing was applied on the stereo images in order to highlight key areas of the images. Some techniques were more successful than others, but it transpired that using two cameras next to each other was not as accurate or calibrated as an off-the-shelf solution. 
+%k means clustering
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=1\columnwidth]{depthKmeans.png}
+
+\caption{K-means clustering as a pre-processing technique on the images}
+\label{fig:kmeans}
+\end{figure}
+As there was a too much noise within the images, I applied K-means clustering to the pixels in order to reduce the noise and change within an environment. This method was unable to distinguish the differences between far in the background and close to the camera. The basic structure could be seen in a room but does not provide any spatial context. 
+
+
+
+%Blur
+
+%Remove differences in image
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=1\columnwidth]{depthRemoval.png}
+
+\caption{Removal of different pixels in image}
+\label{fig:kmeans}
+\end{figure}
+The removal of differences within two images was introduced to remove the amount of noise. This was unsuccessful as it removed almost all information from the images. 
+%dilation
+
+
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=1\columnwidth]{depthDilate.png}
+
+\caption{Dilation of image after disparity}
+\label{fig:dialation}
+\end{figure}
+
+Dilation was the most successful at identifying hazards while removing noise, however, this still could not find significant difference between background and foreground. 
+
+After a disparity map is generated, it is seen that only small areas can be valued significantly, however, shape can be seen. This is evident in Figure~\ref{fig:disp} where the wall and arm raises significance. Dilation is a morphological transformer which uses a kernel to increase the true values within a binary image. The cv2 library provides the features for this. It is clear that the use of morphological operators help to show the clearer routes through an image and avoid structure. 
+
+In all three qualitative examples the chair in front of the camera is not visible. This is likely a problem with the vision calibration. 
+
+\begin{figure}[H]
+\centering
+  \includegraphics[clip,width=0.7\columnwidth]{thresholding.png}
+
+\caption{A video feed of the Xbox Kinect sensor moving round an environment. This shows the sum of all pixels averaged. }
+
+
+\label{fig:thresholding}
+\end{figure}
+
+A threshold was calculated where anything that dropped below it was a hazardous environment. It is clear from Figure~\ref{fig:thresholding} that within hazardous environments the rule-based system can steer an agent in the correct direction. Towards the end of the video used for these calculations, does the vision sensor move towards a wall. This is seen at the end of Figure~\ref{fig:thresholding} where the plots both drop below the threshold. This signifies that the rule based approach can detect collision before it has happened. 
+
+The rule-based approach has limitations such as not being easily compatible with getting stuck. As seen in Figure~\ref{fig:thresholding} the rule-based approach cannot cope well with facing a larger obstacle such as a wall.
+
+\section{Robot platform}
+
+\subsection{Chassis}
+The prototype version of the chassis used aluminium profiles with a lithium ion battery held in the centre under pressure. Continuous rotation servos attached to the sides of the profiles. 
 \begin{figure}[H]
 \centering
   \includegraphics[clip,width=0.4\columnwidth]{whegv1.PNG}
@@ -567,182 +825,197 @@ When the robot would try climb, it would within some trials need an element of h
 
 The neck used a pan and tilt mechanism was placed at the front of the robot chassis and panned left to right, to improve turning left and right within an environment. The tilt will be up and down on the axis of gravity acting as a back. A bend in the back will redistribute weight -- the exact process applied in the cockroach research~\cite{cockroach}. 
 
-For control, the chassis used a Raspberry Pi for its low energy consumption yet reasonable processing power. It was also setup with Linux which allowed SSH control of the robot and ease of gathering results from trials. 
+For control, the chassis used a Raspberry Pi for its low energy consumption yet reasonable processing power. The Pi zero was chosen as it is the lowest consumption of power for Pis on offer, while being small and light in physical size. It was also setup with Linux which allowed SSH control of the robot and ease of gathering results from trials. 
 
 The configuration of the Raspberry Pi used a 32GB SD card to give plenty of expansion space. Due to the use of neural networks and computer vision, having a large SD card allowed RAM over-spill into virtual memory, which would be much slower but would prevent the experiment being cut short. On top of the Pi there is an Adafruit servo driver that allows up to 16 servos to be attached. 
 
 The continuous rotation servos used 100ma while active and the back actuation servos 500ma. In a worst case scenario we assume that all current is needed throughout each servo motor. This is denoted by the following calculation:
 \begin{equation}
- (4*100) + (2*500)= 1400 ma
+ (4\times100) + (2\times500)= 1400 ma
 \end{equation}
 The battery chosen provided this current with the additional current the the Raspberry Pi requires as a minimum. An error found in testing earlier models was where the current draw was too great which made the Pi reboot or would restart the USB drivers. 
 
-On the front of the robot two cameras were mounted for stereo vision. The camera sensors changed throughout the design process but through the use of aluminium profiles components could easily be interchanged. A gyroscope/accelerometer MPU-6050 sensor was mounted on the front to detect unexpected incline.
+On the front of the robot two cameras were mounted for stereo vision. The camera sensors changed throughout the design process but through the use of aluminium profiles components could easily be interchanged. A gyroscope/accelerometer MPU-6050 sensor was mounted on the front to detect unexpected incline. There is the additional option of current monitoring or wheel encoding to detect whether there is movement within a wheel. Current monitoring is more ideal to wheel encoding for this task for two main reasons. To embed encoding requires additional hardware as well as modification to the chassis. If the chassis is suspended in the air, the wheels will rotate despite having no affect to the chassis. 
 
-\subsubsection{Vision}
-To begin with I worked on the stereo vision using two USB Arducam modules and the cv2 disparity function. The initial visual representation was less accurate than needed so I trialed different pre-processing and post-processing techniques. The Arducam modules were chosen over the Pi cameras (which had similar quality) as the Pi only has one camera input through ribbon cables. For multiple Pi cameras additional switch hats are needed, which raised the cost and complexity of the problem. USB allowed simple connection via the cv2 library. 
+The Raspberry Pi allows the stacking of hats which provides ease of connection and reduction of wires compared to using external modules. The Adafruit servo hat has vast online support and documentation, making it well suited for this project. 
 
-To begin with the cameras were distanced along an aluminium profile to secure them on the same axis. Both were USB thus could be directly connected to a main computer for testing. At this stage there was no need to use the control board of the Robot as it would be much slower than a PC.
-%disparity map
-\begin{figure}[H]
-\centering
-  \includegraphics[clip,width=1\columnwidth]{depthNormal.png}
-
-\caption{Disparity map generated using no pre-processing techniques}
-\label{fig:disp}
-\end{figure}
-A disparity map was calculated using the cv2 library. The initial results were disappointing, even with calibration. Calibration was attempted through changing parameters of block size and number of disparities. The larger the block size, the more noticeable features are. Noticeably in Figure~\ref{fig:disp} significant features were located but much of the image goes un-noticed. 
-
-%k means clustering
-\begin{figure}[H]
-\centering
-  \includegraphics[clip,width=1\columnwidth]{depthKmeans.png}
-
-\caption{K-means clustering as a pre-processing technique on the images}
-\label{fig:kmeans}
-\end{figure}
-As there was a too much noise within the images, I applied K-means clustering to the pixels in order to reduce the noise and change within an environment. 
-
-%Blur
-
-%Remove differences in image
-
-%dilation
-\begin{figure}[H]
-\centering
-  \includegraphics[clip,width=1\columnwidth]{depthDilate.png}
-
-\caption{Dilation of image after disparity}
-\label{fig:dialation}
-\end{figure}
-After a disparity map is generated, it is seen that only small areas can be valued significantly, however, shape can be seen. This is evident in Figure~\ref{fig:disp} where the wall and arm raises significance. Dilation is a morphological transformer which uses a kernel to increase the true values within a binary image. The cv2 library provides the features for this. It is clear that the use of morphological operators help to show the clearer routes through an image and avoid structure. 
-
-In all three qualitative examples the chair in front of the camera is not visible. This is likely a problem with the vision calibration. 
-
-\subsubsection{Testing environment}
-TODO
+One challenge of using the Raspberry Pi Zero is that PyTorch support for arm processors are harder to install than the standard pytorch library. It is worth noting that the zero will only compile PyTorch arm python wheels that end with 'linux\_armv6l.whl', however, the GitHub build for this file was not compiled with NumPy. The solution was to download the 'linux\_armv7l.whl' version and rename it to 'linux\_armv6l.whl' before running it. 
 
 
-\subsubsection{Back actuation}
-Back bending is a trait in nature where organisms will bend to increase climb. Research on cockroaches explored the use of cockroach-inspired limbs and movement. ~\cite{cockroach} 
+\subsection{Back actuation}
+Back bending is a trait in nature where organisms will bend to increase climb. Research on cockroaches explored the use of back bending with cockroach-inspired limbs on a robotic chassis. ~\cite{cockroach} 
 
-The actuation used a servo motor was introduced with a pan-tilt style movement. The movement of the back was performed on one axis rotation. The other tilt helped the robot turn left and right while travelling around an environment. The back proved successful while controlling the robot via remote control as the chassis would get stuck at points within an environment. The redistribution of weight via back actuation allowed climb. This can be seen in the qualitative example of Figure~\ref{fig:angleMov}.
+The actuation used a servo motor which introduced a pan-tilt style movement. The movement of the back was performed on one axis rotation. The other tilt helped the robot turn left and right while travelling around an environment. The back proved successful while controlling the robot with remote control trials. The chassis previously got stuck at points within an environment, the redistribution of weight via back actuation allowed climb, preventing obstruction. This can be seen in the qualitative example of Figure~\ref{fig:angleMov}.
+%obstruction word change
 
 \begin{figure}[H]
 \centering
   \includegraphics[width=0.3\linewidth]{back.PNG}
-  \caption{This shows the back rotation and turning system in the center of the robot chassis. One for direction and one for the back. These two servos were responsible for rotating more weight per servo than any of the locomotion joints. This meant they were of heavier duty standard thus drew more current. }
+  \caption{This shows the back rotation and turning system in the centre of the robot chassis. One for direction and one for the back. These two servos were responsible for rotating more weight per servo than any of the locomotion joints. This meant they were of heavier duty standard thus drew more current. }
   \label{fig:back}
 \end{figure}
 
 \begin{figure}[H]
 \centering
   \includegraphics[width=0.9\linewidth]{angles.PNG}
-  \caption{This figure shows how the angle on the robot changes with back actuation. The first image is where the robot has got stuck going over a barrier. The second image shows the distribution of weight to the centre of the robot, which allowed more torque to be focused on the back wheel rotation rather than holding the weight of the robot. The final image shows the robot having climbed over the obstacle. Outlined in the figure is a drawn axis to help demonstrate the movement undertaken by the robot.}
+  \caption{This figure shows how the angle on the robot changes with back actuation. The first image is where the robot got stuck going over a barrier. The second image shows the distribution of weight to the centre of the robot, which allowed more torque to be focused on the back wheel rotation rather than holding the weight of the robot. The final image shows the robot having climbed over the obstacle. Outlined in Figure~\ref{fig:angleMov} is a drawn axis in blue to demonstrate the movement undertaken by the robot.}
   \label{fig:angleMov}
 \end{figure}
 
 Figure~\ref{fig:angleMov} was performed manually using the Xbox360 remote and a USB dongle. This allowed training and proof of concept that the robotic back was useful for the task. Autonomous movement requires detection of being stuck. 
 
-Acceleration and tilt within a direction can be measured with the MPU6050 sensor. This sensor additionally offers temperature readout, which will not be used throughout this experiment. Tilt in the axis direction of up, which for the sensor positioning on the robot will be the x-axis. Acceleration is measured and movement can be detected. These two features make the MPU6050 right for this task. The sensor itself is mounted on the front of the robot, as this will be the place that first detects tilt when going over rough terrain. 
+Acceleration and tilt within a direction can be measured with the MPU6050 sensor. This sensor additionally offers temperature readout, which will not be used throughout this experiment. Tilt in the axis direction of up for the MPU6050 positioning on the robot will be the x-axis. Acceleration is measured and movement can be detected. These two features make the MPU6050 a candidate for this task. The sensor itself is mounted on the front of the robot, as this will be the place that first detects tilt when going over rough terrain. 
 
-A gryo class was created that could be imported into the main Wheg robot code. This is used to trigger when an obstacle is hit, and will get model predictions for how to overcome such obstacles. 
+A gyro class was created that could be imported into the main Wheg robot code. This is used to trigger when an obstacle is hit, and will get predictions from a neural network model for how to overcome such obstacles. Data would be extracted from the sensor by detecting the steepness of the ground with low-pass filtering the accelerator vector. This would be integrated to get velocity. 
 \begin{figure}[H]
 \centering
   \includegraphics[width=0.5\linewidth]{modelPred.PNG}
-  \caption{The back bend model is only needed when an obstacle is predicted. We also want to evolve the model. Through initial trials, the algorithm seen is used to evolve over time by taking motor positions and gyroscopic data as input, and motor movement as output. The genetic process for evolution will use similar approaches as the navigation. }
-  \label{fig:angleMov}
+  \caption{The back bend model is only needed when an obstacle is predicted. The task requires evolution of the model. Through initial trials, the algorithm is used to evolve movement over time by taking motor positions and gyroscopic data as input, and motor movement as output. The genetic process for evolution will use similar approaches as the navigation. }
+  \label{fig:tt}
 \end{figure}
+%evolve movement word
+Initial captivation of the chassis perception used the MPU6050 sensor to find when changes in acceleration would take place. The acceleration produced a lot of noise and therefore could not be trusted for accurate collision detection. This idea was abandoned and replaced with a method that exploited spikes in the current caused by the motors being unable to rotate as the servos would stall and draw high current. This is seen in Figure~\ref{fig:current}. 
 
-Initial captivation of the chassis perception used the MPU6050 sensor to find when changes in acceleration would take place. The acceleration produced a lot of noise and therefore could not be trusted for accurate collision detection. This idea was abandoned and replaced with a method that exploited spikes in the current caused by motors being unable to rotate. This is seen in Figure~\ref{fig:current}. 
 
 \begin{figure}[H]
 \centering
-  \includegraphics[width=0.7\linewidth]{Figure_1.png}
+  \includegraphics[width=0.7\linewidth]{Figure_1_L.PNG}
   \caption{Display of the current read from a rotating servo attached to the robotic chassis. At different time steps, different amounts of pressure were applied to the servo.}
   \label{fig:current}
 \end{figure}
-Between the first time step and time step 110 no signal had been sent to the motors for rotation. This is working at approximately 0.1 Amps. This is expected as the current draw of a servo is 110mA. At time step 125 the robot is lowered onto a surface but some of the weight is maintained off of the motor. The whegs mostly rotate with some disturbance to speed and occasionally gets stuck. At time step 140 the robot is placed fully on the ground with weight preventing it from moving. The current dramatically spikes up to approximately 0.5Amps. Between time step 150 and 160 the robot was picked up, and placed back down. This is why the current draw decreases at this interval. 
+Between the first time step and time step 110, no signal had been sent to the motors for rotation. This is working at approximately 0.1 Amps. This is expected as the current draw of a servo is 110mA. At time step 125, the robot is lowered onto a surface but some of the weight is maintained by the motor. The Whegs mostly rotate with some disturbance to speed and occasionally get stuck. At time step 140, the robot is placed fully on the ground with weight preventing it from moving. The current dramatically spikes up to approximately 0.5 Amps. Between time step 150 and 160, the robot was picked up, and placed back down. This is why the current draw decreases at this interval. 
 
-\section{Testing, Results and Discussion}
-The tests for simulation gave varied results based on the different algorithms used. Random generations of where the agent was within multiple trials was averaged for each fitness. This prevented fluke results of agents biased to specific routes. The most effective was the group of microbial with re-selection of the best genes. 
-
-\begin{figure}[H]
-\centering
-  \includegraphics[clip,width=0.8\columnwidth]{resultsAllGenetic.png}
-
-\caption{Results of the microbial algorithm after 1000 generations. It is clear that the results converge on a solution which is clearly sub-optimal, and eventually cannot improve above this. 
-Using a grouped population there was belief that more internal diversity would provide eloquent solutions and prevent convergent of sub-optimal solutions too early. The results show the fitness of these grouped populations to be considerably lower than the other algorithms. 
-Results of the elitist algorithm that picks the best genes and repopulates at the end of each sub-generation: This converged on the highest fitness quicker out the trialed genetic approaches, though was over taken by the microbial eventually}
-\label{fig:Microbial}
-\end{figure}
-
-The convolutional neural network was outperformed by the feed-forward network, both using the same microbial algorithm. Experimentation with different kernel sizes did not have dramatic improvement to the fitnesses. Though with genetic approaches there is an element of randomness, after quantitative trials the fitnesses still averaged around 50\%. The convolutional layer is likely highlighting areas of the disparity map that are not significant, while the input is already simplified. It is likely that the convolutional network would be more effective with training data, rather than an evolved process. 
-
-From these results there was little evidence to suggest whether the microbial or elite microbial performed more optimally. The Elite microbial works better with smaller numbers of generations, however, takes longer to run the microbial. With a simulation the microbial offers better functionality as we can run as many trials in short periods of time. On a physical robot each generation will take longer, therefore the elite version offers a better short term answer.
+The implementation converted the current readings to an array, then counted how many times the current exceeded the threshold of 0.4mA. If this was found to exceed 30\% of the readings taken, the robot would be registered as stuck. 0.4mA was chosen through a trial and error process. 0.1mA is the expected current, with added noise depending on the  complexity of the terrain. Anything above 0.4mA means the motor is not moving.
 
 
-\begin{figure}[H]
-\centering
-  \includegraphics[clip,width=0.6\columnwidth]{ExplicitGen.png}
+The I2C address of the servo hat had to be changed to 0x44 from 0x40 due to the power monitoring hat using address 0x40 for channel 1. This was achieved by soldering bridges on the PCB address bar. Using the command prompt and changing the default parameters to the library, the new address was found. If this was not done, the motors would spin out of control due to mixed signals causing chaos. 
+%other word for done
 
-\caption{Results of Explicit rule-based agents shows the current agent fitness at each generation, rather than the top of the population. This is because the algorithm and instructions are unchanging, unlike the genetic approach where random mutations affect the outcome of the results. This method converged on much higher fitnesses than the genetic approaches without failure. }
-\label{fig:Explicit}
-\end{figure}
-The approach gave a base and continuous maximum fitness of 90\% (2SF). The was a scatter of individual fitnesses 
-A revised graph for displaying the information of~\ref{fig:Explicit} is using a bar graph. This was generated by rounding all the fitness values to 1 decimal place. Each class was counted and displayed.
-\begin{figure}[H]
-\centering
-  \includegraphics[clip,width=0.7\columnwidth]{Explicit.png}
+\subsection{Proprioception}
+%fancy word for sensing own state
+The physical robot can sense its own state through a series of sensors. The robot can sense whether wheels are stuck through a rise in current being supplied to the battery. Every motor state is tracked through a Python library, which means angles of standard servos is known as well as the expected speed of the continuous rotation servos.
 
-\caption{Results of Explicit rule-based agents placed into a bar graph to present the amount of high fitness solutions the agent generates. The average of 200 trials had a fitness of 88.9\% which was much higher than the average fitness of the genetic approaches. }
-\label{fig:Explicit}
-\end{figure}
+The angle tilt of the robot is known using an MPU6050. When the robot has tilted to move over an obstacle, the robot is able to  use this information, as well as motor angles as input to the back bending neural network. As output there are two nodes to decide whether to move the back up or down using the argmax function.
 
-This shows that the rule-based method performs better than the genetic approach for simulation, suggesting a neural network was over-fitting the problem. Quantitative results show us how the algorithm performed overall within different scenarios. Qualitative examples clearly highlight how the best performing evolved. 
+For the robot to know whether the network had performed well, a fitness function was written. This made use of the knowledge that 0.4A was the highest these motors would raise to, and 0.1A was the default spin. The fitness would perform the following, where C is a set of all the current reads from each continuous rotation servo:
+\begin{equation}
+    Fitness=\frac{(0.4*4)-\sum_{i=1}^{4}(C_i)}{(0.4*4)} \times  100
+\end{equation}
+The value 4 represents how many motors there are. If only two motors are being read from this value would be 2. The multiplication by 100 converts the value to a percentage.
+
+For vision-based navigation the robot made use of stereo cameras. The Xbox Kinect was used to gather depth imaging of the environment. This was reduced in scale to 5 by 5 pixels to highlight key features about the terrain. Using this image, the trained agent within the simulation was deployed to use a convolutional neural network. This was because the Conv2D network architecture had the best accuracy within the given trials. 
+
+The chosen visual sensor was too large to fit directly onto the chassis, therefore the sensor had its video recorded while being manually carried. The model was tested using these gathered frames and plotted as example based figures within the results. As there are multiple directions that can be on valid within these examples, using numeric based validation methods was not possible without mass labelling the data. This would still be down to human judgement. Instead, human judgement over the examples will be the evaluation method of how well the model performed in the real world. The network was trained to predict a vector of movement out of 8 possible moves, but as this was not controlling the robot so the vector is simply displayed as the chosen direction of travel that should be taken.
+
+Evolving this navigation model directly on the robot could lead to better results. This is because the model will learn how its own hardware and control deals with different sized obstacles, and which obstacles the chassis could overcome with back-bending. This method was not used because enforcing reward posed too many challenges. Additionally, would have taken a large amount of time to perform just one trial. Simulation mostly converged on peak fitness at generation 400 to 800. Additionally, if the simulated model performs well it will have shown the model to be robust enough to cross the reality gap between simulation and physical implementation. 
+
+\subsection{Results}
+Back actuation improved climb over terrain, which can be seen in the qualitative example of Figure~\ref{fig:angleMov}. Redistribution of weight allowed more torque to the front Whegs. 
+
+The physical agent was trialed over different terrain. In order to prove the concept of back-bending and obstruction detection the robot was placed on a flat surface, and it would be physically held onto the floor to detect being stuck. Once detected the robot would be released.
+
+ 
 
 \begin{figure}[H]
 \centering
-\subfloat[Microbial evolved agent]{%
-  \includegraphics[clip,width=0.5\columnwidth]{attempt to be energy efficient.png}%
-}
-\subfloat[Microial evolved agent]{%
-  \includegraphics[clip,width=0.5\columnwidth]{Trial on rough terrain.png}%
-}
-
-\\
-\subfloat[Convolutional NN evolved agent]{%
-  \includegraphics[clip,width=0.5\columnwidth]{Conv1D.png}%
-}
-\subfloat[Convolutional NN evolved agent]{%
-  \includegraphics[clip,width=0.5\columnwidth]{CONV.png}%
-}
-\\
-\subfloat[Elite Microbial evolved agent]{%
-  \includegraphics[clip,width=0.5\columnwidth]{EliteGroup.png}%
-}
-\subfloat[Rule-based agent]{%
-  \includegraphics[clip,width=0.5\columnwidth]{avoid problems explicit.png}%
-}
-\\
-\subfloat[Convolutional 2D layer]{%
-  \includegraphics[clip,width=0.5\columnwidth]{crazy2d.png}%
-}
-\subfloat[Convolutional 2D layer]{%
-  \includegraphics[clip,width=0.5\columnwidth]{findingCountours2D.png}%
-}
-\caption{Figure showing qualitative examples of simulated agents with start and end positions. The start position is denoted in a red dot, and the end target is denoted in blue.}
-\label{fig:maps}
+  \includegraphics[width=0.7\linewidth]{Accuracy.png}
+  \caption{Genetic algorithm back bending accuracy over generation. }
+  \label{fig:backGen}
 \end{figure}
 
-The evolved process with high fitnesses had contour traversing behaviour. Travelling on contours would use less energy than travelling over terrain in the shortest euclidean distance to the end point. These journeys can be seen in Figure~\ref{fig:maps}(a)(b). 
+Solutions converged on high a fitness quickly. By 15 generations at least one genotype was close to maximum fitness. This is likely due to the small search space that this problem has. Small changes within the back actuator angle can provide successful locomotion over terrain. 
 
-The convolutional NN example was chosen as it showed an increased diversity of movement compared to alternative neural network architecture. This lead to confused movement near the end before rediscovering the path and moving towards the outcome. Figure~\ref{fig:maps}(d) shows an example of a high fitness attempt that made use of contours and avoided obstacles.
+%show plot of behaviours
 
-The rule based approach example shows precise navigation around dangerous obstacles such as water pools. This method achieved a high fitness through local decisions. 
+Later the robot was tested on polystyrene blocks taped on the ground. This allowed testing on the same block and height, meanwhile keeping the direction and movement of the chassis the same to eliminate changing variables. 
 
-\section{Conclusions}
-TODO
+The final environment was the outdoors. This was a dynamic environment where pebbles and rocks could easily slip and change throughout testing. This environment was used to evaluate how well the robot performed in the 'real world'. 
+
+
+\begin{figure}[H]
+\centering
+  \includegraphics[width=0.5\linewidth]{whegEnv1.PNG}
+  \caption{The robot traverses over pebbled environments with a wooden obstacle where the ground texture changes. }
+  \label{fig:peb}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[width=0.5\linewidth]{whegEnv2.PNG}
+  \caption{This figure shows the robot attempting to climb over larger rocks.}
+  \label{fig:rock}
+\end{figure}
+
+The outdoor environment shown in Figures~\ref{fig:peb} and \ref{fig:rock} give qualitative examples of the types of obstacles that the agent will face. The larger rock is the largest challenge due to the non-linearity of movement and different forces acting on the chassis. 
+%results on improving fitnesses with back actuation
+
+Evaluation of how the simulated trained model reacts to the real world robot vision is denoted by the following qualitative examples. These show the original image, how the depth sensor views this, how the robot views this and the direction the model predicts.  The vector is in the direction of movement of the line triangular marker. The unmarked end is the start position of the vector.
+
+\begin{figure}[H]
+\centering
+  \includegraphics[width=0.7\linewidth]{OutSamplessave39.png}
+  \caption{This example shows where the depth sensor has picked up a large amount of rocks in front, and a continuation of this obstacle moving across.}
+  \label{fig:qual1}
+\end{figure}
+
+ This terrain in Figure~\ref{fig:qual1} is deemed too hazardous by the model, where the vector tells the agent to turn sharply left. This is considered a success case.
+ 
+
+\begin{figure}[H]
+\centering
+  \includegraphics[width=0.7\linewidth]{OutSamplessave51.png}
+  \caption{Robot vision detects that there is a large obstacle in front of the current space.}
+  \label{fig:qual2}
+\end{figure}
+The sensor has picked up the distance as nearby in Figure~\ref{fig:qual2}, despite it being far in the distance. This is a failure case for the sensor, however, it is a success case for the model where it has successfully predicted to turn back when there is no terrain to move to. This suggests that the model has makes use of a form of spatial-temporal reasoning to know there is no point moving forward, despite the immediate ground being free. 
+
+\begin{figure}[H]
+\centering
+  \includegraphics[width=0.7\linewidth]{OutSamplessave74.png}
+  \caption{Model move backwards from immediate threat.}
+  \label{fig:qual3}
+\end{figure}
+
+Figure~\ref{fig:qual3} detects the immediate obstacle, however moves in the wrong direction. The direction chosen wouldn't be a failure for the robot but is not the optimal direction for traversing the terrain. It is likely the model has biased this side as the vector of movement as input to the network was set to (1,1). This means the model is trying to find the end destination by turning right towards it. 
+
+\begin{figure}[H]
+\centering
+  \includegraphics[width=0.7\linewidth]{OutSamplessave77.png}
+  \caption{The sensor has picked up a nearby piece of grass a an obstacle. The model has chosen to ignore a small obstacle.}
+  \label{fig:qual4}
+\end{figure}
+Figure~\ref{fig:qual4} is fail-case of the model. The model is going left and avoiding difficult terrain within the immediate ground, however has been given an input vector of (1,1) which is directing it through the less terrain-complex route. The model has not taken this route, and instead has chosen the more complex route. 
+
+Overall the model has been deployed on real life imagery and performed well. Through the qualitative examples there was not one prediction found that would have harmed the robot. This implementation has been able to cross the reality gap for stereo-vision based navigation. The reduction of the search space by using a 5 x 5 image enabled the removal of real world noise. One potential problem holding back the crossing of the reality gap was that the robot in the simulation was set-up to be able to turn on the spot. The chassis built for this project required rotation of the front Whegs to move left and right. This should not be a problem as each input image is independent of the last, however testing this would be the work of future research.
+
+Though the model isn't necessarily the most efficient, it does keep the agent out of danger.
+
+
+\section{Future work}
+One of the main limitations between robotic navigation and simulated navigation was having a reliable depth sensor. The most reliable sensor the project had access to could not fit onto the robot for secure mounting. Additionally, the sensor used a high amount of energy that the robot battery could not provide. Future chassis would need to use smaller and energy inexpensive stereo sensors. This would allow more rigorous testing of the robot. 
+
+Additionally, it was a mistake to use the Raspberry Pi Zero for such a task. Though it worked well with the battery and interfaced with all the given hardware, it was slow and required a lot of extra peripherals attached to it. 
+
+The sensors available for the robot were limited to stereo vision. This had calibration issues with a dynamic environment. Using sensors such as LIDAR would allow more accurate representations of an environment. This would be the work of future research. 
+
+A critique of the methods carried out within this project would be everything was done on the same chassis. In hindsight it would have made sense to make smaller and lighter chassis, starting with a small chassis for stereo navigation. This would have been more energy efficient and allowed more testing time. After this, a back bending model would have been introduced to experiment with a working navigation model. 
+
+\section{Conclusion}
+
+Within this project we successfully showed that an agent can avoid collision with environmental hazards by understanding its limitations. Evolved and rule-based navigation were both successful approaches to this. Rule-based was more reliable at traversing terrain than the evolved, however, the evolved navigation made use of terrain contours for energy efficiency. The agent was able to recognize hazardous terrain through trials of crashing into it.
+
+
+Simulated trials proved the concept that this paper aimed to develop. The agent used depth imaging which was implemented on the physical robot. Though the depth imaging was not as clear as the simulated, this was expected due to real world noise. Crossing between simulated and physical implementation, referred to as the reality gap, posed many challenges. The robot had a larger search space due to this real-world noise, thus increasing complexity of converging on a solution. 
+%Physical trials take longer
+Using a biologically inspired chassis improved the robots ability to traverse terrain, which was expected. The features of cockroaches were successfully implemented using 3D printed Whegs with a bendable back. This allowed the chassis to climb over rocks and redistribute weight to improve torque at separate parts of the robot. A back that can rotate for off-road chassis shows great potential for future 4-wheeled drive robotic locomotion. 
+
+The back actuation produced a method of feedback for learning how which terrain the chassis should avoid. If back movement does not allow the chassis to get unstuck, the agent has met a limitation. Terrain such as this should be avoided. 
+
+
+
+
+
+
 \bibliographystyle{unsrt}
 \bibliography{sample}
 

@@ -255,7 +255,7 @@ for i in fitnesses:
     d[i]=d.get(i,0)+1
 
 def fitBins(dict,bins):
-    data=list(dict.values())
+    data=np.array(list(dict.values()))
 
     slices = np.linspace(0, 10, bins, True).astype(np.int)
     counts = np.diff(slices)
@@ -268,8 +268,8 @@ dictionary_items = d.items()
 d=sorted(dictionary_items)
 print(d)
 d=dict(d)
-vals=fitBins(d,5)
-plt.bar(range(len(d)), vals, align='center',width=1.0)
+
+plt.bar(range(len(d)), list(d.values()), align='center',width=1.0)
 plt.xticks(range(len(d)), list(d.keys()))
 # # for python 2.x:
 # plt.bar(range(len(D)), D.values(), align='center')  # python 2.x

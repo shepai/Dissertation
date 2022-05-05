@@ -255,12 +255,14 @@ for i in fitnesses:
     d[i]=d.get(i,0)+1
 
 def fitBins(dict,bins):
-    data=list(d.values())
-    bins = np.linspace(0, bins, 5)
-    digitized = np.digitize(data, bins)
-    print(digitized)
-    bin_means = [data[digitized == i].mean() for i in range(1, len(bins))]
-    return bin_means
+    data=list(dict.values())
+
+    slices = np.linspace(0, 10, bins, True).astype(np.int)
+    counts = np.diff(slices)
+    print(slices.shape,len(data),data)
+    mean = np.add.reduceat(data, slices[:-1]) / counts
+    print(mean)
+    return mean
 
 dictionary_items = d.items()
 d=sorted(dictionary_items)

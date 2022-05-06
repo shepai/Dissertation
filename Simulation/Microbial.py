@@ -34,6 +34,14 @@ def generateWorld():
 
 def mutation(gene, mean=0, std=0.5,size=100):
     assert size<len(gene)
+    array=np.random.normal(mean,std,size=len(gene))
+    gene += array #mutate the gene via normal 
+    # constraint
+    gene[gene >4] = 4
+    gene[gene < -4] = -4
+    return gene
+def mutation_old(gene, mean=0, std=0.5,size=100):
+    assert size<len(gene)
     n=rnd.randint(0,len(gene)-size-1)
     array=np.random.normal(mean,std,size=size)
     gene = gene[n:n+size] + array #mutate the gene via normal 
@@ -129,8 +137,8 @@ def getCircleCoord(centre,radius):
         c=(y**2) + by*(y) + cy #get y filled in
         c=cx+c-(radius**2) #normalize for x quadratic
         #apply quadratic form
-        x1=((-1*bx)+math.sqrt((bx**2)-(4*c)))/(2)
-        x2=((-1*bx)-math.sqrt((bx**2)-(4*1*c)))/(2)
+        x1=((-1*bx)+maths.sqrt((bx**2)-(4*c)))/(2)
+        x2=((-1*bx)-maths.sqrt((bx**2)-(4*1*c)))/(2)
         coords.append([x1,y])
         coords.append([x2,y])
     return coords
@@ -150,7 +158,7 @@ def run_trial(gene,runs=30):
     cords=[]
     coords=getCircleCoord(startPos,radius)
     while not valid: #validate random destination
-        cords=random.choice(coords)
+        cords=rnd.choice(coords)
         tmp=cords
         cords=[int(cords[0]),int(cords[1])]
         if world[cords[1]][cords[0]]>-6 and world[cords[1]][cords[0]]<=10:
@@ -269,6 +277,7 @@ for gen in range(Generations):
     print(max(fitnesses))
 bestGene=[]
 bestFit=0
+"""
 for gene in gene_pop:
     startPos=pickPosition(world,4,LBounds=6)
     p1x,p1y,fit,endCord1=run_trial(gene)
@@ -295,8 +304,8 @@ if bestGene!=[]:
         #print(canReach(Rmap,startPos,endPos))
         plt.imshow(BEST[2],cmap='terrain') #show best show
         plt.show()
-
-np.save("microbialPart.npy", fitnesses)
+"""
+np.save("microbialPartOld1.npy", fitnesses)
 """
 plt.plot(BEST[0],BEST[1]) #show best path
 plt.title("Results of best fitness at "+str(BESTFIT)+"% after generations")

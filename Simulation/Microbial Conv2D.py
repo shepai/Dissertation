@@ -268,7 +268,7 @@ for architecture in range(len(archs)):
         gene_pop,fit=microbial(gene_pop,world,startPos)
         fitnesses.append(max([fit]+fitnesses))
 
-    
+    """    
     bestGene=[]
     bestFit=0
     for gene in gene_pop:
@@ -285,10 +285,12 @@ for architecture in range(len(archs)):
             if fit>bestFit:
                 bestFit=fit
                 bestGene=copy.deepcopy(gene)
+    
     whegBot.set_genes(bestGene)
-    np.save("D:/Documents/Computer Science/Year 3/Dissertation/best.npy",bestGene)
+    
+    np.save("D:/Documents/Computer Science/Year 3/Dissertation/best1.npy",bestGene)
     #torch.save(whegBot.state_dict(), "D:/Documents/Computer Science/Year 3/Dissertation/")
-    """
+    
     if bestGene!=[]:
         print("How best performs",bestGene)
         for i in range(5):
@@ -303,7 +305,7 @@ for architecture in range(len(archs)):
             plt.show()
     """
     sto.append(fitnesses)
-    #np.save("D:/Documents/Computer Science/Year 3/Dissertation/microbialConv2D.npy", fitnesses)
+    np.save("D:/Documents/Computer Science/Year 3/Dissertation/microbialConv2D2.npy", fitnesses)
     """
     plt.plot(BEST[0],BEST[1]) #show best path
     plt.title("Results of best fitness at "+str(BESTFIT)+"% after generations")
@@ -320,6 +322,7 @@ for architecture in range(len(archs)):
     plt.xlabel("Generation")
     plt.show()
     """
+"""
 for i in range(len(sto)):
     plt.plot([i for i in range(Generations)],sto[i],label=str(archs[i][0])+" "+str(str(archs[i][1]))+" hidden layer") #show best path
 
@@ -328,7 +331,7 @@ plt.ylabel("Fitness Units")
 plt.xlabel("Generation")
 plt.legend(loc="lower right")
 plt.show()
-"""
+
 if fitness(broke,energy,endDist)>0:
         plt.plot(pathx,pathy) #show best path
         plt.scatter(cords[0],cords[1])

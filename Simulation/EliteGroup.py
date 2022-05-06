@@ -127,8 +127,8 @@ def getCircleCoord(centre,radius):
         c=(y**2) + by*(y) + cy #get y filled in
         c=cx+c-(radius**2) #normalize for x quadratic
         #apply quadratic form
-        x1=((-1*bx)+math.sqrt((bx**2)-(4*c)))/(2)
-        x2=((-1*bx)-math.sqrt((bx**2)-(4*1*c)))/(2)
+        x1=((-1*bx)+maths.sqrt((bx**2)-(4*c)))/(2)
+        x2=((-1*bx)-maths.sqrt((bx**2)-(4*1*c)))/(2)
         coords.append([x1,y])
         coords.append([x2,y])
     return coords
@@ -148,7 +148,7 @@ def run_trial(gene,runs=30):
     cords=[]
     coords=getCircleCoord(startPos,radius)
     while not valid: #validate random destination
-        cords=random.choice(coords)
+        cords=rnd.choice(coords)
         tmp=cords
         cords=[int(cords[0]),int(cords[1])]
         if world[cords[1]][cords[0]]>-6 and world[cords[1]][cords[0]]<=10:
@@ -283,12 +283,12 @@ for i in range(epochs):
     for i,gene in enumerate(topGenes):
         gene_pop[i]=[copy.deepcopy(gene),0]
     for i in range(len(gene_pop),pop_size): #repopulate
-        gene_pop[i]=[copy.deepcopy(mutation(random.choice(topGenes))),0]
+        gene_pop[i]=[copy.deepcopy(mutation(rnd.choice(topGenes))),0]
 
 
 
 #run every single gene left for viewing
-
+"""
 for gene in gene_pop:
     gene=gene_pop[gene][0]
     startPos=pickPosition(world,4,LBounds=6)
@@ -301,12 +301,13 @@ for gene in gene_pop:
         #print(canReach(Rmap,startPos,endPos))
         plt.imshow(world,cmap='terrain') #show best show
         plt.show()
-
-np.save("elite.npy", fitnesses)
-
+"""
+np.save("elite2.npy", fitnesses)
+"""
 plt.cla()
 plt.plot([i for i in range(len(fitnesses))],fitnesses) #show fintesses over generations
 plt.title("Results of population fitness over "+str(len(fitnesses))+" generations")
 plt.ylabel("Fitness Units")
 plt.xlabel("Generation")
 plt.show()
+"""

@@ -166,8 +166,8 @@ def getCircleCoord(centre,radius):
         c=(y**2) + by*(y) + cy #get y filled in
         c=cx+c-(radius**2) #normalize for x quadratic
         #apply quadratic form
-        x1=((-1*bx)+math.sqrt((bx**2)-(4*c)))/(2)
-        x2=((-1*bx)-math.sqrt((bx**2)-(4*1*c)))/(2)
+        x1=((-1*bx)+maths.sqrt((bx**2)-(4*c)))/(2)
+        x2=((-1*bx)-maths.sqrt((bx**2)-(4*1*c)))/(2)
         coords.append([x1,y])
         coords.append([x2,y])
     return coords
@@ -186,7 +186,7 @@ def run_trial(gene,runs=30):
     cords=[]
     coords=getCircleCoord(startPos,radius)
     while not valid: #validate random destination
-        cords=random.choice(coords)
+        cords=rnd.choice(coords)
         tmp=cords
         cords=[int(cords[0]),int(cords[1])]
         if world[cords[1]][cords[0]]>-6:
@@ -329,11 +329,13 @@ for gene in genes:
     plt.imshow(BEST[2],cmap='terrain') #show best show
     plt.show()
 """
-np.save("group.npy", fitnesses)
-
+np.save("group2.npy", fitnesses)
+"""
 plt.cla()
 plt.plot([i for i in range(Generations)],fitnesses) #show fintesses over generations
 plt.title("Results of population fitness over "+str(Generations)+" generations")
 plt.ylabel("Fitness Units")
 plt.xlabel("Generation")
 plt.show()
+
+"""

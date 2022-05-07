@@ -32,8 +32,17 @@ def generateWorld():
     #print("Octaves:",octaves)
     return world,shape
 
-def mutation(gene, mean=0, std=0.5):
+def mutation_OLD(gene, mean=0, std=0.5):
     gene = gene + np.random.normal(mean, std, size=gene.shape) #mutate the gene via normal 
+    # constraint
+    gene[gene >4] = 4
+    gene[gene < -4] = -4
+    return gene
+def mutation(gene, mean=0, std=0.5,size=100):
+    assert size<len(gene)
+    n=rnd.randint(0,len(gene)-size-1)
+    array=np.random.normal(mean,std,size=size)
+    gene = gene[n:n+size] + array #mutate the gene via normal 
     # constraint
     gene[gene >4] = 4
     gene[gene < -4] = -4
@@ -187,11 +196,12 @@ def microbial(genes,world,position):
     global BEST
     #microbial algorithm trial
     ind_1 = rnd.randint(0,len(genes)-1)
-    ind_2=0
-    if ind_1>0: ind_2 = ind_1-1
-    else: ind_2= ind_1+1
-    #while ind_1==ind_2: #make value unique
-    #    ind_2 = rnd.randint(0,len(genes)-1)
+    #ind_2=0
+    #if ind_1>0: ind_2 = ind_1-1
+    #else: ind_2= ind_1+1
+    ind_2=ind_1
+    while ind_1==ind_2: #make value unique
+        ind_2 = rnd.randint(0,len(genes)-1)
     #get two random positions
     gene1=(genes[ind_1])
     gene2=(genes[ind_2])
@@ -231,7 +241,7 @@ world,shape=generateWorld()
 startPos=[int(SIZE/2),int(SIZE/2)] #centre point
 
 testIm=readIm(world,[25,25],30) #read the image that the agent sees
-Generations=1000
+
 vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 #network input:
 #   image, x_dest, y_dest
@@ -241,32 +251,35 @@ vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
 #   10
 #output
 #   vectors possible (8)
-#archs=[[10,10],[20,20],[30,30],[40,40],[50,50],[60,60]]
-archs=[[40,40]]
-
+archs=[[10,10],[20,20],[30,30],[40,40],[50,50],[60,60]]
+#archs=[[40,40]]
+Generations=200
 sto=[]
 for architecture in range(len(archs)):
-    whegBot=Agent_Conv2D(testIm.shape[0]*testIm.shape[1]+2,archs[architecture],len(vectors)) #define the agent
+    avg1=[]
+    for av_ in range(3): #get averages
+        whegBot=Agent_Conv2D(testIm.shape[0]*testIm.shape[1]+2,archs[architecture],len(vectors)) #define the agent
 
-    pop_size=15
-    gene_pop=[]
-    for i in range(pop_size): #vary from 10 to 20 depending on purpose of robot
-        gene=np.random.normal(0, 0.5, (whegBot.num_genes))
-        gene_pop.append(copy.deepcopy(gene))#create
+        pop_size=15
+        gene_pop=[]
+        for i in range(pop_size): #vary from 10 to 20 depending on purpose of robot
+            gene=np.random.normal(0, 0.5, (whegBot.num_genes))
+            gene_pop.append(copy.deepcopy(gene))#create
 
-    fitnesses=[]
-    for gen in range(Generations):
-        print("Gen",gen+1)
-        #generate the world terrain
-        world,shape=generateWorld()
-        world=np.pad(np.array(world), (2,2), 'constant',constant_values=(-6,-6))
-        world=np.pad(np.array(world), (3,3), 'constant',constant_values=(-7,-7))
-        world=np.pad(np.array(world), (1,1), 'constant',constant_values=(-8,-8))
-        #randomly pick a start position
-        
-        #genes have been selected
-        gene_pop,fit=microbial(gene_pop,world,startPos)
-        fitnesses.append(max([fit]+fitnesses))
+        fitnesses=[]
+        for gen in range(Generations):
+            print("Gen",gen+1)
+            #generate the world terrain
+            world,shape=generateWorld()
+            world=np.pad(np.array(world), (2,2), 'constant',constant_values=(-6,-6))
+            world=np.pad(np.array(world), (3,3), 'constant',constant_values=(-7,-7))
+            world=np.pad(np.array(world), (1,1), 'constant',constant_values=(-8,-8))
+            #randomly pick a start position
+            
+            #genes have been selected
+            gene_pop,fit=microbial(gene_pop,world,startPos)
+            fitnesses.append(max([fit]+fitnesses))
+        avg1.append(np.array(fitnesses).copy())
 
     """    
     bestGene=[]
@@ -304,8 +317,8 @@ for architecture in range(len(archs)):
             plt.imshow(BEST[2],cmap='terrain') #show best show
             plt.show()
     """
-    sto.append(fitnesses)
-    np.save("D:/Documents/Computer Science/Year 3/Dissertation/microbialConv2D2.npy", fitnesses)
+    sto.append(np.array(avg1).copy())
+    #np.save("D:/Documents/Computer Science/Year 3/Dissertation/microbialConv2DOld3.npy", fitnesses)
     """
     plt.plot(BEST[0],BEST[1]) #show best path
     plt.title("Results of best fitness at "+str(BESTFIT)+"% after generations")
@@ -322,6 +335,10 @@ for architecture in range(len(archs)):
     plt.xlabel("Generation")
     plt.show()
     """
+
+sto=np.array(sto)
+print(sto.shape)
+np.save("D:/Documents/Computer Science/Year 3/Dissertation/stored.npy", sto)
 """
 for i in range(len(sto)):
     plt.plot([i for i in range(Generations)],sto[i],label=str(archs[i][0])+" "+str(str(archs[i][1]))+" hidden layer") #show best path

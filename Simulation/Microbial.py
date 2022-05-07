@@ -40,7 +40,7 @@ def mutation(gene, mean=0, std=0.5,size=100):
     gene[gene >4] = 4
     gene[gene < -4] = -4
     return gene
-def mutation_old(gene, mean=0, std=0.5,size=100):
+def mutation_o(gene, mean=0, std=0.5,size=100):
     assert size<len(gene)
     n=rnd.randint(0,len(gene)-size-1)
     array=np.random.normal(mean,std,size=size)
@@ -200,10 +200,11 @@ def microbial(genes,world,position):
     #microbial algorithm trial
     ind_1 = rnd.randint(0,len(genes)-1)
     ind_2=0
-    if ind_1>0: ind_2 = ind_1-1
-    else: ind_2= ind_1+1
-    #while ind_1==ind_2: #make value unique
-    #    ind_2 = rnd.randint(0,len(genes)-1)
+    #if ind_1>0: ind_2 = ind_1-1
+    #else: ind_2= ind_1+1
+    ind_2=ind_1
+    while ind_1==ind_2: #make value unique
+        ind_2 = rnd.randint(0,len(genes)-1)
     #get two random positions
     gene1=(genes[ind_1])
     gene2=(genes[ind_2])
@@ -305,7 +306,7 @@ if bestGene!=[]:
         plt.imshow(BEST[2],cmap='terrain') #show best show
         plt.show()
 """
-np.save("microbialPartOld1.npy", fitnesses)
+np.save("microbialPartOld2.npy", fitnesses)
 """
 plt.plot(BEST[0],BEST[1]) #show best path
 plt.title("Results of best fitness at "+str(BESTFIT)+"% after generations")

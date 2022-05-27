@@ -66,6 +66,7 @@ def makeYerr(malt,interval=1):
 
 #plt.plot([i for i in range(len(a))],a,c="b",label="Microbial") #show fintesses over generations
 #microbial
+""""""
 mult=np.array([a1,a2,a3])
 yerr = makeYerr(mult)/2
 

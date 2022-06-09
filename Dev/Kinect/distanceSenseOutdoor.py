@@ -5,7 +5,7 @@ import time
 from agent import *
 
 vectors=[(1,1),(1,0),(0,1),(-1,-1),(-1,0),(0,-1),(-1,1),(1,-1)] #possible moves
-bestGene=np.load("D:/Documents/Computer Science/Year 3/Dissertation/best.npy") #load file
+bestGene=np.load("D:/Documents/Computer Science/Year 3/Dissertation/SavedModelsAndResults/best.npy") #load file
 whegBot=Agent_Conv2D((5*5)+2,[40,40],len(vectors)) #define the agent
 whegBot.set_genes(bestGene) #setup agent
 VectorBetween=[1,1]
@@ -30,23 +30,40 @@ def prepIm(im,inter=cv.INTER_LINEAR):
     im=cv.resize(disp1,(5,5),interpolation=inter) #resize to robot view
     return origin,disp,im
 def GeneratePlot(origin,disp,im,action): #show the image
-    plt.subplot(2,2,1)
-    plt.title("Original image")
-    plt.imshow(origin)
-    plt.subplot(2,2,2)
-    plt.title("Depth image")
-    plt.imshow(disp)
-    plt.subplot(2,2,3)
-    plt.title("Generated robot vision")
-    plt.imshow(im)
-    plt.subplot(2,2,4)
-    plt.title("Vector prediction: "+str(action))
-    plt.plot([0,action[0]],[0,action[1]])
-    plt.scatter(action[0],action[1],marker=">")
-    plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=0.5, hspace=0.5)
-    plt.savefig("D:/Documents/Computer Science/Year 3/Dissertation/Dev/Computer vision/OutSamples/"+"save"+".png")
+    #plt.figure(figsize=(3.5, 1.0))
+    #fig, axes = plt.subplots(2,2, figsize=(3.5, 1.0))
+    #plt.subplot(2,2,1)
+    fig, axes = plt.subplots(2,2, figsize=(3.5, 2.0))
+    axes[0,0].set_title("A", loc="left")
+    axes[0,0].imshow(origin)
+    axes[0,0].xaxis.set_visible(False)
+    axes[0,0].yaxis.set_visible(False)
+    #plt.subplot(2,2,2)
+    axes[1,0].set_title("B", loc="left")
+    axes[1,0].imshow(disp)
+    axes[1,0].xaxis.set_visible(False)
+    axes[1,0].yaxis.set_visible(False)
+    #plt.subplot(2,2,3)
+    axes[0,1].set_title("C", loc="left")
+    axes[0,1].imshow(im)
+    axes[0,1].xaxis.set_visible(False)
+    axes[0,1].yaxis.set_visible(False)
+    #plt.subplot(2,2,4)
+    axes[1,1].set_title("D", loc="left")
+    axes[1,1].arrow(0, 0, action[0], action[1], head_width=0.2, head_length=0.1, length_includes_head=True, facecolor="black")
+    axes[1,1].set_xlim((-1.1, 1.1))
+    axes[1,1].set_ylim((-1.1, 1.1))
+    axes[1,1].set_aspect("equal")
+    #axes[1,1].plot([0,action[0]],[0,action[1]])
+    #axes[1,1].scatter(action[0],action[1],marker=">")
+    #plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=0.5, hspace=0.5)
+    fig.tight_layout(pad=0.05)
+    fig.savefig("D:/Documents/Computer Science/Year 3/Dissertation/Dev/Computer vision/OutSamples/"+"save"+".pdf")
+    ad=cv.imread("D:/Documents/Computer Science/Year 3/Dissertation/Dev/Computer vision/OutSamples/"+"save"+".pdf")
+    fig.savefig("D:/Documents/Computer Science/Year 3/Dissertation/Dev/Computer vision/OutSamples/"+"save"+".png")
     ad=cv.imread("D:/Documents/Computer Science/Year 3/Dissertation/Dev/Computer vision/OutSamples/"+"save"+".png")
-    plt.clf()
+    plt.show()
+    #plt.clf()
     return ad
 #open up video capture
 cap = cv.VideoCapture('C:/Users/Dexter Shepherd/Videos/2022-04-30-10-00-24.mp4')
@@ -71,27 +88,28 @@ p=GeneratePlot(origin,disp,im,[-1,0])
 h, w = p.shape[:2]
 print(w,h)
 fourcc = cv.VideoWriter_fourcc(*'mp4v')
-out = cv.VideoWriter('D:/Documents/Computer Science/Year 3/Dissertation/Results/Vision/output_terrain_area.mp4', fourcc, 10, (w,h))
+#out = cv.VideoWriter('D:/Documents/Computer Science/Year 3/Dissertation/Results/Vision/output_terrain_area.mp4', fourcc, 10, (w,h))
 c=0
 sums=[]
 error=[]
+cap.set(cv.CAP_PROP_POS_MSEC, 6000)
 while(cap.isOpened() and c<300):
     ret, im = cap.read()
-    if ret and c%2==0:
+    if ret and c%1==0:
         #print(c)
         origin,disp,im=prepIm(im,inter=cv.INTER_AREA)
         act=predict(np.copy(im))
         p=GeneratePlot(origin,disp,im,act)
         w1, h1 = im.shape[:2]
         #calculations for debug
-        cv.imshow('frame', p)
-        if cv.waitKey(1) == ord('q'):
-            break
+        #cv.imshow('frame', p)
+        #if cv.waitKey(1) == ord('q'):
+        #    break
         #p=cv.resize(p,(w,h)) 
-        out.write(p)
+        #out.write(p)
     c+=1
 cap.release()
-out.release()
+#out.release()
 plt.cla()
 
 
